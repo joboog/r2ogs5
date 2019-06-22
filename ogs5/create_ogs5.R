@@ -1,13 +1,27 @@
 
 # a constructor for the ogs5 base-class
 create_ogs5 <- function(
-                  x = list(input=list(), output=list(mod)),
+                  #x = list(input=list(), output=list(mod)),
                   sim_name = character(NULL),
                   sim_id = integer(NULL),
                   sim_path = character(NULL)
                ) {
    
-   stopifnot(is.list(x))
+   # validation
+   if (!is.character(sim_name)) {
+      stop("'sim_name' has to be of type character", call. = FALSE)
+   } 
+   
+   if (!is.character(sim_path)) {
+      stop("'sim_path' has to be of type character", call. = FALSE)
+   } 
+   
+   if (!is.integer(sim_id)) {
+      stop("'sim_id' has to be of type integer", call. = FALSE)
+   } 
+   
+   # define ogs5-obj
+   x <- list(input=list(), output=list())
    
    structure(
       x,
@@ -17,3 +31,8 @@ create_ogs5 <- function(
       sim_path = sim_path
    )
 }
+
+
+# validator for ogs5 class
+# define when all input objects have been defined
+# shoul dbe used right before printing og5-obj, or running simulations
