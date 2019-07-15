@@ -8,8 +8,9 @@
 
 input_add_pcs_bloc <- function(
                         x = list(),
-                        PROCESS = character(),
-                        PRIMARY_VARIABLE = character(),
+                        pcs_name = character(),
+                        PCS_TYPE = character(),
+                        PRIMARY_VARIABLE = NULL,
                         APP_TYPE = NULL,
                         BOUNDARY_CONDITION_OUTPUT = FALSE
                       ){
@@ -20,9 +21,31 @@ input_add_pcs_bloc <- function(
     }
   
     # look if ogs5-obj$input$pcs exists, otherwise create 
-    if (!("pcs" %in% names(mod3$input))) {
-        ogs5_obj$input$pcs <- lists() 
+    if (!("pcs" %in% names(x$input))) {
+       x$input$pcs <- list() 
+    } else {
+       
+       if (pcs_name %in% names(x$input$pcs)) {
+          stop("pcs_name does already exist", call. = FALSE)
+       }
+       
+       if (PCS_TYPE!="MASS_TRANSPORT" &&
+           PCS_TYPE %in% sapply(x$input$pcs, "[[", 1)
+          ) {
+          stop("PCS_TYPE does already exist", call. = FALSE)
+       }
     }
     
-    # now validate eac input argutment and add to pcs-list
+    # add sublist to pcs-list
+    x$input$pcs[[paste(pcs_name)]] <- list(
+    
+       "PCS_TYPE" = PCS_TYPE,
+       "PRIMARY_VARIABLE" =  PRIMARY_VARIABLE,
+       "APP_TYPE" = APP_TYPE,
+       "BOUNDARY_CONDITION_OUTPUT" = BOUNDARY_CONDITION_OUTPUT
+    
+       )
+
+    return(x)
+   
 }
