@@ -47,14 +47,14 @@ input_add_pcs_bloc <-
              ){
   
     # validate input
-    if (!class(x)=="ogs5") {
-      stop("x is not of class 'ogs5' ", call. = FALSE)
-    }
+    valid_ogs5(x)
     
-    # look if ogs5-obj$input$pcs exists, otherwise create 
+    # look if ogs5-obj$input$pcs exists and valid, otherwise create 
     if (!("pcs" %in% names(x$input))) {
-       x$input$pcs <- list()
+      x$input$pcs <- create_ogs5_pcs() 
     } else {
+       
+       valid_ogs5_pcs(x$input$pcs)
        
        if (pcs_name %in% names(x$input$pcs)) {
           stop("pcs_name does already exist", call. = FALSE)
@@ -67,10 +67,11 @@ input_add_pcs_bloc <-
        }
     }
     
-    # add sublist to pcs-list
-    x$input$pcs[[paste(pcs_name)]] <- list(
+    # create and add sublist to pcs-list
     
-       "APP_TYPE" = APP_TYPE,
+   x$input$pcs[[paste(pcs_name)]] <- list(
+       
+      "APP_TYPE" = APP_TYPE,
        "BOUNDARY_CONDITION_OUTPUT" = BOUNDARY_CONDITION_OUTPUT,
        "COUNT" = COUNT,
        "CPL_TYPE" = CPL_TYPE,
@@ -104,8 +105,11 @@ input_add_pcs_bloc <-
        "USE_VELOCITIES_FOR_TRANSPORT" = USE_VELOCITIES_FOR_TRANSPORT
        ) %>% 
        purrr::discard(is.null) %>% 
-       purrr::discard(isFALSE)
-
+       purrr::discard(isFALSE) %>% 
+       structure(class = "ogs5_pcs_process")
+    
+    valid_ogs5_pcs_process(x$input$pcs[[paste(pcs_name)]])
+   
     return(x)
    
 }
