@@ -41,11 +41,6 @@ input_add_st_bloc <-
             stop("st_name does already exist", call. = FALSE)
          }
          
-         if (PCS_TYPE!="MASS_TRANSPORT" &&
-             PCS_TYPE %in% sapply(x$input$st, "[[", 1)
-         ) {
-            stop("PCS_TYPE does already exist", call. = FALSE)
-         }
       }
       
       # create and add sublist to st-list
