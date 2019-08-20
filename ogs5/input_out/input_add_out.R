@@ -62,9 +62,9 @@ input_add_out_bloc <-
       "TIM_TYPE" = TIM_TYPE,
       "VARIABLESHARING" = VARIABLESHARING
       
-    ) %>% 
+      ) %>% 
       purrr::discard(is.null) %>% 
-      #purrr::discard(isFALSE) %>% 
+      purrr::discard(isFALSE) %>% 
       structure(class = "ogs5_out_bloc")
     
     valid_ogs5_out_bloc(x$input$out[[paste(out_name)]])
