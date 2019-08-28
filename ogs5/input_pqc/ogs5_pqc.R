@@ -21,3 +21,11 @@ valid_ogs5_pqc_skeybloc <- function(x){
   }
   
 }
+
+valid_ogs5_pqc <- function(x){
+  
+  if (!class(x)=="ogs5_pqc_filebloc"){
+    stop(paste(x, " is not of class 'ogs5_pqc_filebloc' "), call. = FALSE)
+  }
+  
+}

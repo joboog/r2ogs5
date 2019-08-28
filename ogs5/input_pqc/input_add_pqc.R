@@ -70,9 +70,9 @@ input_add_pqcfile_as_pqc_bloc <-
     pqc_file = read_file(file = pqc_filename)
     
     # create pqc-sublist
-    x$input$pqc <- pqc_file %>% structure(class = "ogs5_pqc")
+    x$input$pqc <- pqc_file %>% structure(class = "ogs5_pqc_filebloc")
     
-    valid_ogs5_pqc(x$input$pqc)
+    valid_ogs5_pqc_filebloc(x$input$pqc)
     
     return(x)
   }
