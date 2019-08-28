@@ -14,10 +14,10 @@ valid_ogs5_pqc <- function(x){
   
 }
 
-valid_ogs5_pqc_bloc <- function(x){
+valid_ogs5_pqc_skeybloc <- function(x){
   
-  if (!class(x)=="ogs5_pqc_bloc"){
-    stop(paste(x, " is not of class 'ogs5_pqc_bloc' "), call. = FALSE)
+  if (!class(x)=="ogs5_pqc_skeybloc"){
+    stop(paste(x, " is not of class 'ogs5_pqc_skeybloc' "), call. = FALSE)
   }
   
 }
