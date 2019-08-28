@@ -50,3 +50,29 @@ input_add_pqc_skeybloc <-
     return(x)
     
   }
+
+
+# function to read complete *.pqc file as pqc bloc ------------------------------
+
+input_add_pqcfile_as_pqc_bloc <- 
+  
+  function(x = list(), pqc_filename = character(NULL)){
+    
+    # validate input
+    valid_ogs5(x)
+    
+    # look if ogs5-obj$input$pqc exists and valid, otherwise create 
+    if ("pqc" %in% names(x$input)) {
+      stop("pqc bloc already defined", call. = FALSE)
+    }
+    
+    # read file
+    pqc_file = read_file(file = pqc_filename)
+    
+    # create pqc-sublist
+    x$input$pqc <- pqc_file %>% structure(class = "ogs5_pqc")
+    
+    valid_ogs5_pqc(x$input$pqc)
+    
+    return(x)
+  }
