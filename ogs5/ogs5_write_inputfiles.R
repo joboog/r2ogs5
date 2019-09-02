@@ -22,16 +22,22 @@
 #       cat
 #   }
 
-print_mkey_bloc <- function(bloc = list(), mkey = character(NULL)){
+
+# function to print an individual mkey bloc out of a ogs5_sublist --------
+# input: mkey_bloc = main keywword bloc; mkey = main (#) key word
+# define as class specific method?
+ogs5_print_mkey_bloc <- 
   
-  skey_str <- sapply(
-                names(bloc),
-                function(x) {
-                  paste0("\n", "$", x, "\n ",
-                         paste(bloc[[x]], collapse="")
-                  )
-                }
-              )
+  function(mkey_bloc = list(), mkey = character(NULL)){
   
-  cat(paste0("#", mkey), skey_str)
-}
+    skey_str <- sapply(
+                  names(mkey_bloc),
+                  function(x) {
+                    paste0("\n", "$", x, "\n ",
+                           paste(mkey_bloc[[x]], collapse=" ")
+                    )
+                  }
+                )
+    
+    cat(paste0("#", mkey), skey_str, "\n")
+  }
