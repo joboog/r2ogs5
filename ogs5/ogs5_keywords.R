@@ -450,3 +450,5 @@ ogs5_extract_ogs5_keywordlist <-
     }
     return(x)
   }
+
+ogs5_keywordlist <- ogs5_extract_ogs5_keywordlist(ogs5_keywordlist)
