@@ -41,7 +41,23 @@ ogs5_pcs_print_sublist <-
     cat("STOP", "\n")
   }
 
-
+# function to print ogs5_bc sublist ------------------------------------------
+ogs5_pcs_print_sublist <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_bc")
+    
+    ogs5_mkey <- ogs5_keywordlist$bc$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
   
 # function to print an individual mkey bloc out of a ogs5_sublist --------
 # input: mkey_bloc = main keywword bloc; mkey = main (#) key word
