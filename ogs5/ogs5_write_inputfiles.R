@@ -1,19 +1,32 @@
 # function to write ogs5-mkeybloc input files -------------------------------------
 
-#  write input file -------------------------------------------------------
-ogs5_write_inputfile <-
 
-  function(ogs5_obj = list(), type = character()){
+#  write input file -------------------------------------------------------
+ogs5_write_inputfiles <-
+
+  function(ogs5_obj = list(), type = "all"){
 
     # validate input
     valid_ogs5(ogs5_obj)
-    stopifnot(type %in% names(ogs5_keywordlist))
+    if (!(type %in% names(ogs5_keywordlist) | type == "all")) {
+      stop("wrong type entered", call. = FALSE)
+    }
     
-    # define input file name and list
-    filename <- paste0(attributes(ogs5_obj)$sim_name, ".", type)
-    ogs5_list <- ogs5_obj$input[[paste(type)]]
+    if (type == "all") {
     
-    ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
+    # loop through ogs5-obj and print all sublists
+     for (i in names(ogs5_obj$input)){
+       filename <- paste0(attributes(ogs5_obj)$sim_name, ".", i)
+       ogs5_list <- ogs5_obj$input[[paste(i)]]
+       ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))   
+     }
+    }
+    else {
+      
+      filename <- paste0(attributes(ogs5_obj)$sim_name, ".", type)
+      ogs5_list <- ogs5_obj$input[[paste(type)]]
+      ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))  
+    }
   }
 
 ogs5_write_tofile <- 
