@@ -23,6 +23,28 @@
 #   }
 
 
+#  write input file -------------------------------------------------------
+# ogs5_write_inputfile <- 
+#   
+#   function(type = character()){
+#     
+#     # check type if of: pcs, tim ...
+#     # define input file name
+#     # grab input text_objectfct
+#     # write file: ogs5_write_tofile
+#     
+#   }
+
+ogs5_write_tofile <- 
+  
+  function(filename = character(), text_output_fct){
+    #cat(text_output_fct)
+    sink(filename, type = "output")
+    text_output_fct
+    sink()
+  }
+
+
 # output simple sublist ---------------------------------------------
 
 ogs5_sublist_output <- 
@@ -55,6 +77,7 @@ ogs5_print_mkey_bloc <-
     cat(paste0("#", mkey), skey_str, "\n")
   }
 
+  
 # output ogs5_pcs sublist ------------------------------------------
 ogs5_pcs_list_output <- 
   
@@ -148,19 +171,6 @@ ogs5_fct_bloc_output <-
   }
 
 
-function(mkey_bloc = list(), mkey = character(NULL)){
-  
-  skey_str <- sapply(
-    names(mkey_bloc),
-    function(x) {
-      paste0("\n", "$", x, "\n ",
-             paste(mkey_bloc[[x]], collapse=" ")
-      )
-    }
-  )
-  
-  cat(paste0("#", mkey), skey_str, "\n")
-}
 # output ogs5_fct sublist ------------------------------------------
 
 # output ogs5_gem sublist ------------------------------------------
