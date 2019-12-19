@@ -24,38 +24,27 @@
 
 
 #  write input file -------------------------------------------------------
-# ogs5_write_inputfile <- 
-#   
-#   function(type = character()){
-#     
-#     # check type if of: pcs, tim ...
-#     # define input file name
-#     # grab input text_objectfct
-#     # write file: ogs5_write_tofile
-#     
-#   }
+ogs5_write_inputfile <-
+
+  function(ogs5_obj = list(), type = character()){
+
+    # validate input
+    valid_ogs5(ogs5_obj)
+    stopifnot(type %in% names(ogs5_keywordlist))
+    
+    # define input file name and list
+    filename <- paste0(attributes(ogs5_obj)$sim_name, ".", type)
+    ogs5_list <- ogs5_obj$input[[paste(type)]]
+    
+    ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
+  }
 
 ogs5_write_tofile <- 
   
   function(filename = character(), text_output_fct){
-    #cat(text_output_fct)
     sink(filename, type = "output")
     text_output_fct
     sink()
-  }
-
-
-# output simple sublist ---------------------------------------------
-
-ogs5_sublist_output <- 
-  function(ogs5_sublist = list(), ogs5_mkey = character()){
-    
-    for (i in seq_len(ogs5_sublist %>% length())){
-      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
-                           mkey = ogs5_mkey)
-      cat("\n")
-    }
-    cat("STOP", "\n")
   }
 
 # output an individual mkey bloc out of a ogs5_sublist -------------
@@ -79,9 +68,22 @@ ogs5_print_mkey_bloc <-
 
 
 # generic to output ogs5_sublist ------------------------------------------
-ogs5_list_output <- function(ogs5_sublist) {
+ogs5_list_output <- function(ogs5_sublist, ...) {
   UseMethod("ogs5_list_output")
 }
+
+## method to output simple sublist ---------------------------------------------
+# ogs5_list_output.default <- 
+#   function(ogs5_sublist = list(), ogs5_mkey = character()){
+#     
+#     for (i in seq_len(ogs5_sublist %>% length())){
+#       ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+#                            mkey = ogs5_mkey)
+#       cat("\n")
+#     }
+#     cat("STOP", "\n")
+#   }
+
 
 ## method for ogs5_pcs sublist ------------------------------------------
 ogs5_list_output.ogs5_pcs <- 
