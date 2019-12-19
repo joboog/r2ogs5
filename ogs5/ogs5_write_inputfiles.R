@@ -108,7 +108,24 @@ ogs5_list_output.ogs5_bc <-
     }
     cat("STOP", "\n")
   }
+
+## method for ogs5_ic sublist ------------------------------------------
+ogs5_list_output.ogs5_ic <- 
   
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_ic")
+    
+    ogs5_mkey <- ogs5_keywordlist$ic$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 
 ## method for ogs5_cct sublist ------------------------------------------
 ogs5_list_output.ogs5_cct <- 
@@ -168,8 +185,6 @@ ogs5_fct_bloc_output <-
   }
 
 
-# output ogs5_fct sublist ------------------------------------------
-
 # output ogs5_gem sublist ------------------------------------------
 
 # output ogs5_gli sublist ------------------------------------------
@@ -178,19 +193,114 @@ ogs5_fct_bloc_output <-
 
 # output ogs5_krc sublist ------------------------------------------
 
-# output ogs5_mcp sublist ------------------------------------------
+## method for ogs5_mcp sublist ------------------------------------------
+ogs5_list_output.ogs5_mcp <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_mcp")
+    
+    ogs5_mkey <- ogs5_keywordlist$mcp$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 
-# output ogs5_mfp sublist ------------------------------------------
+## method for ogs5_mfp sublist ------------------------------------------
+ogs5_list_output.ogs5_mfp <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_mfp")
+    
+    ogs5_mkey <- ogs5_keywordlist$mfp$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 
-# output ogs5_mmp sublist ------------------------------------------
-
+# method for ogs5_mmp sublist ------------------------------------------
+ogs5_list_output.ogs5_mmp <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_mmp")
+    
+    ogs5_mkey <- ogs5_keywordlist$mmp$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 # output ogs5_msh sublist ------------------------------------------
 
-# output ogs5_msp sublist ------------------------------------------
+# method for ogs5_msp sublist ------------------------------------------
+ogs5_list_output.ogs5_msp <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_msp")
+    
+    ogs5_mkey <- ogs5_keywordlist$msp$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 
-# output ogs5_num sublist ------------------------------------------
+# method for ogs5_num sublist ------------------------------------------
+ogs5_list_output.ogs5_num <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_num")
+    
+    ogs5_mkey <- ogs5_keywordlist$num$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 
-# output ogs5_out sublist ------------------------------------------
+# method for ogs5_out sublist ------------------------------------------
+ogs5_list_output.ogs5_out <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_out")
+    
+    ogs5_mkey <- ogs5_keywordlist$out$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 
 # output ogs5_pqc sublist ------------------------------------------
 
@@ -198,8 +308,39 @@ ogs5_fct_bloc_output <-
 
 # output ogs5_rfd sublist ------------------------------------------
 
-# output ogs5_st sublist ------------------------------------------
+# method for ogs5_st sublist ------------------------------------------
+ogs5_list_output.ogs5_st <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_st")
+    
+    ogs5_mkey <- ogs5_keywordlist$st$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 
-# output ogs5_tim sublist ------------------------------------------
-
+# method for ogs5_tim sublist ------------------------------------------
+ogs5_list_output.ogs5_tim <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_tim")
+    
+    ogs5_mkey <- ogs5_keywordlist$tim$mkey
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("STOP", "\n")
+  }
 
