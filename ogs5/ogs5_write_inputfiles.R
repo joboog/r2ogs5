@@ -1,28 +1,5 @@
 # function to write ogs5-mkeybloc input files -------------------------------------
 
-#todo
-# input: ogs5-mkey_bloc
-# output: 
-
-# write_ogs5_inputfile_bloc <- 
-#   
-#   function(x = list(), bloc_class = character()){
-#     
-#     
-#     # check x
-#     
-#     # check bloc_class
-#     
-#     # write bloc
-#     mkey = "PROCESS"
-#     sapply(
-#       names(a),
-#       function(x) paste0("#", mkey, "\n", "$", x, "\n ", paste(a[[x]], collapse=""), "\n")
-#       ) %>%
-#       cat
-#   }
-
-
 #  write input file -------------------------------------------------------
 ogs5_write_inputfile <-
 
