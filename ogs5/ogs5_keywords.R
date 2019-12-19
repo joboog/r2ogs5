@@ -187,7 +187,7 @@ ogs5_keywordlist$mcp$skey <- "$ACENTRIC_FACTOR
                         $VOLUME_DIFFUSION "
 
 # mfp ---------------------------------------------------------------------
-ogs5_keywordlist$mfp$mkey <- "'FLUID_PROPERTIES"
+ogs5_keywordlist$mfp$mkey <- "#FLUID_PROPERTIES"
 ogs5_keywordlist$mfp$skey <- "$COMPONENTS
                         $COMPRESSIBILITY
                         $DAT_TYPE
@@ -210,8 +210,7 @@ ogs5_keywordlist$mfp$skey <- "$COMPONENTS
                         $VISCOSITY "
 
 # mmp ---------------------------------------------------------------------
-ogs5_keywordlist$mmp$mkey <- "#MEDIUM_PROPERTIES
-                        #MEDIUM_PROPERTIES_DISTRIBUTED "
+ogs5_keywordlist$mmp$mkey <- "#MEDIUM_PROPERTIES" #MEDIUM_PROPERTIES_DISTRIBUTED "
 ogs5_keywordlist$mmp$skey <- "$CAPILLARY_PRESSURE
                         $CHANNEL
                         $COMPOUND_DEPENDENT_DT
