@@ -77,9 +77,14 @@ ogs5_print_mkey_bloc <-
     cat(paste0("#", mkey), skey_str, "\n")
   }
 
-  
-# output ogs5_pcs sublist ------------------------------------------
-ogs5_pcs_list_output <- 
+
+# generic to output ogs5_sublist ------------------------------------------
+ogs5_list_output <- function(ogs5_sublist) {
+  UseMethod("ogs5_list_output")
+}
+
+## method for ogs5_pcs sublist ------------------------------------------
+ogs5_list_output.ogs5_pcs <- 
   
   function(ogs5_sublist){
     
@@ -94,8 +99,8 @@ ogs5_pcs_list_output <-
     cat("STOP", "\n")
   }
 
-# output ogs5_bc sublist ------------------------------------------
-ogs5_bc_list_output <- 
+## method for ogs5_bc sublist ------------------------------------------
+ogs5_list_output.ogs5_bc <- 
   
   function(ogs5_sublist){
     
@@ -113,8 +118,8 @@ ogs5_bc_list_output <-
   }
   
 
-# output ogs5_cct sublist ------------------------------------------
-ogs5_cct_list_output <- 
+## method for ogs5_cct sublist ------------------------------------------
+ogs5_list_output.ogs5_cct <- 
   
   function(ogs5_sublist){
     
@@ -131,8 +136,8 @@ ogs5_cct_list_output <-
     cat("STOP", "\n")
   }
 
-# output ogs5_fct sublist ------------------------------------------
-ogs5_fct_list_output <- 
+## method for ogs5_fct sublist ------------------------------------------
+ogs5_list_output.ogs5_fct <- 
   
   function(ogs5_sublist){
     
