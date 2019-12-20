@@ -400,8 +400,8 @@ ogs5_keywordlist$rei$skey <- "$ALL_PCS_DUMP
                         $WATER_SPECIES_NAME "
 
 # rfd ---------------------------------------------------------------------
-ogs5_keywordlist$st$mkey <- "#CURVES" #CURVE
-ogs5_keywordlist$st$skey <- "$INTERPOLATION
+ogs5_keywordlist$rfd$mkey <- "#CURVES" #CURVE
+ogs5_keywordlist$rfd$skey <- "$INTERPOLATION
                         $MSH_TYPE"
                         
 # tim ---------------------------------------------------------------------
