@@ -360,7 +360,7 @@ ogs5_list_output.ogs5_msp <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("#STOP", "\n")
+    cat("STOP", "\n")
   }
 
 # method for ogs5_num sublist ------------------------------------------
@@ -378,7 +378,7 @@ ogs5_list_output.ogs5_num <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("#STOP", "\n")
+    cat("STOP", "\n")
   }
 
 # method for ogs5_out sublist ------------------------------------------
@@ -396,7 +396,7 @@ ogs5_list_output.ogs5_out <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("#STOP", "\n")
+    cat("STOP", "\n")
   }
 
 # output ogs5_pqc sublist ------------------------------------------
@@ -415,7 +415,7 @@ ogs5_list_output.ogs5_rfd <-
       ogs5_print_rfd_mkey_bloc(mkey_bloc = ogs5_sublist[[i]])
       cat("\n")
     }
-    cat("#STOP", "\n")
+    cat("STOP", "\n")
   }
 
 
@@ -435,12 +435,11 @@ ogs5_print_rfd_mkey_bloc <-
                         paste(mkey_bloc$MSH_TYPE, collapse=" "))
     }else msh_str <- ""
     
-    cat(paste0("#", mkey), int_str, msh_str, "\n")
+    cat(paste0("#", mkey), int_str, msh_str, "\n", "$DATA")
     
-    df <- mkey_bloc$data %>% 
-          as.data.frame()
-    names(df) <- NULL
-    df %>% print(row.names = FALSE)
+    mkey_bloc$data %>% 
+      as.data.frame() %>% 
+      print(row.names = FALSE)
     
     cat("\n")
   }
@@ -461,7 +460,7 @@ ogs5_list_output.ogs5_st <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("#STOP", "\n")
+    cat("STOP", "\n")
   }
 
 # method for ogs5_tim sublist ------------------------------------------
@@ -479,6 +478,6 @@ ogs5_list_output.ogs5_tim <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("#STOP", "\n")
+    cat("STOP", "\n")
   }
 
