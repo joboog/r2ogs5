@@ -399,6 +399,11 @@ ogs5_keywordlist$rei$skey <- "$ALL_PCS_DUMP
                         $WATER_SATURATION_LIMIT
                         $WATER_SPECIES_NAME "
 
+# rfd ---------------------------------------------------------------------
+ogs5_keywordlist$st$mkey <- "#CURVES" #CURVE
+ogs5_keywordlist$st$skey <- "$INTERPOLATION
+                        $MSH_TYPE"
+                        
 # tim ---------------------------------------------------------------------
 ogs5_keywordlist$tim$mkey <- "#TIME_STEPPING"
 ogs5_keywordlist$tim$skey <- "$CRITICAL_TIME
