@@ -81,6 +81,21 @@ ex1 <- input_add_tim_bloc(x = ex1,  tim_name = "tracer",
                           PCS_TYPE = "MASS_TRANSPORT", TIME_START = "0",
                           TIME_END = "36000000", TIME_STEPS = "229 3600")
 
+# add rfd
+ex1 <- input_add_rfd_bloc(x = ex1, rfd_name = "tracer", mkey = "CURVES", 
+                          data = tibble(time=c(0, 3600, 3600.1, 720, 36000000),
+                                        conc=c(1,1,0,0,0)))
+
+# add gli
+ex1 <- input_add_gli_points(x = ex1, ogs5_points = tibble(x = c(0, 4.7), y = c(0,0), 
+                                                          z = c(0,0), name = c("POINT 0", "POINT 1")))
+
+# ad msh bloc
+ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base", 
+                          NODES = tibble(x=seq(0:5), y = rep(0,6), z = rep(0,6)),
+                          ELEMENTS = tibble(material_id = rep(0,5), ele_type = c(rep("line", 4), "tri"),
+                                            node1 = seq(0:4), node2 = seq(1:5), node3 = c(rep(NA,4), 2))
+        )
 
 # write input files -------------------------------------------------------
 
@@ -96,6 +111,12 @@ ogs5_write_inputfiles(ex1, "num")
 ogs5_write_inputfiles(ex1, "out")
 ogs5_write_inputfiles(ex1, "st")
 ogs5_write_inputfiles(ex1, "tim")
+ogs5_write_inputfiles(ex1, "rfd")
+ogs5_write_inputfiles(ex1, "gli")
+ogs5_write_inputfiles(ex1, "msh")
+
+
+# missing
 
 # write all files
 ogs5_write_inputfiles(ex1, "all")
