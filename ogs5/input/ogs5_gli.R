@@ -11,7 +11,6 @@ valid_ogs5_gli <- function(x){
    if (!class(x)=="ogs5_gli"){
       stop(paste(x, " is not of class 'ogs5_gli' "), call. = FALSE)
    }
-   
 }
 
 valid_ogs5_gli_points <- function(x){
@@ -27,21 +26,43 @@ valid_ogs5_gli_points <- function(x){
        ){
       stop(paste(x, " column names do not fit to 'x, y, z, name' "))
    }
+}
+
+create_ogs5_gli_polylines <- function(){
+   
+   list() %>% structure(class = "ogs5_gli_polylines")
    
 }
 
-valid_ogs5_gli_ply <- function(x){
+valid_ogs5_gli_polylines <- function(x){
+   
+   if (!class(x)=="ogs5_gli_polylines"){
+      stop(paste(x, " is not of class 'ogs5_gli_polylines' "), call. = FALSE)
+   }
+}
+
+valid_ogs5_gli_polyline <- function(x){
    
    if (!class(x)=="ogs5_gli_polyline"){
       stop(paste(x, " is not of class 'ogs5_gli_polyline' "), call. = FALSE)
    }
+}
+
+create_ogs5_gli_surfaces <- function(){
+   
+   list() %>% structure(class = "ogs5_gli_surfaces")
    
 }
 
-valid_ogs5_gli_point <- function(x){
+valid_ogs5_gli_surfaces <- function(x){
+   
+   if (!class(x)=="ogs5_gli_surfaces"){
+      stop(paste(x, " is not of class 'ogs5_gli_surfaces' "), call. = FALSE)
+   }}
+   
+valid_ogs5_gli_surface <- function(x){
    
    if (!class(x)=="ogs5_gli_surface"){
       stop(paste(x, " is not of class 'ogs5_gli_surface' "), call. = FALSE)
    }
-   
 }
