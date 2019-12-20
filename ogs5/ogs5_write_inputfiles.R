@@ -290,9 +290,60 @@ ogs5_list_output.ogs5_mmp <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
-# output ogs5_msh sublist ------------------------------------------
+
+# method for ogs5_msh sublist ------------------------------------------
+ogs5_list_output.ogs5_msh <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_msh")
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_msh_mkey_bloc(mkey_bloc = ogs5_sublist[[i]])
+      cat("\n")
+    }
+    cat("#STOP", "\n")
+  }
+
+
+ogs5_print_msh_mkey_bloc <- 
+  
+  function(mkey_bloc = list()) {
+    
+    mkey <- "FEM_MESH"
+    skeys <- names(mkey_bloc)[names(mkey_bloc) != "ELEMENTS" &
+                                names(mkey_bloc) != "NODES"]
+    skey_str <- sapply(
+      skeys,
+      function(x) {
+        paste0("\n", "$", x, "\n ",
+               paste(mkey_bloc[[x]], collapse=" ")
+        )
+      }
+    )
+    cat(paste0("#", mkey), skey_str, "\n")
+    
+    # print NODES
+    df <- mkey_bloc$NODES %>% 
+          as.data.frame()
+    rownames(df) <- rownames(df) %>% as.numeric() %>% -1
+    names(df) <- NULL
+    cat("$NODES\n", length(df[[1]]))
+    df %>% print(row.names = TRUE)
+    
+    # print ELEMENTS
+    df <- mkey_bloc$ELEMENTS %>%
+          replace_na(list(node3 = "", node4 = "", node5 = "",
+                          node6 = "", node7 = "", node8 = "")) %>% 
+          as.data.frame() 
+    rownames(df) <- rownames(df) %>% as.numeric() %>% -1
+    names(df) <- NULL
+    cat("$ELEMENTS\n", length(df[[1]]))
+    df %>% print(row.names = TRUE)
+  }
 
 # method for ogs5_msp sublist ------------------------------------------
 ogs5_list_output.ogs5_msp <- 
