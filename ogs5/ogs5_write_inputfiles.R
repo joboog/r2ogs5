@@ -187,7 +187,53 @@ ogs5_fct_bloc_output <-
 
 # output ogs5_gem sublist ------------------------------------------
 
-# output ogs5_gli sublist ------------------------------------------
+# method for ogs5_gli sublist ------------------------------------------
+ogs5_list_output.ogs5_gli <- 
+  
+  function(ogs5_sublist){
+    
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_gli")
+    
+    for (i in seq_len(ogs5_sublist %>% length())){
+      
+      # print points
+      if ("points" == names(ogs5_sublist[i])){
+        
+        cat("#POINTS\n")
+        
+        df <- ogs5_sublist[[i]] %>% 
+              as.data.frame() 
+        names(df) <- NULL
+        df %>% print(row.names = TRUE)
+        
+        cat("\n")
+      }
+      
+      # print ply and srf
+      if ("polylines" == names(ogs5_sublist[i])){
+        
+        ogs5_mkey = "POLYLINE"
+        for (j in seq_len(ogs5_sublist[[i]] %>% length())){
+          ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]][[j]],
+                               mkey = ogs5_mkey)
+          cat("\n")
+        }
+      }
+      
+      if ("surfaces" == names(ogs5_sublist[i])){
+        
+        ogs5_mkey = "SURFACE"
+        for (j in seq_len(ogs5_sublist[[i]] %>% length())){
+          ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]][[j]],
+                               mkey = ogs5_mkey)
+          cat("\n")
+        }
+      }
+    }
+    cat("STOP", "\n")
+  }
+
 
 # output ogs5_ic sublist ------------------------------------------
 
