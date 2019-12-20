@@ -71,7 +71,7 @@ ogs5_list_output <- function(ogs5_sublist, ...) {
 #                            mkey = ogs5_mkey)
 #       cat("\n")
 #     }
-#     cat("STOP", "\n")
+#     cat("#STOP", "\n")
 #   }
 
 
@@ -88,7 +88,7 @@ ogs5_list_output.ogs5_pcs <-
                            mkey = "PROCESS")
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 ## method for ogs5_bc sublist ------------------------------------------
@@ -106,7 +106,7 @@ ogs5_list_output.ogs5_bc <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 ## method for ogs5_ic sublist ------------------------------------------
@@ -124,7 +124,7 @@ ogs5_list_output.ogs5_ic <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 ## method for ogs5_cct sublist ------------------------------------------
@@ -142,7 +142,7 @@ ogs5_list_output.ogs5_cct <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 ## method for ogs5_fct sublist ------------------------------------------
@@ -158,7 +158,7 @@ ogs5_list_output.ogs5_fct <-
                           mkey = "FUNCTION")
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 
@@ -181,7 +181,7 @@ ogs5_fct_bloc_output <-
                           mkey = "FUNCTION")
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 
@@ -231,7 +231,7 @@ ogs5_list_output.ogs5_gli <-
         }
       }
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 
@@ -254,7 +254,7 @@ ogs5_list_output.ogs5_mcp <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 ## method for ogs5_mfp sublist ------------------------------------------
@@ -272,7 +272,7 @@ ogs5_list_output.ogs5_mfp <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 # method for ogs5_mmp sublist ------------------------------------------
@@ -360,7 +360,7 @@ ogs5_list_output.ogs5_msp <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 # method for ogs5_num sublist ------------------------------------------
@@ -378,7 +378,7 @@ ogs5_list_output.ogs5_num <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 # method for ogs5_out sublist ------------------------------------------
@@ -396,7 +396,7 @@ ogs5_list_output.ogs5_out <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 # output ogs5_pqc sublist ------------------------------------------
@@ -415,7 +415,7 @@ ogs5_list_output.ogs5_rfd <-
       ogs5_print_rfd_mkey_bloc(mkey_bloc = ogs5_sublist[[i]])
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 
@@ -460,7 +460,7 @@ ogs5_list_output.ogs5_st <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
 # method for ogs5_tim sublist ------------------------------------------
@@ -478,6 +478,6 @@ ogs5_list_output.ogs5_tim <-
                            mkey = ogs5_mkey)
       cat("\n")
     }
-    cat("STOP", "\n")
+    cat("#STOP", "\n")
   }
 
