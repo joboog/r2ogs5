@@ -307,19 +307,15 @@ ogs5_list_output.ogs5_out <-
 # output ogs5_rei sublist ------------------------------------------
 
 # method for ogs5_rfd sublist ------------------------------------------
-ogs5_list_output.ogs5_rfd_bloc <- 
+ogs5_list_output.ogs5_rfd <- 
   
   function(ogs5_sublist){
     
     # check ogs5_sublist
-    stopifnot(class(ogs5_sublist) == "ogs5_rfd_bloc")
-    
-    ogs5_mkey <- ogs5_sublist$mkey
-    ogs5_sublist$mkey <- NULL
+    stopifnot(class(ogs5_sublist) == "ogs5_rfd")
     
     for (i in seq_len(ogs5_sublist %>% length())){
-      ogs5_print_rfd_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
-                               mkey = ogs5_mkey)
+      ogs5_print_rfd_mkey_bloc(mkey_bloc = ogs5_sublist[[i]])
       cat("\n")
     }
     cat("STOP", "\n")
@@ -328,16 +324,9 @@ ogs5_list_output.ogs5_rfd_bloc <-
 
 ogs5_print_rfd_mkey_bloc <- 
   
-  function(mkey_bloc = list(), mkey = character(NULL)){
+  function(mkey_bloc = list()) {
     
-    skey_str <- sapply(
-      names(mkey_bloc),
-      function(x) {
-        paste0("\n", "$", x, "\n ",
-               paste(mkey_bloc[[x]], collapse=" ")
-        )
-      }
-    )
+    mkey <- mkey_bloc$mkey
     
     if ("INTERPOLATION" %in% names(mkey_bloc)){
       int_str <- paste0("\n", "$INTERPOLATION", "\n",
@@ -349,7 +338,7 @@ ogs5_print_rfd_mkey_bloc <-
                         paste(mkey_bloc$MSH_TYPE, collapse=" "))
     }else msh_str <- ""
     
-    cat(paste0("#", mkey), int_str, msh_str, "\n")
+    cat(paste0("#", mkey), int_str, msh_str, "\n", "$DATA")
     
     mkey_bloc$data %>% 
       as.data.frame() %>% 
