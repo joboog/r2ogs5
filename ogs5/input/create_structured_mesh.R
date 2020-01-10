@@ -50,7 +50,7 @@ create_1d_node_df <- function(base_vector = numeric(), dimension = i){
 
 
 # main function
-create_structured_mesh <- 
+create_structured_mesh_nodes_ele <- 
   
   function(
     origin = c(0,0,0),
@@ -58,7 +58,8 @@ create_structured_mesh <-
     ly = NULL, ny = NULL, sy = NULL,
     lz = NULL, nz = NULL, sz = NULL
   ){
-  
+  # returns a list with a tibble for nodes and elements
+    
   # comp base vectors
   if (!(is.null(lx)) & !(is.null(nx))){
     x_vector <- comp_coordinate_vector(origin = origin, d = 1,
@@ -124,7 +125,7 @@ create_structured_mesh <-
                      node2 = node1 + 1)
   }
   
-  return(list(node_df, ele_df))
+  return(list(NODES = node_df, ELEMENTS = ele_df))
 }
 
 
