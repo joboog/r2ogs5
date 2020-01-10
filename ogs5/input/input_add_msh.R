@@ -6,7 +6,7 @@ input_add_msh_bloc <-
     AREA = NULL,
     AXISYMMETRY = NULL,
     CROSS_SECTION = NULL,
-    ELEMENTS = tibble(), # material_id ele_type ele_1 ele2 (ele3, ele4)
+    ELEMENTS = tibble(), # material_id ele_type node1 node2 (node3, node4)
     GEO_NAME = NULL,
     GEO_TYPE = NULL,
     LAYER = NULL,
@@ -42,7 +42,7 @@ input_add_msh_bloc <-
     }
     
     # check NODES
-    if (!all(c("x", "y", "z") %in% names(ELEMENTS))){
+    if (!all(c("x", "y", "z") %in% names(NODES))){
       stop("NODES has to have headers: 'x', 'y', 'z'",
            call. = FALSE)
     }
