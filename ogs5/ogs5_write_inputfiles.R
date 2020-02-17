@@ -4,12 +4,16 @@
 #  write input file -------------------------------------------------------
 ogs5_write_inputfiles <-
 
-  function(ogs5_obj = list(), type = "all", folderpath = character("./")){
+  function(ogs5_obj = list(), type = "all", folderpath = NULL){
 
     # validate input
     valid_ogs5(ogs5_obj)
     if (!(type %in% names(ogs5_keywordlist) | type == "all")) {
       stop("wrong type entered", call. = FALSE)
+    }
+    
+    if (is.null(folderpath)){
+      folderpath <- str_c(attributes(ogs5_obj$sim_path), "/")
     }
     
     if (type == "all") {
