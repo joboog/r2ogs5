@@ -314,7 +314,7 @@ ogs5_print_msh_mkey_bloc <-
   
   function(mkey_bloc = list()) {
     
-    mkey <- "FEM_MESH"
+    mkey <- "FEM_MSH"
     skeys <- names(mkey_bloc)[names(mkey_bloc) != "ELEMENTS" &
                                 names(mkey_bloc) != "NODES"]
     skey_str <- sapply(
