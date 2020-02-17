@@ -88,14 +88,14 @@ ex1 <- input_add_rfd_bloc(x = ex1, rfd_name = "tracer", mkey = "CURVES",
 
 # add gli
 ex1 <- input_add_gli_points(x = ex1, ogs5_points = tibble(x = c(0, 4.7), y = c(0,0), 
-                                                          z = c(0,0), name = c("POINT 0", "POINT 1")))
+                                                          z = c(0,0), name = c("point0", "point1")))
 
 # ad msh bloc
-ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base", 
-                          NODES = tibble(x=seq(0:5), y = rep(0,6), z = rep(0,6)),
-                          ELEMENTS = tibble(material_id = rep(0,5), ele_type = c(rep("line", 4), "tri"),
-                                            node1 = seq(0:4), node2 = seq(1:5), node3 = c(rep(NA,4), 2))
-        )
+mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
+ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh", 
+                          NODES = mesh_lst[[1]],
+                          ELEMENTS = mesh_lst[[2]])
+      
 
 # write input files -------------------------------------------------------
 
@@ -116,7 +116,11 @@ ogs5_write_inputfiles(ex1, "gli")
 ogs5_write_inputfiles(ex1, "msh")
 
 
-# missing
-
 # write all files
 ogs5_write_inputfiles(ex1, "all")
+
+# run simulaiton
+ogs5_run(ogs5_obj = ex1, exe_path = "/home/boog/ufz/08_hiwi_envinf/03_ogs5/ogs_5.76/bin",
+         run_path = NULL, 
+         log_output = FALSE,
+         log_path = "test/ex1/log")
