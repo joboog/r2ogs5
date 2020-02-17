@@ -13,14 +13,14 @@ ogs5_write_inputfiles <-
     }
     
     if (is.null(folderpath)){
-      folderpath <- str_c(attributes(ogs5_obj$sim_path), "/")
+      folderpath <- paste0(attributes(ogs5_obj)$sim_path, "/")
     }
     
     if (type == "all") {
     
     # loop through ogs5-obj and print all sublists
      for (i in names(ogs5_obj$input)){
-       filename <- paste0(attributes(ogs5_obj)$sim_name, ".", i)
+       filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", i)
        ogs5_list <- ogs5_obj$input[[paste(i)]]
        ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))   
      }
