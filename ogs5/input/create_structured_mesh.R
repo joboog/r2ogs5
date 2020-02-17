@@ -43,7 +43,7 @@ create_1d_node_df <- function(base_vector = numeric(), dimension = i){
                     y = vector(mode = "numeric", length = length(base_vector)),
                     z = vector(mode = "numeric", length = length(base_vector)))
   
-  node_df[,i] <- base_vector
+  node_df[, dimension] <- base_vector
   return(node_df)
 }
 
@@ -109,14 +109,21 @@ create_structured_mesh_nodes_ele <-
   # create 1d line mesh -----------------------------------------------------
   if (length(mesh_dim[mesh_dim==TRUE]) == 1) {
     # call fct to compute line mesh
-    for (i in 1:3){
-      if (mesh_dim[i] == TRUE) break
-    }
+    dim = 0
+    repeat{
+      dim = dim + 1
+      if (mesh_dim[dim] == TRUE){
+        break
+    }}
+    
+    # for (i in 1:3){
+    #   if (mesh_dim[i] == TRUE) break
+    # }
     
     # create node_df
-    if (i == 1) node_df <- create_1d_node_df(base_vector = x_vector, dimension = i)
-    if (i == 2) node_df <- create_1d_node_df(base_vector = y_vector, dimension = i)
-    if (i == 3) node_df <- create_1d_node_df(base_vector = z_vector, dimension = i)
+    if (dim == 1) node_df <- create_1d_node_df(base_vector = x_vector, dimension = dim)
+    if (dim == 2) node_df <- create_1d_node_df(base_vector = y_vector, dimension = dim)
+    if (dim == 3) node_df <- create_1d_node_df(base_vector = z_vector, dimension = dim)
     
     # create element_df
     ele_df <- tibble(material_id = vector("numeric", length(node_df[[1]])-1),
