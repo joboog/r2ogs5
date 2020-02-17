@@ -28,6 +28,15 @@ input_add_msh_bloc <-
         stop("msh_name does already exist", call. = FALSE)
       }
       
+      # check if basemesh (mesh without PCS definitoin exist, there is only one basemesh allowed)
+      exist_base_mesh = FALSE
+      for (mesh in x$input$msh) {
+        if (mesh$PCS_TYPE == "NO_PCS") exist_base_mesh = TRUE
+      }
+      if (exist_base_mesh == TRUE && PCS_TYPE == "NO_PCS"){
+        stop("A base mesh (mesh without PCS_TYPE defined) does already exist. You can have only one base mesh.", call. = FALSE)
+      }
+      
       if (PCS_TYPE!="MASS_TRANSPORT" &&
           PCS_TYPE %in% sapply(x$input$msh, "[[", 1)
       ) {
@@ -36,12 +45,22 @@ input_add_msh_bloc <-
     }
     
     # check ELEMENTS
+    if (!(is_tibble(ELEMENTS))){
+      stop("ELEMENTS has to be a 'tibble' ",
+           call. = FALSE)
+    }
+    
     if (!all(c("material_id", "ele_type", "node1", "node2") %in% names(ELEMENTS))){
       stop("ELEMENTS has to have headers: 'material_id', 'ele_type', 'node1', 'node2', ...",
            call. = FALSE)
     }
     
     # check NODES
+    if (!(is_tibble(NODES))){
+      stop("NODES has to be a 'tibble' ",
+           call. = FALSE)
+    }
+    
     if (!all(c("x", "y", "z") %in% names(NODES))){
       stop("NODES has to have headers: 'x', 'y', 'z'",
            call. = FALSE)
