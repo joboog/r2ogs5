@@ -36,20 +36,75 @@ comp_coordinate_vector <- function(origin = numeric(), d = numeric(),
   return(x_cords)
 }
 
-# create 1d df of nodes
-create_1d_node_df <- function(base_vector = numeric(), dimension = i){
+# compute hex element df ----------------------------------------------------
+generateRegHexEle <- function(x_vector = numeric(), y_vector = numeric(),
+                              z_vector = numeric()){
+  # this code is adapted from ogs6::generateRegularHexMesh()
   
-  node_df <- tibble(x = vector(mode = "numeric", length = length(base_vector)),
-                    y = vector(mode = "numeric", length = length(base_vector)),
-                    z = vector(mode = "numeric", length = length(base_vector)))
+  n_nodes_x <- length(x_vector)
+  n_nodes_y <- length(y_vector)
+  n_nodes_z <- length(z_vector)
+  n_ele_x <- length(x_vector)-1
+  n_ele_y <- length(y_vector)-1
+  n_ele_z <- length(z_vector)-1
+  ele_df <- tibble(ele_type = character(), node1 = numeric(), node2 = numeric(),
+                  node3 = numeric(), node4 = numeric(),node5 = numeric(),
+                  node6 = numeric(), node7 = numeric(), node8 = numeric())
   
-  node_df[, dimension] <- base_vector
-  return(node_df)
+  for (i in 0:(n_ele_z-1)){
+    
+    offset_z1 <- i * n_nodes_x * n_nodes_y
+    offset_z2 <- (i+1) * n_nodes_x * n_nodes_y
+    for (j in 0:(n_ele_y-1)){
+      
+      offset_y1 <- j * n_nodes_x 
+      offset_y2 <- (j+1) * n_nodes_x
+      for (k in 0:(n_ele_x-1)){
+        ele_df <- add_row(.data = ele_df,
+                          ele_type = "hex",
+                          node1 = offset_z1 + offset_y1 + k,
+                          node2 = offset_z1 + offset_y1 + k + 1,
+                          node3 = offset_z1 + offset_y2 + k + 1,
+                          node4 = offset_z1 + offset_y2 + k,
+                          node5 = offset_z2 + offset_y1 + k,
+                          node6 = offset_z2 + offset_y1 + k + 1,
+                          node7 = offset_z2 + offset_y2 + k + 1,
+                          node8 = offset_z2 + offset_y2 + k)
+      }
+    }
+  }
+  return((ele_df))
 }
 
+# compute quad element df ----------------------------------------------------
+generateRegQuadEle <- function(vector1 = numeric(), vector2 = numeric()){
+  # this code is adapted from ogs6::generateRegularHexMesh()
+  
+  n_nodes1 <- length(vector1)
+  n_nodes2 <- length(vector2)
+  n_ele1 <- length(vector1)-1
+  n_ele2 <- length(vector2)-1
+  ele_df <- tibble(ele_type = character(), node1 = numeric(), node2 = numeric(),
+                  node3 = numeric(), node4 = numeric())
+  
+  for (j in 0:(n_ele2-1)){
+    
+    offset_v1_1 <- j * n_nodes1
+    offset_v2_2 <- (j+1) * n_nodes1
+    for (k in 0:(n_ele1-1)){
+      ele_df <- add_row(.data = ele_df,
+                       ele_type = "quad",
+                       node1 = offset_v1_1 + k,
+                       node2 = offset_v1_1 + k + 1,
+                       node3 = offset_v2_2 + k + 1,
+                       node4 = offset_v2_2 + k)
+    }
+  }
+  return((ele_df))
+}
 
+# main functoin -----------------------------------------------------------
 
-# main function
 create_structured_mesh_nodes_ele <- 
   
   function(
@@ -60,80 +115,80 @@ create_structured_mesh_nodes_ele <-
   ){
   # returns a list with a tibble for nodes and elements
     
+  # set mesh_dim
+  mesh_dim <- c(FALSE, FALSE, FALSE)
+  
   # comp base vectors
   if (!(is.null(lx)) & !(is.null(nx))){
     x_vector <- comp_coordinate_vector(origin = origin, d = 1,
                                        dist = lx, n_ele = nx)
+    mesh_dim[1] <- TRUE
   } 
   
   if (!(is.null(lx)) & !(is.null(sx))){
     x_vector <- comp_coordinate_vector(origin = origin, d = 1,
                                        dist = lx, s_ele = sx)
+    mesh_dim[1] <- TRUE
   } 
   
   if (!(is.null(ly)) & !(is.null(ny))){
     y_vector <- comp_coordinate_vector(origin = origin, d = 2,
                                        dist = ly, n_ele = ny)
+    mesh_dim[2] <- TRUE
   } 
   
   if (!(is.null(ly)) & !(is.null(sy))){
     y_vector <- comp_coordinate_vector(origin = origin, d = 2,
                                        dist = ly, s_ele = sy)
+    mesh_dim[2] <- TRUE
   } 
   
   if (!(is.null(lz)) & !(is.null(nz))){
     z_vector <- comp_coordinate_vector(origin = origin, d = 3,
                                        dist = lz, n_ele = nz)
+    mesh_dim[3] <- TRUE
   } 
   
   if (!(is.null(lz)) & !(is.null(sz))){
     z_vector <- comp_coordinate_vector(origin = origin, d = 3,
                                        dist = lz, s_ele = sz)
+    mesh_dim[3] <- TRUE
   } 
   
-  # check dimension
-  mesh_dim <- c(FALSE, FALSE, FALSE)
+  # compute nodes_df
+  if (mesh_dim[1] == FALSE) x_vector <- 0
+  if (mesh_dim[2] == FALSE) y_vector <- 0
+  if (mesh_dim[3] == FALSE) z_vector <- 0
   
-  if (exists("x_vector")){
-    mesh_dim[1] = TRUE 
-  }
+  xyz_vector <- list(x_vector, y_vector, z_vector)
   
-  if (exists("y_vector")){
-    mesh_dim[2] = TRUE 
-  }
+  nodes_df <- as_tibble(expand.grid(x = xyz_vector[[1]], y = xyz_vector[[2]],
+                                    z = xyz_vector[[3]]))
   
-  if (exists("z_vector")){
-    mesh_dim[3] = TRUE 
-  }
-  
-  # create 1d line mesh -----------------------------------------------------
-  if (length(mesh_dim[mesh_dim==TRUE]) == 1) {
-    # call fct to compute line mesh
-    dim = 0
-    repeat{
-      dim = dim + 1
-      if (mesh_dim[dim] == TRUE){
-        break
-    }}
+  # create element_df
+  # 1d
+  if (length(mesh_dim[mesh_dim == TRUE]) == 1) {
     
-    # for (i in 1:3){
-    #   if (mesh_dim[i] == TRUE) break
-    # }
-    
-    # create node_df
-    if (dim == 1) node_df <- create_1d_node_df(base_vector = x_vector, dimension = dim)
-    if (dim == 2) node_df <- create_1d_node_df(base_vector = y_vector, dimension = dim)
-    if (dim == 3) node_df <- create_1d_node_df(base_vector = z_vector, dimension = dim)
-    
-    # create element_df
+    ele_type <- "line"
     ele_df <- tibble(material_id = vector("numeric", length(node_df[[1]])-1),
-                     ele_type = rep("line", times = length(node_df[[1]])-1),
+                     ele_type = rep(ele_type, times = length(node_df[[1]])-1),
                      node1 = seq(0, length(node_df[[1]])-2,1),
                      node2 = node1 + 1)
   }
   
-  return(list(NODES = node_df, ELEMENTS = ele_df))
+  # 2d
+  if (length(mesh_dim[mesh_dim == TRUE]) == 2) {
+    dims <- which(mesh_dim == TRUE)
+    ele_df <- generateRegQuadEle(vector1 = xyz_vector[dims[[1]]],
+                                 vector2 = xyz_vector[dims[[2]]])
+  }
+  
+  # 3d
+  if (length(mesh_dim[mesh_dim == TRUE]) == 3) {
+    ele_df <- generateRegHexEle(x_vector = xyz_vector[[1]], 
+                                y_vector = xyz_vector[[2]],
+                                z_vector = xyz_vector[[3]])
+  }
+  
+  return(list(NODES = nodes_df, ELEMENTS = ele_df))
 }
-
-
-
