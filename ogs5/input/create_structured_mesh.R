@@ -47,7 +47,8 @@ generateRegHexEle <- function(x_vector = numeric(), y_vector = numeric(),
   n_ele_x <- length(x_vector)-1
   n_ele_y <- length(y_vector)-1
   n_ele_z <- length(z_vector)-1
-  ele_df <- tibble(ele_type = character(), node1 = numeric(), node2 = numeric(),
+  ele_df <- tibble(material_id = numeric(), ele_type = character(),
+                   node1 = numeric(), node2 = numeric(),
                   node3 = numeric(), node4 = numeric(),node5 = numeric(),
                   node6 = numeric(), node7 = numeric(), node8 = numeric())
   
@@ -61,6 +62,7 @@ generateRegHexEle <- function(x_vector = numeric(), y_vector = numeric(),
       offset_y2 <- (j+1) * n_nodes_x
       for (k in 0:(n_ele_x-1)){
         ele_df <- add_row(.data = ele_df,
+                          material_id = 0,
                           ele_type = "hex",
                           node1 = offset_z1 + offset_y1 + k,
                           node2 = offset_z1 + offset_y1 + k + 1,
@@ -84,7 +86,8 @@ generateRegQuadEle <- function(vector1 = numeric(), vector2 = numeric()){
   n_nodes2 <- length(vector2)
   n_ele1 <- length(vector1)-1
   n_ele2 <- length(vector2)-1
-  ele_df <- tibble(ele_type = character(), node1 = numeric(), node2 = numeric(),
+  ele_df <- tibble(material_id = numeric(), ele_type = character(),
+                   node1 = numeric(), node2 = numeric(),
                   node3 = numeric(), node4 = numeric())
   
   for (j in 0:(n_ele2-1)){
@@ -93,6 +96,7 @@ generateRegQuadEle <- function(vector1 = numeric(), vector2 = numeric()){
     offset_v2_2 <- (j+1) * n_nodes1
     for (k in 0:(n_ele1-1)){
       ele_df <- add_row(.data = ele_df,
+                        material_id = 0,
                        ele_type = "quad",
                        node1 = offset_v1_1 + k,
                        node2 = offset_v1_1 + k + 1,
@@ -170,9 +174,9 @@ create_structured_mesh_nodes_ele <-
   if (length(mesh_dim[mesh_dim == TRUE]) == 1) {
     
     ele_type <- "line"
-    ele_df <- tibble(material_id = vector("numeric", length(node_df[[1]])-1),
-                     ele_type = rep(ele_type, times = length(node_df[[1]])-1),
-                     node1 = seq(0, length(node_df[[1]])-2,1),
+    ele_df <- tibble(material_id = vector("numeric", length(nodes_df[[1]])-1),
+                     ele_type = rep(ele_type, times = length(nodes_df[[1]])-1),
+                     node1 = seq(0, length(nodes_df[[1]])-2,1),
                      node2 = node1 + 1)
   }
   
