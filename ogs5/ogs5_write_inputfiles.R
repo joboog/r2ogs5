@@ -4,7 +4,7 @@
 #  write input file -------------------------------------------------------
 ogs5_write_inputfiles <-
 
-  function(ogs5_obj = list(), type = "all"){
+  function(ogs5_obj = list(), type = "all", folderpath = character("./")){
 
     # validate input
     valid_ogs5(ogs5_obj)
@@ -23,7 +23,7 @@ ogs5_write_inputfiles <-
     }
     else {
       
-      filename <- paste0(attributes(ogs5_obj)$sim_name, ".", type)
+      filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", type)
       ogs5_list <- ogs5_obj$input[[paste(type)]]
       ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))  
     }
@@ -204,6 +204,7 @@ ogs5_list_output.ogs5_gli <-
         
         df <- ogs5_sublist[[i]] %>% 
               as.data.frame() 
+        df$name <- str_c("$NAME ", df$name)
         names(df) <- NULL
         df %>% print(row.names = TRUE)
         
