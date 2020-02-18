@@ -119,8 +119,22 @@ ogs5_write_inputfiles(ex1, "msh")
 # write all files
 ogs5_write_inputfiles(ex1, "all")
 
-# run simulaiton
+
+# run ogs5 simulation -----------------------------------------------------
+
 ogs5_run(ogs5_obj = ex1, exe_path = "/home/boog/ufz/08_hiwi_envinf/03_ogs5/ogs_5.76/bin",
          run_path = NULL, 
          log_output = FALSE,
-         log_path = "test/ex1/log")
+         log_path = "example/ex1/log")
+
+
+# read output -------------------------------------------------------------
+
+# read tecplot
+tec_df <- ogs5_read_many_tecplots(filepath = "examples/ex1", geo_object = "domain")
+
+# read all output
+ex1 <- ogs5_get_output_all(ex1)
+
+# read specific output
+ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer_tec")
