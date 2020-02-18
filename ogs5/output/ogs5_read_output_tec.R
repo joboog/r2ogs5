@@ -1,6 +1,37 @@
 # Functions to read and process outputted *.tec files
 
 
+
+# generic to ogs5_read_tecplot-- ------------------------------------------
+ogs5_read_tecplot <- function(filename = character(), 
+                              geo_object = character()){
+  
+  # content:
+  # function to read *.tec files by calling functoin to read *.tec depending 
+  # on the corresponding geometry
+  # filename: path+name of file
+  # geo_object: associated geometric domain
+  #
+  # returns: dataframe of *.tec
+  
+  if (geo_object=="domain"){
+    df=ogs5_read_tecplot_domain(filename)
+  }
+  if (geo_object=="POINT"){
+    df=myReadTecPlot_POINT(filename)
+  }
+  if (geo_object=="POLYLINE"){
+    stop("Function to read output on POLYLINE not implemented yet.",
+         call. = FALSE)
+  }
+  if (geo_object=="SURFACE"){
+    stop("Function to read output on POLYLINE not implemented yet.",
+         call. = FALSE)
+  }
+  
+  return(df)
+}
+
 # Read *.tec file for whole domain ----------------------------------------
 
 ogs5_read_tecplot_domain<-function(filename = character()){
@@ -156,20 +187,8 @@ ogs5_read_many_tecplots <- function(filepath = character(),
     )],
     function(filename) {
       
-      if (geo_object=="domain"){
-        df=ogs5_read_tecplot_domain(filename)
-      }
-      if (geo_object=="POINT"){
-        df=myReadTecPlot_POINT(filename)
-      }
-      if (geo_object=="POLYLINE"){
-        stop("Function to read output on POLYLINE not implemented yet.",
-             call. = FALSE)
-      }
-      if (geo_object=="SURFACE"){
-        stop("Function to read output on POLYLINE not implemented yet.",
-             call. = FALSE)
-      }
+      df <- ogs5_read_tecplot(filename = filename,
+                              geo_object = geo_object)
       df$filename=filename
       return(df)
     }
