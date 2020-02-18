@@ -41,6 +41,12 @@ valid_ogs5 <- function(x){
    if (!class(x)=="ogs5") {
       stop("x is not of class 'ogs5' ", call. = FALSE)
    }
+   if (is.null(x$input)) {
+     stop("'input' list missing.", call. = FALSE)
+   }
+   if (is.null(x$output)) {
+    stop("'output' list missing.", call. = FALSE)
+   }
    
 }
 
