@@ -158,3 +158,34 @@ ogs_read_vtu_geometry <- function(filename = character()){
   ll <- list(points)
   return(ll)
 }
+
+# read time from *.vtu ----------------------------------------------------
+
+ogs5_extract_time_from_vtu <- function(filename = character()){
+  
+  # content:
+  # extracts timestep and time from *.vtu file
+  #
+  # filename: name of *.vtu file
+  #
+  # returns numeric vector (timestep, time)
+  
+  # check filepath
+  if (!(file.exists(filename))){
+    stop("'filename' does not exist.", call = FALSE)
+  }
+  
+  line_str <- readLines(con=filename, n=2L)
+  
+  timestep <- line_str %>% 
+                stringr::str_extract(pattern = "(?<=step: )\\d+") %>% 
+                na.omit() %>% as.numeric()
+  
+  time <- line_str %>% 
+            stringr::str_extract(pattern = "(?<=Time: )\\d+\\.\\d+e\\+\\d+") %>% 
+            na.omit() %>% as.numeric()  
+  
+  timestep_time <- c("timestep"=timestep, "time_in_sec" = time)
+  
+  return(timestep_time)
+}
