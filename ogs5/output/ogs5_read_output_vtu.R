@@ -93,8 +93,11 @@ ogs_read_vtu_file_point_data_array <-
     src_data <- dsa$WrapDataObject(src$GetOutput())
     src_data_arr <- src_data$PointData[array_name]
     
-    src_data_ll <- list(src_data_arr)
-    names(src_data_ll) <- array_name
+    timestep_time <- ogs5_extract_time_from_vtu(filename) 
+    
+    # combine
+    src_data_ll <- list(src_data_arr, timestep_time[1], timestep_time[2])
+    names(src_data_ll) <- c(array_name, "time_step", "time")
     return(src_data_ll)
 }
 
@@ -124,7 +127,10 @@ ogs_read_vtu_file_point_data_all <-
                                     return(l)
                                 })
         
-        names(src_data_list) <- src_data_keys
+        timestep_time <- ogs5_extract_time_from_vtu(filename) 
+        
+        src_data_list <- append(src_data_list,c(timestep_time[1], timestep_time[2]))
+        names(src_data_list) <- c(src_data_keys, "time_step", "time")
         #src_data_tbl <- as_tibble(src_data_list) 
         return(src_data_list)
     }
@@ -158,6 +164,7 @@ ogs_read_vtu_geometry <- function(filename = character()){
   ll <- list(points)
   return(ll)
 }
+
 
 # read time from *.vtu ----------------------------------------------------
 
