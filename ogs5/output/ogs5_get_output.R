@@ -53,6 +53,10 @@ ogs5_get_output_all <- function(ogs5 = list(),
     # read output files
     if (out_dat_type == "PVD") {
       warning("get_output not yet implemented for type 'PVD'")
+      
+      out_data_list <- ogs_read_vtu_files_point_data(
+                          filepath = out_filepath, pcs_type = out_pcs_type)
+      
     }
     
     if (out_dat_type == "TECPLOT") {
@@ -74,9 +78,9 @@ ogs5_get_output_all <- function(ogs5 = list(),
       
       out_data_list <- lapply(out_files, 
                          FUN = function(x){
-                           df <- ogs5_read_tecplot(filename = x,
+                           l <- ogs5_read_tecplot(filename = x,
                                     geo_object = out_geo_object)
-                           return(df)
+                           return(l)
                          })
     }
     
