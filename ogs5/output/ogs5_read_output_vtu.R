@@ -45,6 +45,11 @@ ogs_read_vtu_files_point_data <- function(filepath = character(),
               )==TRUE
             )]
   
+  if (length(files) < 1){
+    stop(paste0("Corresponding '*", pcs_type, "*.vtu' files do not exist",
+                call. = FALSE))
+  }
+  
   # loop over file list
   l <- lapply(
     files,
