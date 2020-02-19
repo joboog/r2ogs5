@@ -123,3 +123,33 @@ ogs_read_vtu_file_point_data_all <-
         #src_data_tbl <- as_tibble(src_data_list) 
         return(src_data_list)
     }
+
+
+# read geometry from *.vtu ------------------------------------------------
+
+ogs_read_vtu_geometry <- function(filename = character()){
+  
+  # content:
+  # reads geometric informatoin (nodes, cells, material id's) from *.vtu
+  
+  points <- list()
+  cells <- list()
+  
+  require(reticulate)
+  
+  # load vtu
+  src <- vtk$vtkXMLUnstructuredGridReader()
+  src$SetFileName(filename)
+  src$Update()
+  
+  # get data
+  src_data <- dsa$WrapDataObject(src$GetOutput())
+  #src_data$CellTypes # element types?
+  #src_data$CellLocations
+  #src_data$Cells
+  src_data$Points
+  
+  # combine
+  ll <- list(points)
+  return(ll)
+}
