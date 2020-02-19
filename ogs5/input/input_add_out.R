@@ -18,7 +18,7 @@ input_add_out_bloc <-
     MSH_TYPE = NULL,
     NOD_VALUES = NULL,
     PCON_VALUES = NULL,
-    PCS_TYPE = character(NULL),
+    PCS_TYPE = NULL,
     RWPT_VALUES = NULL,
     TECPLOT_ZONE_SHARE = FALSE,
     TIM_TYPE = character(NULL),
