@@ -45,24 +45,8 @@ ogs5_get_output_all <- function(ogs5 = list(),
     
     # check output type
     out_dat_type <- ogs5$input$out[[paste(i)]]$DAT_TYPE
-    
     out_geo_object <- ogs5$input$out[[paste(i)]]$GEO_TYPE
-    if (out_geo_object == "DOMAIN") out_geo_object <- "domain"
-    
     out_pcs_type <- ogs5$input$out[[paste(i)]]$PCS_TYPE
-    
-    # get filenames
-    out_filenamepattern <- c(attributes(ogs5)$sim_name,
-                             out_geo_object, out_pcs_type)
-    
-    out_files <- list.files(path=out_filepath, pattern=".tec", 
-                           full.names=TRUE)[
-                             which(
-                             stringr::str_detect(string=list.files(
-                               path=out_filepath, pattern=".tec",
-                               full.names=TRUE),
-                                pattern=out_filenamepattern)==TRUE
-                              )]
     
     out_data_list <- NULL
     
@@ -73,8 +57,22 @@ ogs5_get_output_all <- function(ogs5 = list(),
     
     if (out_dat_type == "TECPLOT") {
 
-      out_filelist <- as.list(out_files)
-      out_data_list <- lapply(out_filelist, 
+      if (out_geo_object == "DOMAIN") out_geo_object <- "domain"
+      
+      # get filenames
+      out_filenamepattern <- paste0(attributes(ogs5)$sim_name, "_",
+                               out_geo_object,"_", out_pcs_type)
+      # list *.tec files
+      out_files <- list.files(path=out_filepath, pattern=".tec", 
+                              full.names=TRUE)[
+                                which(
+                                  stringr::str_detect(string=list.files(
+                                    path=out_filepath, pattern=".tec",
+                                    full.names=TRUE),
+                                    pattern=out_filenamepattern)==TRUE
+                                )]
+      
+      out_data_list <- lapply(out_files, 
                          FUN = function(x){
                            df <- ogs5_read_tecplot(filename = x,
                                     geo_object = out_geo_object)
