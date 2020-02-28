@@ -2,8 +2,15 @@
 
 library(tidyverse)
 library(BBmisc)
+library(reticulate)
+use_condaenv("py3env")
 
 sources = list.files(path = ("ogs5/input/"),
+                     pattern="*.R$", full.names=TRUE, 
+                     ignore.case=TRUE)
+sapply(sources, source, .GlobalEnv)
+
+sources = list.files(path = ("ogs5/output/"),
                      pattern="*.R$", full.names=TRUE, 
                      ignore.case=TRUE)
 sapply(sources, source, .GlobalEnv)
@@ -58,7 +65,7 @@ ex1 <- input_add_num_bloc(x = ex1, num_name = "tracer", PCS_TYPE = "MASS_TRANSPO
                           LINEAR_SOLVER = "2 6 1.0E-14 100 1.0 100 4")
 
 ex1 <- input_add_out_bloc(x = ex1, out_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
-                          NOD_VALUES = "PRESSURE1 VELOCITY_X1", GEO_TYPE = "DOMAIN",
+                          NOD_VALUES = "PRESSURE1\n VELOCITY_X1", GEO_TYPE = "DOMAIN",
                           DAT_TYPE = "PVD", TIM_TYPE = "STEPS 10")
 
 ex1 <- input_add_out_bloc(x = ex1, out_name = "tracer", PCS_TYPE = "MASS_TRANSPORT",
@@ -137,4 +144,11 @@ tec_df <- ogs5_read_many_tecplots(filepath = "examples/ex1", geo_object = "domai
 ex1 <- ogs5_get_output_all(ex1)
 
 # read specific output
-ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer_tec")
+ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
+
+# read vtu output via calling python
+library(reticulate)
+use_condaenv("py3env")
+
+foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
+                           node_coords = tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
