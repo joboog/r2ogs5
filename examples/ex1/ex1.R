@@ -1,3 +1,8 @@
+# Example 1: Single ogs5 simulation ---------------------------------------
+
+# In this example, a single serial ogs5 simulation will be defined and
+# executed. Then the output will be retrieved.
+
 # source all code ---------------------------------------------------------
 
 library(tidyverse)
@@ -147,8 +152,5 @@ ex1 <- ogs5_get_output_all(ex1)
 ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
 
 # read vtu output via calling python
-library(reticulate)
-use_condaenv("py3env")
-
 foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
                            node_coords = tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
