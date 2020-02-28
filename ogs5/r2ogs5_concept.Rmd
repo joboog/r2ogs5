@@ -1,0 +1,192 @@
+---
+title: "r2ogs_concept"
+author: "Johannes Boog"
+date: "2/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(DiagrammeR)
+```
+
+
+```{r example-graphviz}
+grViz("
+  digraph diagram {
+      compound=true;
+      ranksep=1
+      raw [shape=box, label='Raw ww tank']
+
+      
+  
+      subgraph cluster_site {
+          label='Fuheis Site'
+          style=none
+          
+  
+          
+          subgraph cluster_eco3 {
+              label='ECO 3'
+              style=dashed
+               eco3_a1 [shape=box,label='Septic', size=100.0]
+               eco3_p1 [shape=circle,label='Pump shaft']
+               eco3_b1  [shape=box, label='ACW']
+               eco3_p2 [shape=circle,label='Pump shaft']
+               eco3_dis [shape=none,label='Discharge']
+
+              eco3_a1 -> eco3_p1 -> eco3_b1 -> eco3_p2 -> eco3_dis
+              
+          }
+          raw -> eco3_a1 
+
+
+
+          subgraph cluster_eco4 {
+              label='ECO 4'
+              style=dashed
+               eco4_a1 [shape=box,label='1st-stage FCW']
+               eco4_split [shape=box,label='Splitter Box']
+               eco4_p1 [shape=circle,label='Pump shaft']
+               eco4_p2 [shape=circle,label='Pump shaft']
+               eco4_b1  [shape=box, label='2nd-stage FCW']
+               eco4_b2  [shape=box, label='ACW']
+               eco4_p3 [shape=circle,label='Pump shaft']
+               eco4_p4 [shape=circle,label='Pump shaft']
+               eco4_dis [shape=none,label='Discharge']
+
+              eco4_a1 -> eco4_split -> eco4_p1-> eco4_b1 -> eco4_p3 -> eco4_dis ;  eco4_split -> eco4_p2-> eco4_b2 -> eco4_p4 -> eco4_dis
+              
+          }
+          raw -> eco4_a1 
+
+
+      }
+  
+  }
+")
+```
+```{r structure-r2ogs5}
+# no dash in graph or subgraph names
+# 'subgraph cluster_your_name' will create a sub graph of 
+# type cluster with 'your_name'
+grViz("
+  digraph diagram {
+      compound=true;
+     
+      
+      subgraph cluster_r2ogs5 {
+          label='r2ogs5'
+          style=none
+
+        subgraph cluster_ogs5_class {
+          label='ogs5-class'
+          style=solid
+           
+           subgraph cluster_attributes{
+            label='attributes'
+            style=none
+            directory [shape = none, label = 'directory']
+            sim_name [shape = none, label = 'sim_name']
+            sim_id [shape = none, label = 'sim_id']
+            input [shape = none, label = 'input']
+            output [shape = none, label = 'output']
+           }
+           
+           subgraph cluster_methods{
+            label = 'methods'
+            style= bold
+            create_ogs5 [shape = none, label = 'create_ogs5']
+            validate_ogs5 [shape = none, label = 'validate_ogs5']
+            run_ogs5 [shape = none, label = 'run_ogs5']
+           }
+        }
+          
+        subgraph cluster_input{
+            label = 'input (ogs5 input files)'
+            input_input [shape=none, label='']
+            
+            subgraph cluster_attributes{
+                label='attributes'
+                style=none
+                pcs [shape = none, label = 'PCS']
+                ic [shape = none, label = 'IC']
+                bc [shape = none, label = 'BC']
+                gli [shape = none, label = 'GLI']
+                msh [shape = none, label = 'MSH']
+                etc1 [shape = none, label = '...']
+           }
+        }
+        input -> input_input [ltail=cluster_ogs5_class, lhead=cluster_input]
+
+        subgraph cluster_pcs{
+            label = 'PCS'
+            pcs_pcs [shape = none, label = 'PCS']
+            
+            subgraph cluster_attributes{
+                label='attributes'
+                style=none
+                bloc_name [shape = none, label = 'bloc_name']
+                pcs_type [shape = none, label = 'PCS_TYPE']
+                etc2 [shape = none, label = '...']
+            }
+           
+            subgraph cluster_methods{
+                label='methods'
+                style=none
+                add_pcs_bloc [shape = none, label = 'add_pcs_bloc']
+                write_pcs_bloc [shape = none, label = 'write_pcs_bloc']
+                read_pcs_bloc [shape = none, label = 'read_pcs_bloc_inputfile']
+                etc3 [shape = none, label = '...']
+           }
+        }
+        pcs -> pcs_pcs [ltail=cluster_input, lhead=cluster_pcs]
+        
+        subgraph cluster_add_pcs_bloc{
+            label = 'add_pcs_bloc'
+            
+            args [shape = none, label='arguments']
+            pcs_type2 [shape = none, label = 'add_pcs_bloc']
+            prim_var [shape = none, label = 'PRIMARY_VARIABLE']
+            etc4 [shape = none, label = '...']
+        }
+        add_pcs_bloc -> args [ltail=cluster_pcs, lhead=cluster_add_pcs_bloc]
+        
+        
+        subgraph cluster_output{
+            label = 'output'
+            
+            output_output [shape=none, label='']
+            output_bloc1 [shape=none, label='output_data_bloc1']
+            output_bloc2 [shape=none, label='output_data_bloc2']
+            
+            subgraph cluster_methods{
+                label='attributes'
+                style=none
+                read_p_tec [shape = none, label = 'ogs5_read_tecplot']
+                read_vtu [shape = none, label = 'ogs5_read_vtu_files']
+                etc5 [shape = none, label = '...']
+           }
+        }
+        output -> output_output [ltail=cluster_ogs5_class, lhead=cluster_output]
+        
+        subgraph cluster_output_bloc1{
+                label='output_bloc1'
+                style=none
+                
+                output_bloc1_1 [shape = none, label = '']
+                LF0 [shape = none, label = 'sim_name_LIQUID_FLOW0.vtu']
+                LF10 [shape = none, label = 'sim_name_LIQUID_FLOW10.vtu']
+                LF20 [shape = none, label = 'sim_name_LIQUID_FLOW20.vtu']
+                etc5 [shape = none, label = '...']
+        }
+        output_bloc1 -> output_bloc1_1 [ltail=cluster_output, lhead=cluster_output_bloc1]
+    
+    }
+  }
+")
+```
+
