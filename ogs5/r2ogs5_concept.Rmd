@@ -14,62 +14,7 @@ library(DiagrammeR)
 ```
 
 
-```{r example-graphviz}
-grViz("
-  digraph diagram {
-      compound=true;
-      ranksep=1
-      raw [shape=box, label='Raw ww tank']
-
-      
-  
-      subgraph cluster_site {
-          label='Fuheis Site'
-          style=none
-          
-  
-          
-          subgraph cluster_eco3 {
-              label='ECO 3'
-              style=dashed
-               eco3_a1 [shape=box,label='Septic', size=100.0]
-               eco3_p1 [shape=circle,label='Pump shaft']
-               eco3_b1  [shape=box, label='ACW']
-               eco3_p2 [shape=circle,label='Pump shaft']
-               eco3_dis [shape=none,label='Discharge']
-
-              eco3_a1 -> eco3_p1 -> eco3_b1 -> eco3_p2 -> eco3_dis
-              
-          }
-          raw -> eco3_a1 
-
-
-
-          subgraph cluster_eco4 {
-              label='ECO 4'
-              style=dashed
-               eco4_a1 [shape=box,label='1st-stage FCW']
-               eco4_split [shape=box,label='Splitter Box']
-               eco4_p1 [shape=circle,label='Pump shaft']
-               eco4_p2 [shape=circle,label='Pump shaft']
-               eco4_b1  [shape=box, label='2nd-stage FCW']
-               eco4_b2  [shape=box, label='ACW']
-               eco4_p3 [shape=circle,label='Pump shaft']
-               eco4_p4 [shape=circle,label='Pump shaft']
-               eco4_dis [shape=none,label='Discharge']
-
-              eco4_a1 -> eco4_split -> eco4_p1-> eco4_b1 -> eco4_p3 -> eco4_dis ;  eco4_split -> eco4_p2-> eco4_b2 -> eco4_p4 -> eco4_dis
-              
-          }
-          raw -> eco4_a1 
-
-
-      }
-  
-  }
-")
-```
-```{r structure-r2ogs5}
+```{r concept-r2ogs5}
 # no dash in graph or subgraph names
 # 'subgraph cluster_your_name' will create a sub graph of 
 # type cluster with 'your_name'
@@ -89,7 +34,7 @@ grViz("
            subgraph cluster_attributes{
             label='attributes'
             style=none
-            directory [shape = none, label = 'directory']
+            directory [shape = none, label = 'sim_directory']
             sim_name [shape = none, label = 'sim_name']
             sim_id [shape = none, label = 'sim_id']
             input [shape = none, label = 'input']
