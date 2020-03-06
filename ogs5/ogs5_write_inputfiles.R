@@ -210,7 +210,10 @@ ogs5_list_output.ogs5_gli <-
               as.data.frame() 
         df$name <- str_c("$NAME ", df$name)
         names(df) <- NULL
-        df %>% print(row.names = TRUE)
+        #df %>% print(row.names = TRUE)
+        
+        cat(" ", paste(colnames(df)), "\n")
+        cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
         
         cat("\n")
       }
@@ -333,21 +336,29 @@ ogs5_print_msh_mkey_bloc <-
     
     # print NODES
     df <- mkey_bloc$NODES %>% 
+          rownames_to_column() %>% 
+          mutate(rowname = as.numeric(rowname) - 1) %>% 
           as.data.frame()
     rownames(df) <- rownames(df) %>% as.numeric() %>% -1
     names(df) <- NULL
-    cat("$NODES\n", length(df[[1]]))
-    df %>% print(row.names = TRUE)
+    cat("$NODES\n", length(df[[1]]), "\n")
+    #df %>% print(row.names = TRUE)
+    #cat(" ", paste(colnames(df)), "\n")
+    cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
     
     # print ELEMENTS
     df <- mkey_bloc$ELEMENTS %>%
+          rownames_to_column() %>% 
+          mutate(rowname = as.numeric(rowname) - 1) %>% 
           replace_na(list(node3 = "", node4 = "", node5 = "",
                           node6 = "", node7 = "", node8 = "")) %>% 
           as.data.frame() 
     rownames(df) <- rownames(df) %>% as.numeric() %>% -1
     names(df) <- NULL
-    cat("$ELEMENTS\n", length(df[[1]]))
-    df %>% print(row.names = TRUE)
+    cat("$ELEMENTS\n", length(df[[1]]), "\n")
+    #df %>% print(row.names = TRUE)
+    #cat(" ", paste(colnames(df)), "\n")
+    cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
   }
 
 # method for ogs5_msp sublist ------------------------------------------
@@ -442,10 +453,11 @@ ogs5_print_rfd_mkey_bloc <-
     
     cat(paste0("#", mkey), int_str, msh_str, "\n", "$DATA")
     
-    mkey_bloc$data %>% 
-      as.data.frame() %>% 
-      print(row.names = FALSE)
+    df <- mkey_bloc$data %>% 
+            as.data.frame()
     
+    cat(" ", paste(colnames(df)), "\n")
+    cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
     cat("\n")
   }
 
