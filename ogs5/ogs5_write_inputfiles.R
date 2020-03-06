@@ -16,6 +16,10 @@ ogs5_write_inputfiles <-
       folderpath <- paste0(attributes(ogs5_obj)$sim_path, "/")
     }
     
+    if (!(dir.exists(folderpath))){
+      dir.create(folderpath, recursive = TRUE)
+    }
+    
     if (type == "all") {
     
     # loop through ogs5-obj and print all sublists
