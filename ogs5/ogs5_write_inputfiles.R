@@ -211,6 +211,8 @@ ogs5_list_output.ogs5_gli <-
         cat("#POINTS\n")
         
         df <- ogs5_sublist[[i]] %>% 
+              rownames_to_column() %>% 
+              mutate(rowname = as.numeric(rowname)) %>% 
               as.data.frame() 
         df$name <- str_c("$NAME ", df$name)
         names(df) <- NULL
