@@ -10,23 +10,23 @@ library(BBmisc)
 library(reticulate)
 use_condaenv("py3env")
 
-sources = list.files(path = ("ogs5/input/"),
+sources = list.files(path = "ogs5/input/",
                      pattern="*.R$", full.names=TRUE, 
                      ignore.case=TRUE)
 sapply(sources, source, .GlobalEnv)
 
-sources = list.files(path = ("ogs5/output/"),
+sources = list.files(path = "ogs5/output/",
                      pattern="*.R$", full.names=TRUE, 
                      ignore.case=TRUE)
 sapply(sources, source, .GlobalEnv)
 
-sources = list.files(path = ("ogs5/"),
+sources = list.files(path =  "ogs5/",
                      pattern="*.R$", full.names=TRUE, 
                      ignore.case=TRUE)
 sapply(sources, source, .GlobalEnv)
 
 # define ogs5 obj ---------------------------------------------------------
-ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L, sim_path = "examples/ex1")
+ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L, sim_path = "ogs5/examples/ex1")
 
 
 ## add input file blocs ----------------------------------------------------
@@ -57,7 +57,7 @@ ex1 <- input_add_mcp_bloc(x = ex1, NAME = "Tracer", MOBILE = 1)
 ex1 <- input_add_mfp_bloc(x = ex1, FLUID_NAME = "water", FLUID_TYPE = "LIQUID", 
                           DENSITY = "1 1.0E+3", VISCOSITY = "1 1.0E-3")
 
-ex1 <- input_add_mmp_bloc(x = ex1, GEOMETRY_DIMENSION = "1", GEOMETRY_AREA = "1.2", POROSITY = "0.38",
+ex1 <- input_add_mmp_bloc(x = ex1, GEOMETRY_DIMENSION = "1", GEOMETRY_AREA = "1.2", POROSITY = "1 0.38",
                           PERMEABILITY_TENSOR = "ISOTROPIC 1.0E-8", MASS_DISPERSION = "1 1.0", 
                           TORTUOSITY = "1 1.0", NAME = "gravel")
 
@@ -134,23 +134,23 @@ ogs5_write_inputfiles(ex1, "all")
 
 # run ogs5 simulation -----------------------------------------------------
 
-ogs5_run(ogs5_obj = ex1, exe_path = "/home/boog/ufz/08_hiwi_envinf/03_ogs5/ogs_5.76/bin",
-         run_path = NULL, 
-         log_output = FALSE,
-         log_path = "example/ex1/log")
+# ogs5_run(ogs5_obj = ex1, exe_path = "/home/boog/ufz/08_hiwi_envinf/03_ogs5/ogs_5.76/bin",
+#          run_path = NULL, 
+#          log_output = FALSE,
+#          log_path = "example/ex1/log")
 
 
 # read output -------------------------------------------------------------
 
 # read tecplot
-tec_df <- ogs5_read_many_tecplots(filepath = "examples/ex1", geo_object = "domain")
+#tec_df <- ogs5_read_many_tecplots(filepath = "examples/ex1", geo_object = "domain")
 
 # read all output
-ex1 <- ogs5_get_output_all(ex1)
+#ex1 <- ogs5_get_output_all(ex1)
 
 # read specific output
-ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
+#ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
 
 # read vtu output via calling python
-foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
-                           node_coords = tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
+#foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
+#                           node_coords = tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
