@@ -3,7 +3,7 @@
 # ogs5_object
 
 
-ogs5_get_output_all <- function(ogs5 = list(),
+ogs5_get_output_all <- function(ogs5,# = list(),
                                 out_filepath = NULL){ 
 
   # content:
