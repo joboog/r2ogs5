@@ -36,5 +36,5 @@ ogs5_run <- function(ogs5_obj = list(),
                           run_path,"/", attributes(ogs5_obj)$sim_name," ",
                           logfile)
   
-  system(command = command_to_os)
+  system(command = command_to_os, wait = FALSE)
 }
