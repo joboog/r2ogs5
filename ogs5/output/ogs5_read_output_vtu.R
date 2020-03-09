@@ -9,8 +9,8 @@ dsa <- import("vtk.numpy_interface.dataset_adapter")
 
 # read multiple vtu files -------------------------------------------------
 
-ogs_read_vtu_files_point_data <- function(filepath = character(),
-                                          pcs_type = character(),
+ogs_read_vtu_files_point_data <- function(filepath,#, = character(),
+                                          pcs_type,#, = character(),
                                           variable_name = NULL){
   
   # content:
@@ -24,7 +24,7 @@ ogs_read_vtu_files_point_data <- function(filepath = character(),
   # returns a list
   
   
-  # check filepath
+# check filepath
   if (!(dir.exists(filepath))){
     stop("'filepath' does not exist.", call = FALSE)
   }
@@ -44,7 +44,6 @@ ogs_read_vtu_files_point_data <- function(filepath = character(),
                 pattern=c(pcs_type)
               )==TRUE
             )]
-  
   if (length(files) < 1){
     stop(paste0("Corresponding '*", pcs_type, "*.vtu' files do not exist",
                 call. = FALSE))
