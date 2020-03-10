@@ -1,0 +1,123 @@
+---
+title: "Example 3 -- TM Calibration"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, results = "hide", error = FALSE, message = FALSE)
+```
+
+
+
+## Model Definition
+
+```{r}
+source("ogs5/examples/ex1.R")
+```
+
+
+## Get Experimenal Data
+
+```{r}
+## Get Experimenal Data
+exp_df <- read_delim("ogs5/examples/tracer_exp.csv", 
+                     ";", escape_double = FALSE, trim_ws = TRUE) %>% 
+          mutate(time = time/(24*3600))
+```
+
+```{r}
+gg_exxp <- exp_df %>% 
+            ggplot(aes(x = time, y = tracer_exp))+
+            geom_point(color = "orange")
+```
+
+
+## Preprocessing
+
+```{r}
+sim <- ex1
+attributes(sim)$sim_name <- "ex3"
+attributes(sim)$sim_path <- "ogs5/examples/ex3"
+#sim$input$out$waterflow <- NULL
+#sim$input$out$tracer <- NULL
+#sim$input$out$tracer_tec <- NULL
+
+```
+
+Function to change parameter, write input file, run model
+```{r}
+ogs5_compute_ssqe <- function(ll, par, return_ogs5 = FALSE){
+  # x <- sim 
+  # par <- 1
+  # update parameter
+  ll$input$mmp$gravel$MASS_DISPERSION <- 
+      paste("1 ", round(par, 2))
+  
+  # write inoput files
+  ogs5_write_inputfiles(ll, "all")
+  
+  # run
+  ogs5_run(ll,
+            exe_path = "/home/boog/ufz/08_hiwi_envinf/03_ogs5/ogs_5.76/bin",
+            run_path = NULL, 
+            log_output = TRUE,
+            wait = TRUE)
+  
+  # get output
+  #ogs5_obj$output <- list(NULL)
+  ll <- ogs5_get_output_all(ll)
+  
+  # compare with exp data
+  mod_df <- ll$output$tracer_tec[[1]] %>%
+              filter(X == 4.7) %>%
+              select("Tracer_hat"="Tracer", "TIME") %>%
+              mutate(TIME = TIME/(24*3600))
+
+  f <- approxfun(x = mod_df$TIME, y = mod_df$Tracer_hat)
+  y_hat <- f(exp_df$time) %>% na.omit
+  y <- exp_df$tracer_exp
+  ssqe <- sum((y_hat-y)^2)
+  
+  # clear folder
+  system(command = "rm -r ogs5/examples/ex3")
+  #rm(y)
+  
+  ifelse(return_ogs5 == TRUE, res <- list(ssqe, ll, mod_df), res <- ssqe)
+  
+  return(res)
+} 
+```
+
+## Optimize
+
+```{r}
+result <- optim(par = 0.5, fn = ogs5_compute_ssqe, ll = sim)
+```
+
+
+## Execute Run with optimized Parameter
+
+```{r}
+sim_optimized <- ogs5_compute_ssqe(ll = sim, par = result$par,
+                                   return_ogs5 = TRUE)
+```
+
+
+## Visualize
+
+```{r}
+
+gg_exxp + 
+  geom_line(data = sim_optimized[[3]], 
+            aes(x = TIME, y = Tracer_hat),
+            color = "blue")+
+
+    theme_classic()+
+    labs(x = expression(Time~(days)),
+         y = expression(c[Tracer]~(mg~L^{-1}))
+    )
+```
