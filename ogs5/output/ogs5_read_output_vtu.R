@@ -9,8 +9,8 @@ dsa <- import("vtk.numpy_interface.dataset_adapter")
 
 # read multiple vtu files -------------------------------------------------
 
-ogs_read_vtu_files_point_data <- function(filepath,#, = character(),
-                                          pcs_type,#, = character(),
+ogs_read_vtu_files_point_data <- function(filepath,
+                                          pcs_type,
                                           variable_name = NULL){
   
   # content:
@@ -22,13 +22,11 @@ ogs_read_vtu_files_point_data <- function(filepath,#, = character(),
   # variable_name: name of the array in the *.vtu files (optional)
   #
   # returns a list
-  
-  
-# check filepath
+
+  # check filepath
   if (!(dir.exists(filepath))){
     stop("'filepath' does not exist.", call = FALSE)
   }
-  
   # list *.vtu files
   files <- list.files(
               path=filepath,
@@ -102,14 +100,14 @@ ogs_read_vtu_file_point_data_array <-
 
 # read all arrays from single file
 ogs_read_vtu_file_point_data_all <- 
-    function(filename = character()){
+    function(filename){
         
         # content:
         # this function reads all point data array from a
         # *.vtu output file and returns a list 
         # filename: path+name of *.vtu file
         
-        require(reticulate)
+        #require(reticulate)
         
         # load vtu
         src <- vtk$vtkXMLUnstructuredGridReader()
@@ -167,7 +165,7 @@ ogs_read_vtu_geometry <- function(filename = character()){
 
 # read time from *.vtu ----------------------------------------------------
 
-ogs5_extract_time_from_vtu <- function(filename = character()){
+ogs5_extract_time_from_vtu <- function(filename){
   
   # content:
   # extracts timestep and time from *.vtu file
@@ -175,7 +173,8 @@ ogs5_extract_time_from_vtu <- function(filename = character()){
   # filename: name of *.vtu file
   #
   # returns numeric vector (timestep, time)
-  
+  #
+
   # check filepath
   if (!(file.exists(filename))){
     stop("'filename' does not exist.", call = FALSE)

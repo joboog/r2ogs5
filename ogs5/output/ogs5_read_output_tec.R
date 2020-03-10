@@ -34,7 +34,7 @@ ogs5_read_tecplot <- function(filename = character(),
 
 # Read *.tec file for whole domain ----------------------------------------
 
-ogs5_read_tecplot_domain<-function(filename = character()){
+ogs5_read_tecplot_domain<-function(filename){
   
   # content:
   # this function reads an individual tecplot file (*.tec) 
@@ -42,8 +42,8 @@ ogs5_read_tecplot_domain<-function(filename = character()){
   # filename: path + name of the *.tec file
   
   require(magrittr)
-  
-  # check filepath
+
+    # check filepath
   if (!(file.exists(filename))){
     stop("'filename' does not exist.", call = FALSE)
   }
@@ -70,7 +70,7 @@ ogs5_read_tecplot_domain<-function(filename = character()){
   #=== get data =======================================================
   
   #=== get time
-  ts<-readLines(con=filename,n=-1L)
+  ts<-readLines(con=filename, n = -1L, ok = TRUE)
   ts<-ts %>% 
     stringr::str_extract("ZONE T=\"\\d+\\.\\d+e\\+\\d+") %>% 
     na.omit() %>% 
