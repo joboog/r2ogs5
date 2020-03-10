@@ -6,7 +6,8 @@
 ogs5_run <- function(ogs5_obj = list(), 
                      exe_path = NULL, run_path = NULL, 
                      log_output = TRUE,
-                     log_path = NULL){
+                     log_path = NULL,
+                     wait = TRUE){
   
   # validate input
   valid_ogs5(ogs5_obj)
@@ -36,5 +37,5 @@ ogs5_run <- function(ogs5_obj = list(),
                           run_path,"/", attributes(ogs5_obj)$sim_name," ",
                           logfile)
   
-  system(command = command_to_os, wait = FALSE)
+  system(command = command_to_os, wait = wait)
 }
