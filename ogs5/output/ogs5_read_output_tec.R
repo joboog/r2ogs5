@@ -78,8 +78,12 @@ ogs5_read_tecplot_domain<-function(filename){
     as.numeric()
   
   #=== get point data
-  df <- readr::read_delim(filename,
-                          " ", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE, skip = 3)
+  suppressWarnings(
+    suppressMessages(
+      df <- readr::read_delim(filename,
+                              " ", escape_double = FALSE, col_names = FALSE,
+                              trim_ws = TRUE, skip = 3)))
+  
   # extract all lines with elements in first column that do not match pattern 
   df<-df %>% 
     dplyr::filter(
@@ -136,7 +140,10 @@ ogs5_read_tecplot_point <- function(filename = character()){
   rm(df)
   
   # read data
-  df <- read_delim(filename, " ", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE, skip = 3)
+  suppressWarnings(
+    suppressMessages(
+    df <- read_delim(filename, " ", escape_double = FALSE, col_names = FALSE,
+                     trim_ws = TRUE, skip = 3)))
   df <- as.data.frame(df)
   df <- df[, !sapply(df, is.character)]
   
