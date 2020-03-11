@@ -4,4 +4,13 @@
 .Ruserdata
 
 *.Rproj
+*.vtu
+*.pvd
+*.tec
+*.asc
+*.html
+*.pdf
+*.png
+
 test/*
+ogs5/examples/sim_files/*
