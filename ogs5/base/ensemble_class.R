@@ -8,19 +8,19 @@
 create_ens <- function(
     base_sim = list(),
     parameter_tbl = tbl(),
-    ens_name = character(NULL),
-    ens_path = character(NULL)
+    name = character(NULL),
+    path = character(NULL)
 ) {
 
     # validation
     valid_ogs5(base_sim)
 
-    if (!is.character(ens_name)) {
-        stop("'ens_name' has to be of type character", call. = FALSE)
+    if (!is.character(name)) {
+        stop("'name' has to be of type character", call. = FALSE)
     }
 
-    if (!is.character(ens_path)) {
-        stop("'ens_path' has to be of type character", call. = FALSE)
+    if (!is.character(path)) {
+        stop("'path' has to be of type character", call. = FALSE)
     }
 
     # valid sim_plan if it contains a parameter that is contained in the
@@ -38,7 +38,7 @@ create_ens <- function(
 
     # create sim_plan
     sim_plan <- parameter_tbl %>%
-                add_column(sim_name = paste0(ens_name,
+                add_column(sim_name = paste0(name,
                                              1:dim(.)[1]))
 
     # remove any output contained in base_sim
@@ -52,8 +52,8 @@ create_ens <- function(
         class = "ens",
         base_sim = base_sim,
         sim_plan = sim_plan,
-        ens_name = ens_name,
-        ens_path = paste0(ens_path, "/", ens_name)
+        name = name,
+        path = paste0(path, "/", name)
     )
 }
 
