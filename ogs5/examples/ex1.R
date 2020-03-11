@@ -20,13 +20,13 @@ sources = list.files(path = "ogs5/output/",
                      ignore.case=TRUE)
 sapply(sources, source, .GlobalEnv)
 
-sources = list.files(path =  "ogs5/",
+sources = list.files(path =  "ogs5/base/",
                      pattern="*.R$", full.names=TRUE, 
                      ignore.case=TRUE)
 sapply(sources, source, .GlobalEnv)
 
 # define ogs5 obj ---------------------------------------------------------
-ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L, sim_path = "ogs5/examples/ex1")
+ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L, sim_path = "ogs5/examples/tmp/ex1")
 
 
 ## add input file blocs ----------------------------------------------------
