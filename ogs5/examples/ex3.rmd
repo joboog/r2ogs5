@@ -41,7 +41,7 @@ gg_exxp <- exp_df %>%
 ```{r}
 sim <- ex1
 attributes(sim)$sim_name <- "ex3"
-attributes(sim)$sim_path <- "ogs5/examples/ex3"
+attributes(sim)$sim_path <- "ogs5/examples/tmp/ex3"
 #sim$input$out$waterflow <- NULL
 #sim$input$out$tracer <- NULL
 #sim$input$out$tracer_tec <- NULL
@@ -109,8 +109,7 @@ sim_optimized <- ogs5_compute_ssqe(ll = sim, par = result$par,
 
 ## Visualize
 
-```{r}
-
+```{r fig.width=6, fig.height=4.5}
 gg_exxp + 
   geom_line(data = sim_optimized[[3]], 
             aes(x = TIME, y = Tracer_hat),
@@ -119,5 +118,7 @@ gg_exxp +
     theme_classic()+
     labs(x = expression(Time~(days)),
          y = expression(c[Tracer]~(mg~L^{-1}))
-    )
+    )+
+    ylim(c(0,0.03))
+#ggsave("myplot.png", device = "png", scale = 0.6)
 ```
