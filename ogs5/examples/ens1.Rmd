@@ -1,0 +1,139 @@
+---
+title: "Example 2 -- Define Ensemble Run"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, results = "hide", error = FALSE, message = FALSE)
+```
+
+```{r}
+source("ogs5/examples/ex1.R")
+```
+
+
+## Preprocessing
+
+Define parameter table for ensemble.
+```{r, eval = FALSE, include = FALSE}
+para_df <- tibble(parameter_tree = rep("input$MMP$gravel$MASS_DISPERSION", 10),
+                  parameter_name = rep("MASS_DISPERSION", 10),
+                  tmp1 = rep(1,10),
+                  tmp2 = seq(0.1, 2.5, length.out = 10),
+                  parameter_value = paste(tmp1, tmp2)) %>% 
+              select(-tmp1, -tmp2)
+```
+
+```{r results = "markup"}
+para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 10),
+                       tracer_input_concentration = seq(0.1, 1, length.out = 5)) %>% 
+            as_tibble()
+
+head(para_df)
+```
+
+
+Define the ensemble runs.
+```{r}
+ens1 = create_ens(base_sim = ex1, parameter_tbl = para_df, name = "tracersim",
+                  path = "ogs5/examples/tmp")
+
+# ensemble_add_sims <- functoin(ensemble = list())
+# add sims
+for (i in 1:dim(attributes(ens1)$sim_plan)[1]){
+
+  # define new ogs5 obj based on attributes(ens1)$base_sim 
+  tmp <- attributes(ens1)$base_sim
+ 
+  # set parameters
+  tmp$input$mmp$gravel$MASS_DISPERSION <- 
+    paste("1 ", round(attributes(ens1)$sim_plan[i, "mass_dispersion"], 2))
+  
+  tmp$input$bc$tracer_in$DIS_TYPE <- 
+    paste("CONSTANT", attributes(ens1)$sim_plan[i, "tracer_input_concentration"])
+  
+  # add to ens1
+  ens1 <- ens_add_ogs5(x = ens1, ogs5_obj = tmp)
+}
+```
+
+Write all input files.
+```{r}
+ens_write_inputfiles(ens1)
+```
+
+## Simulate
+
+Execute simulations.
+```{r}
+ens_run(ens1, 
+        exe_path = "/home/boog/ufz/08_hiwi_envinf/03_ogs5/ogs_5.76/bin",
+        log_output = TRUE,
+        wait = FALSE)
+
+```
+
+Read output.
+```{r}
+ens1 <- ens_get_output(ens1, type = "all")
+```
+
+## Postprocessing
+
+```{r}
+# create tibble of all outputted *.tec files
+tracer_out_df <- tibble()
+
+for (i in 1:length(ens1)){
+  tracer_out_df <- tracer_out_df %>% 
+                    bind_rows(
+                      ens1[[i]]$output$tracer_tec[[1]] %>% 
+                        mutate(sim_name = attributes(ens1[[i]])$sim_name)
+                    )   
+}
+```
+
+
+```{r}
+# linke output with paramter table
+tracer_out_df <-
+  tracer_out_df %>% 
+                  filter(X == 4.7) %>% 
+                  left_join(attributes(ens1)$sim_plan, by= "sim_name") %>% 
+                  mutate(TIME = TIME/(3600*24))
+```
+
+
+## Visualization
+
+```{r fig.align="center", fig.asp=0.5}
+library("ggridges")
+
+tracer_out_df %>% 
+  filter(X == 4.7) %>% 
+  
+  ggplot(aes(x = TIME, y = mass_dispersion, 
+             height= (Tracer), group = mass_dispersion,
+             fill = Tracer))+
+    geom_density_ridges_gradient(stat = "identity", rel_min_height = 0.01,
+                                 panel_scaling = TRUE)+
+    
+    facet_grid(.~tracer_input_concentration)+
+  
+    theme_ridges()+
+    theme(axis.text.x.bottom = element_text(angle = 30) )+
+    labs(x = expression(Time~(days)),
+         y = expression(Dispersion~Length~(m)),
+         fill = expression(c[Tracer]~(mg~L^{-1}))
+    )
+```
+
+## Clear ip
+```{r}
+unlink(attributes(ens1)$path, recursive = TRUE)
+```
+
