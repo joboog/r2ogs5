@@ -4,7 +4,7 @@
 # run simulation ----------------------------------------------------------
 
 ogs5_run <- function(ogs5_obj = list(), 
-                     exe_path = NULL, run_path = NULL, 
+                     ogs_exe = NULL, run_path = NULL, 
                      log_output = TRUE,
                      log_path = NULL,
                      wait = TRUE){
@@ -13,8 +13,12 @@ ogs5_run <- function(ogs5_obj = list(),
   valid_ogs5(ogs5_obj)
 
   # check paths
-  if (is.null(exe_path)){
-    exe_path <- paste0(attributes(ogs5_obj)$sim_path)
+  if (is.null(ogs_exe)){
+    stop("You did not specifiy the full name of the ogs executable.",
+         call. = FALSE)
+  }
+  if (!(file.exists(ogs_exe))){
+    stop("The provided ogs executable does not exist.", call. = FALSE)
   }
   
   if (is.null(run_path)){
@@ -33,9 +37,9 @@ ogs5_run <- function(ogs5_obj = list(),
   } else logfile <- ""
   
   # run ogs5 sim
-  command_to_os <- paste0(exe_path,"/ogs* ", 
+  command_to_os <- paste0(ogs_exe, " ", 
                           run_path,"/", attributes(ogs5_obj)$sim_name," ",
                           logfile)
-  
+
   system(command = command_to_os, wait = wait)
 }
