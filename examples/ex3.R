@@ -85,9 +85,9 @@ ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
 
 
 ## Get Experimenal Data
-exp_df <- load("data/tracer_exp.rda")
+tracer_exp <- load("data/tracer_exp.rda")
 
-gg_exp <- exp_df %>%
+gg_exp <- tracer_exp %>%
             ggplot2::ggplot(ggplot2::aes(x = time, y = tracer_exp))+
             ggplot2::geom_point(color = "orange")
 
@@ -131,8 +131,8 @@ ogs5_compute_ssqe <- function(ll, par, return_ogs5 = FALSE){
               dplyr::mutate(TIME = TIME/(24*3600))
 
   f <- approxfun(x = mod_df$TIME, y = mod_df$Tracer_hat)
-  y_hat <- f(exp_df$time) %>% na.omit
-  y <- exp_df$tracer_exp
+  y_hat <- f(tracer_exp$time) %>% na.omit
+  y <- tracer_exp$tracer_exp
   ssqe <- sum((y_hat-y)^2)
 
   # clear folder
