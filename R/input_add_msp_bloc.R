@@ -2,8 +2,8 @@
 # input: ogs5-obj
 # output: updated ogs5-obj
 
-input_add_msp_bloc <- 
-   
+input_add_msp_bloc <-
+
    function(
     x = list(),
     BIOT_CONSTANT = NULL,
@@ -26,31 +26,31 @@ input_add_msp_bloc <-
     THERMAL = NULL,
     THRESHOLD_DEV_STR = NULL,
     TIME_DEPENDENT_YOUNGS_POISSON = NULL
-   
+
    ){
-      
+
       msp_name <- NAME
-      
+
       # validate input
       valid_ogs5(x)
-      
-      # look if ogs5-objinput$msp exists and valid, otherwise create 
+
+      # look if ogs5-objinput$msp exists and valid, otherwise create
       if (!("msp" %in% names(x$input))) {
-         x$input$msp <- create_ogs5_msp() 
+         x$input$msp <- create_ogs5_msp()
       } else {
-         
+
          valid_ogs5_msp(x$input$msp)
-         
+
          if (msp_name %in% names(x$input$msp)) {
             stop("msp_name does already exist", call. = FALSE)
          }
-         
+
       }
-      
+
       # create and add sublist to msp-list
-      
+
       x$input$msp[[paste(msp_name)]] <- list(
-         
+
          "BIOT_CONSTANT" = BIOT_CONSTANT,
          "CREEP" = CREEP,
          "DENSITY" = DENSITY,
@@ -70,15 +70,15 @@ input_add_msp_bloc <-
          "SWELLING_PRESSURE_TYPE" = SWELLING_PRESSURE_TYPE,
          "THERMAL" = THERMAL,
          "THRESHOLD_DEV_STR" = THRESHOLD_DEV_STR,
-         "TIME_DEPENDENT_YOUNGS_POISSON" = TIME_DEPENDENT_YOUNGS_POISSON 
-         
-      ) %>% 
-         purrr::discard(is.null) %>% 
-         purrr::discard(isFALSE) %>% 
+         "TIME_DEPENDENT_YOUNGS_POISSON" = TIME_DEPENDENT_YOUNGS_POISSON
+
+      ) %>%
+         purrr::discard(is.null) %>%
+         purrr::discard(BBmisc::isFALSE) %>%
          structure(class = "ogs5_msp_bloc")
-      
+
       valid_ogs5_msp_bloc(x$input$msp[[paste(msp_name)]])
-      
+
       return(x)
-      
+
    }

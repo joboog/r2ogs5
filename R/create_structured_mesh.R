@@ -47,7 +47,7 @@ generateRegHexEle <- function(x_vector = numeric(), y_vector = numeric(),
   n_ele_x <- length(x_vector)-1
   n_ele_y <- length(y_vector)-1
   n_ele_z <- length(z_vector)-1
-  ele_df <- tibble(material_id = numeric(), ele_type = character(),
+  ele_df <-tibble::tibble(material_id = numeric(), ele_type = character(),
                    node1 = numeric(), node2 = numeric(),
                   node3 = numeric(), node4 = numeric(),node5 = numeric(),
                   node6 = numeric(), node7 = numeric(), node8 = numeric())
@@ -86,7 +86,7 @@ generateRegQuadEle <- function(vector1 = numeric(), vector2 = numeric()){
   n_nodes2 <- length(vector2)
   n_ele1 <- length(vector1)-1
   n_ele2 <- length(vector2)-1
-  ele_df <- tibble(material_id = numeric(), ele_type = character(),
+  ele_df <-tibble::tibble(material_id = numeric(), ele_type = character(),
                    node1 = numeric(), node2 = numeric(),
                   node3 = numeric(), node4 = numeric())
   
@@ -166,7 +166,7 @@ create_structured_mesh_nodes_ele <-
   
   xyz_vector <- list(x_vector, y_vector, z_vector)
   
-  nodes_df <- as_tibble(expand.grid(x = xyz_vector[[1]], y = xyz_vector[[2]],
+  nodes_df <- tibble::as_tibble(expand.grid(x = xyz_vector[[1]], y = xyz_vector[[2]],
                                     z = xyz_vector[[3]]))
   
   # create element_df
@@ -174,7 +174,7 @@ create_structured_mesh_nodes_ele <-
   if (length(mesh_dim[mesh_dim == TRUE]) == 1) {
     
     ele_type <- "line"
-    ele_df <- tibble(material_id = vector("numeric", length(nodes_df[[1]])-1),
+    ele_df <-tibble::tibble(material_id = vector("numeric", length(nodes_df[[1]])-1),
                      ele_type = rep(ele_type, times = length(nodes_df[[1]])-1),
                      node1 = seq(0, length(nodes_df[[1]])-2,1),
                      node2 = node1 + 1)

@@ -38,7 +38,7 @@ create_ens <- function(
 
     # create sim_plan
     sim_plan <- parameter_tbl %>%
-                add_column(sim_name = paste0(name,
+                tibble::add_column(sim_name = paste0(name,
                                              1:dim(.)[1]))
 
     # remove any output contained in base_sim

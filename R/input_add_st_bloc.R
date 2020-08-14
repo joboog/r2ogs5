@@ -2,12 +2,12 @@
 # input: ogs5-obj
 # output: updated ogs5-obj
 
-input_add_st_bloc <- 
-   
+input_add_st_bloc <-
+
    function(
       x = list(),
       st_name = character(NULL),
-      
+
       AIR_BREAKING = NULL,
       CHANNEL = NULL,
       COMP_NAME = NULL,
@@ -24,29 +24,29 @@ input_add_st_bloc <-
       PRIMARY_VARIABLE = character(NULL),
       TIME_INTERPOLATION = NULL,
       TIM_TYPE = NULL
-      
+
    ){
-      
+
       # validate input
       valid_ogs5(x)
-      
-      # look if ogs5-obj$input$st exists and valid, otherwise create 
+
+      # look if ogs5-obj$input$st exists and valid, otherwise create
       if (!("st" %in% names(x$input))) {
-         x$input$st <- create_ogs5_st() 
+         x$input$st <- create_ogs5_st()
       } else {
-         
+
          valid_ogs5_st(x$input$st)
-         
+
          if (st_name %in% names(x$input$st)) {
             stop("st_name does already exist", call. = FALSE)
          }
-         
+
       }
-      
+
       # create and add sublist to st-list
-      
+
       x$input$st[[paste(st_name)]] <- list(
-         
+
          "AIR_BREAKING" = AIR_BREAKING,
          "CHANNEL" = CHANNEL,
          "COMP_NAME" = COMP_NAME,
@@ -63,14 +63,14 @@ input_add_st_bloc <-
          "PRIMARY_VARIABLE" =  PRIMARY_VARIABLE,
          "TIME_INTERPOLATION" = TIME_INTERPOLATION,
          "TIM_TYPE" = TIM_TYPE
-         
-      ) %>% 
-         purrr::discard(is.null) %>% 
-         purrr::discard(isFALSE) %>% 
+
+      ) %>%
+         purrr::discard(is.null) %>%
+         purrr::discard(BBmisc::isFALSE) %>%
          structure(class = "ogs5_st_condition")
-      
+
       valid_ogs5_st_condition(x$input$st[[paste(st_name)]])
-      
+
       return(x)
-      
+
    }

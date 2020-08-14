@@ -6,12 +6,12 @@
 # add pcs-blocs as additional list
 
 
-input_add_pcs_bloc <- 
-               
+input_add_pcs_bloc <-
+
          function(
             x = list(),
             pcs_name = character(NULL),
-            
+
             APP_TYPE = NULL,
             BOUNDARY_CONDITION_OUTPUT = FALSE,
             COUNT = NULL,
@@ -45,32 +45,32 @@ input_add_pcs_bloc <-
             USE_PRECALCULATED_FILES = FALSE,
             USE_VELOCITIES_FOR_TRANSPORT = NULL
              ){
-  
+
     # validate input
     valid_ogs5(x)
-    
-    # look if ogs5-obj$input$pcs exists and valid, otherwise create 
+
+    # look if ogs5-obj$input$pcs exists and valid, otherwise create
     if (!("pcs" %in% names(x$input))) {
-      x$input$pcs <- create_ogs5_pcs() 
+      x$input$pcs <- create_ogs5_pcs()
     } else {
-       
+
        valid_ogs5_pcs(x$input$pcs)
-       
+
        if (pcs_name %in% names(x$input$pcs)) {
           stop("pcs_name does already exist", call. = FALSE)
        }
-       
+
        if (PCS_TYPE!="MASS_TRANSPORT" &&
            PCS_TYPE %in% sapply(x$input$pcs, "[[", 1)
           ) {
           stop("PCS_TYPE does already exist", call. = FALSE)
        }
     }
-    
+
     # create and add sublist to pcs-list
-    
+
    x$input$pcs[[paste(pcs_name)]] <- list(
-       
+
       "APP_TYPE" = APP_TYPE,
        "BOUNDARY_CONDITION_OUTPUT" = BOUNDARY_CONDITION_OUTPUT,
        "COUNT" = COUNT,
@@ -103,13 +103,13 @@ input_add_pcs_bloc <-
        "UPDATE_INI_STATE" = TIM_TYPE,
        "USE_PRECALCULATED_FILES" = TIM_TYPE,
        "USE_VELOCITIES_FOR_TRANSPORT" = USE_VELOCITIES_FOR_TRANSPORT
-       ) %>% 
-       purrr::discard(is.null) %>% 
-       purrr::discard(isFALSE) %>% 
+       ) %>%
+       purrr::discard(is.null) %>%
+       purrr::discard(BBmisc::isFALSE) %>%
        structure(class = "ogs5_pcs_process")
-    
+
     valid_ogs5_pcs_process(x$input$pcs[[paste(pcs_name)]])
-   
+
     return(x)
-   
+
 }

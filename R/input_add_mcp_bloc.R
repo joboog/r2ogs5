@@ -2,8 +2,8 @@
 # input: ogs5-obj
 # output: updated ogs5-obj
 
-input_add_mcp_bloc <- 
-   
+input_add_mcp_bloc <-
+
    function(
       x = list(),
       ACENTRIC_FACTOR = NULL,
@@ -28,31 +28,31 @@ input_add_mcp_bloc <-
       OutputMassOfComponentInModel = NULL,
       TRANSPORT_PHASE = NULL,
       VALENCE = NULL,
-      VOLUME_DIFFUSION = NULL 
-      
+      VOLUME_DIFFUSION = NULL
+
    ){
       mcp_name <- NAME
-      
+
       # validate input
       valid_ogs5(x)
-      
-      # look if ogs5-obj$input$mcp eximcps and valid, otherwise create 
+
+      # look if ogs5-obj$input$mcp eximcps and valid, otherwise create
       if (!("mcp" %in% names(x$input))) {
-         x$input$mcp <- create_ogs5_mcp() 
+         x$input$mcp <- create_ogs5_mcp()
       } else {
-         
+
          valid_ogs5_mcp(x$input$mcp)
-         
+
          if (mcp_name %in% names(x$input$mcp)) {
             stop("mcp_name does already exist", call. = FALSE)
          }
-         
+
       }
-      
+
       # create and add sublist to mcp-list
-      
+
       x$input$mcp[[paste(mcp_name)]] <- list(
-         
+
          "ACENTRIC_FACTOR" = ACENTRIC_FACTOR,
          "A_ZERO" = A_ZERO,
          "BUBBLE_VELOCITY" = BUBBLE_VELOCITY,
@@ -75,15 +75,15 @@ input_add_mcp_bloc <-
          "OutputMassOfComponentInModel" = OutputMassOfComponentInModel,
          "TRANSPORT_PHASE" = TRANSPORT_PHASE,
          "VALENCE" = VALENCE,
-         "VOLUME_DIFFUSION" = VOLUME_DIFFUSION 
-         
-      ) %>% 
-         purrr::discard(is.null) %>% 
-         purrr::discard(isFALSE) %>% 
+         "VOLUME_DIFFUSION" = VOLUME_DIFFUSION
+
+      ) %>%
+         purrr::discard(is.null) %>%
+         purrr::discard(BBmisc::isFALSE) %>%
          structure(class = "ogs5_mcp_component")
-      
+
       valid_ogs5_mcp_component(x$input$mcp[[paste(mcp_name)]])
-      
+
       return(x)
-      
+
    }

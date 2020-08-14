@@ -2,8 +2,8 @@
 # input: ogs5-obj
 # output: updated ogs5-obj
 
-input_add_mmp_bloc <- 
-   
+input_add_mmp_bloc <-
+
    function(
       x = list(),
       CAPILLARY_PRESSURE = NULL,
@@ -54,31 +54,31 @@ input_add_mmp_bloc <-
       VOL_BIO = NULL,
       VOL_MAT = NULL,
       WIDTH  = NULL
-      
+
    ){
-      
+
       mmp_name <- NAME
-      
+
       # validate input
       valid_ogs5(x)
-      
-      # look if ogs5-objinput$mmp exists and valid, otherwise create 
+
+      # look if ogs5-objinput$mmp exists and valid, otherwise create
       if (!("mmp" %in% names(x$input))) {
-         x$input$mmp <- create_ogs5_mmp() 
+         x$input$mmp <- create_ogs5_mmp()
       } else {
-         
+
          valid_ogs5_mmp(x$input$mmp)
-         
+
          if (mmp_name %in% names(x$input$mmp)) {
             stop("mmp_name does already exist", call. = FALSE)
          }
-         
+
       }
-      
+
       # create and add sublist to mmp-list
-      
+
       x$input$mmp[[paste(mmp_name)]] <- list(
-         
+
          "CAPILLARY_PRESSURE" = CAPILLARY_PRESSURE,
          "CHANNEL" = CHANNEL,
          "COMPOUND_DEPENDENT_DT" = COMPOUND_DEPENDENT_DT,
@@ -127,14 +127,14 @@ input_add_mmp_bloc <-
          "VOL_BIO" = VOL_BIO,
          "VOL_MAT" = VOL_MAT,
          "WIDTH"  = WIDTH
-         
-      ) %>% 
-         purrr::discard(is.null) %>% 
-         purrr::discard(isFALSE) %>% 
+
+      ) %>%
+         purrr::discard(is.null) %>%
+         purrr::discard(BBmisc::isFALSE) %>%
          structure(class = "ogs5_mmp_bloc")
-      
+
       valid_ogs5_mmp_bloc(x$input$mmp[[paste(mmp_name)]])
-      
+
       return(x)
-      
+
    }

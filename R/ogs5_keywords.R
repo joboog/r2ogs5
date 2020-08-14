@@ -1,36 +1,38 @@
 
 # ogs5 keyword list -------------------------------------------------------
-ogs5_keywordlist <- list()
+ogs5_get_keywordlist <- function(){
 
-# bc ----------------------------------------------------------------------
-ogs5_keywordlist$bc <- list()
-ogs5_keywordlist$bc$mkey <- "#BOUNDARY_CONDITION"
-ogs5_keywordlist$bc$skey = "$COMP_NAME 
-                $CONSTRAINED 
-                $COPY_VALUE 
-                $DIS_TYPE 
-                $DIS_TYPE_CONDITION 
-                $EPSILON 
-                $EXCAVATION 
-                $FCT_TYPE 
-                $GEO_TYPE 
-                $MSH_TYPE 
-                $NO_DISP_INCREMENT 
-                $PCS_TYPE 
-                $PRESSURE_AS_HEAD 
-                $PRIMARY_VARIABLE 
-                $TIME_CONTROLLED_ACTIVE 
+  ogs5_keywordlist <- list()
+
+  # bc ----------------------------------------------------------------------
+  ogs5_keywordlist$bc <- list()
+  ogs5_keywordlist$bc$mkey <- "#BOUNDARY_CONDITION"
+  ogs5_keywordlist$bc$skey = "$COMP_NAME
+                $CONSTRAINED
+                $COPY_VALUE
+                $DIS_TYPE
+                $DIS_TYPE_CONDITION
+                $EPSILON
+                $EXCAVATION
+                $FCT_TYPE
+                $GEO_TYPE
+                $MSH_TYPE
+                $NO_DISP_INCREMENT
+                $PCS_TYPE
+                $PRESSURE_AS_HEAD
+                $PRIMARY_VARIABLE
+                $TIME_CONTROLLED_ACTIVE
                 $TIM_TYPE"
 
-# cct ---------------------------------------------------------------------
-ogs5_keywordlist$cct$mkey <- "#COMMUNICATION_TABLE"
-ogs5_keywordlist$cct$skey <- "$MYRANK
+  # cct ---------------------------------------------------------------------
+  ogs5_keywordlist$cct$mkey <- "#COMMUNICATION_TABLE"
+  ogs5_keywordlist$cct$skey <- "$MYRANK
                         $NEIGHBOR
                         $NNEIGHBORS "
 
-# fct ---------------------------------------------------------------------
-ogs5_keywordlist$fct$mkey <- "#FUNCTION"
-ogs5_keywordlist$fct$skey <- "$DATA
+  # fct ---------------------------------------------------------------------
+  ogs5_keywordlist$fct$mkey <- "#FUNCTION"
+  ogs5_keywordlist$fct$skey <- "$DATA
                         $DIMENSION
                         $DIS_TYPE
                         $GEO_TYPE
@@ -38,9 +40,9 @@ ogs5_keywordlist$fct$skey <- "$DATA
                         $TYPE
                         $VARIABLES "
 
-# gem ---------------------------------------------------------------------
-ogs5_keywordlist$gem$mkey <- "#GEM_PROPERTIES"
-ogs5_keywordlist$gem$skey <- "$CALCULATE_BOUNDARY_NODES
+  # gem ---------------------------------------------------------------------
+  ogs5_keywordlist$gem$mkey <- "#GEM_PROPERTIES"
+  ogs5_keywordlist$gem$skey <- "$CALCULATE_BOUNDARY_NODES
                         $DISABLE_GEMS
                         $FLAG_COUPLING_HYDROLOGY
                         $FLAG_DISABLE_GEM
@@ -58,13 +60,13 @@ ogs5_keywordlist$gem$skey <- "$CALCULATE_BOUNDARY_NODES
                         $TEMPERATURE_GEM
                         $TRANSPORT_B "
 
-# gli ---------------------------------------------------------------------
-ogs5_keywordlist$gli$mkey <- "#POINTS
+  # gli ---------------------------------------------------------------------
+  ogs5_keywordlist$gli$mkey <- "#POINTS
                         #POLYLINE
                         #STOP
                         #SURFACE
                         #VOLUME "
-ogs5_keywordlist$gli$skey <- "$EPSILON
+  ogs5_keywordlist$gli$skey <- "$EPSILON
                         $ID
                         $LAYER
                         $MAT_GROUP
@@ -77,21 +79,21 @@ ogs5_keywordlist$gli$skey <- "$EPSILON
                         $TIN
                         $TYPE "
 
-# ic ----------------------------------------------------------------------
-ogs5_keywordlist$ic$mkey <- "#INITIAL_CONDITION"
-ogs5_keywordlist$ic$skey <- "$COMP_NAME
+  # ic ----------------------------------------------------------------------
+  ogs5_keywordlist$ic$mkey <- "#INITIAL_CONDITION"
+  ogs5_keywordlist$ic$skey <- "$COMP_NAME
                         $DIS_TYPE
                         $GEO_TYPE
                         $PCS_TYPE
                         $PRIMARY_VARIABLE
                         $STORE_VALUES "
 
-# krc ---------------------------------------------------------------------
-ogs5_keywordlist$krc$mkey <- "#BLOB_PROPERTIES
+  # krc ---------------------------------------------------------------------
+  ogs5_keywordlist$krc$mkey <- "#BLOB_PROPERTIES
                         #KINREACTIONDATA
                         #MICROBE_PROPERTIES
                         #REACTION "
-ogs5_keywordlist$krc$skey <- "$ACTIVITY_MODEL
+  ogs5_keywordlist$krc$skey <- "$ACTIVITY_MODEL
                         $ALLOW_REACTIONS
                         $BACTERIACAPACITY
                         $BACTERIAL_YIELD
@@ -160,9 +162,9 @@ ogs5_keywordlist$krc$skey <- "$ACTIVITY_MODEL
                         $drmc_
                         $drmc__PARAMETERS "
 
-# mcp ---------------------------------------------------------------------
-ogs5_keywordlist$mcp$mkey <- "#COMPONENT_PROPERTIES"
-ogs5_keywordlist$mcp$skey <- "$ACENTRIC_FACTOR
+  # mcp ---------------------------------------------------------------------
+  ogs5_keywordlist$mcp$mkey <- "#COMPONENT_PROPERTIES"
+  ogs5_keywordlist$mcp$skey <- "$ACENTRIC_FACTOR
                         $A_ZERO
                         $BUBBLE_VELOCITY
                         $CRITICAL_PRESSURE
@@ -186,9 +188,9 @@ ogs5_keywordlist$mcp$skey <- "$ACENTRIC_FACTOR
                         $VALENCE
                         $VOLUME_DIFFUSION "
 
-# mfp ---------------------------------------------------------------------
-ogs5_keywordlist$mfp$mkey <- "#FLUID_PROPERTIES"
-ogs5_keywordlist$mfp$skey <- "$COMPONENTS
+  # mfp ---------------------------------------------------------------------
+  ogs5_keywordlist$mfp$mkey <- "#FLUID_PROPERTIES"
+  ogs5_keywordlist$mfp$skey <- "$COMPONENTS
                         $COMPRESSIBILITY
                         $DAT_TYPE
                         $DECAY
@@ -209,9 +211,9 @@ ogs5_keywordlist$mfp$skey <- "$COMPONENTS
                         $TEMPERATURE
                         $VISCOSITY "
 
-# mmp ---------------------------------------------------------------------
-ogs5_keywordlist$mmp$mkey <- "#MEDIUM_PROPERTIES" #MEDIUM_PROPERTIES_DISTRIBUTED "
-ogs5_keywordlist$mmp$skey <- "$CAPILLARY_PRESSURE
+  # mmp ---------------------------------------------------------------------
+  ogs5_keywordlist$mmp$mkey <- "#MEDIUM_PROPERTIES" #MEDIUM_PROPERTIES_DISTRIBUTED "
+  ogs5_keywordlist$mmp$skey <- "$CAPILLARY_PRESSURE
                         $CHANNEL
                         $COMPOUND_DEPENDENT_DT
                         $CONDUCTIVITY_MODEL
@@ -260,9 +262,9 @@ ogs5_keywordlist$mmp$skey <- "$CAPILLARY_PRESSURE
                         $VOL_MAT
                         $WIDTH "
 
-# msh ---------------------------------------------------------------------
-ogs5_keywordlist$msh$mkey <- "#FEM_MSH"
-ogs5_keywordlist$msh$skey <- "$AREA
+  # msh ---------------------------------------------------------------------
+  ogs5_keywordlist$msh$mkey <- "#FEM_MSH"
+  ogs5_keywordlist$msh$skey <- "$AREA
                         $AXISYMMETRY
                         $CROSS_SECTION
                         $ELEMENTS
@@ -272,9 +274,9 @@ ogs5_keywordlist$msh$skey <- "$AREA
                         $NODES
                         $PCS_TYPE "
 
-# msp ---------------------------------------------------------------------
-ogs5_keywordlist$msp$mkey <- "SOLID_PROPERTIES"
-ogs5_keywordlist$msp$skey <- "$BIOT_CONSTANT
+  # msp ---------------------------------------------------------------------
+  ogs5_keywordlist$msp$mkey <- "SOLID_PROPERTIES"
+  ogs5_keywordlist$msp$skey <- "$BIOT_CONSTANT
                         $CREEP
                         $DENSITY
                         $ELASTICITY
@@ -295,9 +297,9 @@ ogs5_keywordlist$msp$skey <- "$BIOT_CONSTANT
                         $THRESHOLD_DEV_STR
                         $TIME_DEPENDENT_YOUNGS_POISSON "
 
-# num ---------------------------------------------------------------------
-ogs5_keywordlist$num$mkey <- "#NUMERICS"
-ogs5_keywordlist$num$skey <- "$COUPLED_PROCESS
+  # num ---------------------------------------------------------------------
+  ogs5_keywordlist$num$mkey <- "#NUMERICS"
+  ogs5_keywordlist$num$skey <- "$COUPLED_PROCESS
                         $COUPLING_CONTROL
                         $COUPLING_ITERATIONS
                         $DYNAMIC_DAMPING
@@ -319,9 +321,9 @@ ogs5_keywordlist$num$skey <- "$COUPLED_PROCESS
                         $RENUMBER
                         $TIME_STEPS "
 
-# out ---------------------------------------------------------------------
-ogs5_keywordlist$out$mkey <- "#OUTPUT"
-ogs5_keywordlist$out$skey <- "$AMPLIFIER
+  # out ---------------------------------------------------------------------
+  ogs5_keywordlist$out$mkey <- "#OUTPUT"
+  ogs5_keywordlist$out$skey <- "$AMPLIFIER
                         $DAT_TYPE
                         $DIS_TYPE
                         $ELE_VALUES
@@ -337,9 +339,9 @@ ogs5_keywordlist$out$skey <- "$AMPLIFIER
                         $TIM_TYPE
                         $VARIABLESHARING "
 
-# pcs ---------------------------------------------------------------------
-ogs5_keywordlist$pcs$mkey <- "#PROCESS"
-ogs5_keywordlist$pcs$skey <- "$APP_TYPE
+  # pcs ---------------------------------------------------------------------
+  ogs5_keywordlist$pcs$mkey <- "#PROCESS"
+  ogs5_keywordlist$pcs$skey <- "$APP_TYPE
                         $BOUNDARY_CONDITION_OUTPUT
                         $COUNT
                         $CPL_TYPE
@@ -372,13 +374,13 @@ ogs5_keywordlist$pcs$skey <- "$APP_TYPE
                         $USE_PRECALCULATED_FILES
                         $USE_VELOCITIES_FOR_TRANSPORT "
 
-# pqc ---------------------------------------------------------------------
-ogs5_keywordlist$pqc$mkey <- "#ende 
+  # pqc ---------------------------------------------------------------------
+  ogs5_keywordlist$pqc$mkey <- "#ende
                         #libprint"
 
-# rei ---------------------------------------------------------------------
-ogs5_keywordlist$rei$mkey <- "#REACTION_INTERFACE"
-ogs5_keywordlist$rei$skey <- "$ALL_PCS_DUMP
+  # rei ---------------------------------------------------------------------
+  ogs5_keywordlist$rei$mkey <- "#REACTION_INTERFACE"
+  ogs5_keywordlist$rei$skey <- "$ALL_PCS_DUMP
                         $DISSOLVED_NEUTRAL_CO2_SPECIES_NAME
                         $HEATPUMP_2DH_TO_2DV
                         $INITIAL_CONDITION_OUTPUT
@@ -399,14 +401,14 @@ ogs5_keywordlist$rei$skey <- "$ALL_PCS_DUMP
                         $WATER_SATURATION_LIMIT
                         $WATER_SPECIES_NAME "
 
-# rfd ---------------------------------------------------------------------
-ogs5_keywordlist$rfd$mkey <- "#CURVES" #CURVE
-ogs5_keywordlist$rfd$skey <- "$INTERPOLATION
+  # rfd ---------------------------------------------------------------------
+  ogs5_keywordlist$rfd$mkey <- "#CURVES" #CURVE
+  ogs5_keywordlist$rfd$skey <- "$INTERPOLATION
                         $MSH_TYPE"
-                        
-# tim ---------------------------------------------------------------------
-ogs5_keywordlist$tim$mkey <- "#TIME_STEPPING"
-ogs5_keywordlist$tim$skey <- "$CRITICAL_TIME
+
+  # tim ---------------------------------------------------------------------
+  ogs5_keywordlist$tim$mkey <- "#TIME_STEPPING"
+  ogs5_keywordlist$tim$skey <- "$CRITICAL_TIME
                         $INDEPENDENT
                         $PCS_TYPE
                         $SUBSTEPS
@@ -418,9 +420,9 @@ ogs5_keywordlist$tim$skey <- "$CRITICAL_TIME
                         $TIME_STEPS
                         $TIME_UNIT "
 
-# st ----------------------------------------------------------------------
-ogs5_keywordlist$st$mkey <- "#SOURCE_TERM"
-ogs5_keywordlist$st$skey <- "$CRITICAL_TIME
+  # st ----------------------------------------------------------------------
+  ogs5_keywordlist$st$mkey <- "#SOURCE_TERM"
+  ogs5_keywordlist$st$skey <- "$CRITICAL_TIME
                         $INDEPENDENT
                         $PCS_TYPE
                         $SUBSTEPS
@@ -432,27 +434,29 @@ ogs5_keywordlist$st$skey <- "$CRITICAL_TIME
                         $TIME_STEPS
                         $TIME_UNIT "
 
+  ogs5_keywordlist <- ogs5_extract_ogs5_keywordlist(ogs5_keywordlist)
+  return(ogs5_keywordlist)
+}
 
-# function to extract and list ogs5_keywordlist -----------------------------------
-ogs5_extract_ogs5_keywordlist <- 
+
+# function to extract and list ogs5_keywordlist -------------------------------
+ogs5_extract_ogs5_keywordlist <-
   function(x) {
-    
+
     for (i in seq_len(length(x))){
-      x[[i]]$mkey <- x[[i]]$mkey %>% 
-        str_squish() %>% 
-        str_split(pattern = " ") %>% 
-        .[[1]] %>% as.character %>% 
-        str_remove(pattern = "\\#")
-      
+      x[[i]]$mkey <- x[[i]]$mkey %>%
+       stringr::str_squish() %>%
+       stringr::str_split(pattern = " ") %>%
+        .[[1]] %>% as.character %>%
+       stringr::str_remove(pattern = "\\#")
+
       if (!is.null(x[[i]]$skey)){
-        x[[i]]$skey <- x[[i]]$skey %>% 
-          str_squish() %>% 
-          str_split(pattern = " ") %>% 
-          .[[1]] %>% as.character %>% 
-          str_remove(pattern = "\\$")
+        x[[i]]$skey <- x[[i]]$skey %>%
+         stringr::str_squish() %>%
+         stringr::str_split(pattern = " ") %>%
+          .[[1]] %>% as.character %>%
+         stringr::str_remove(pattern = "\\$")
       }
     }
     return(x)
   }
-
-ogs5_keywordlist <- ogs5_extract_ogs5_keywordlist(ogs5_keywordlist)

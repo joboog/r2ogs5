@@ -2,8 +2,8 @@
 # input: ogs5-obj
 # output: updated ogs5-obj
 
-input_add_num_bloc <- 
-   
+input_add_num_bloc <-
+
    function(
       x = list(),
       num_name = character(NULL),
@@ -28,32 +28,32 @@ input_add_num_bloc <-
       PLASTICITY_TOLERANCE = NULL,
       RENUMBER = NULL,
       TIME_STEPS  = NULL
-      
+
    ){
       # validate input
       valid_ogs5(x)
-      
-      # look if ogs5-objinput$num exists and valid, otherwise create 
+
+      # look if ogs5-objinput$num exists and valid, otherwise create
       if (!("num" %in% names(x$input))) {
-         x$input$num <- create_ogs5_num() 
+         x$input$num <- create_ogs5_num()
       } else {
-         
+
          valid_ogs5_num(x$input$num)
-         
+
          if (num_name %in% names(x$input$num)) {
             stop("num_name does already exist", call. = FALSE)
          }
-         
+
          if (PCS_TYPE %in% sapply(x$input$bc, "[[", 1)) {
             stop("PCS_TYPE does already exist", call. = FALSE)
          }
-         
+
       }
-      
+
       # create and add sublist to num-list
-      
+
       x$input$num[[paste(num_name)]] <- list(
-         
+
          "COUPLED_PROCESS" = COUPLED_PROCESS,
          "COUPLING_CONTROL" = COUPLING_CONTROL,
          "COUPLING_ITERATIONS" = COUPLING_ITERATIONS,
@@ -75,14 +75,14 @@ input_add_num_bloc <-
          "PLASTICITY_TOLERANCE" = PLASTICITY_TOLERANCE,
          "RENUMBER" = RENUMBER,
          "TIME_STEPS"  = TIME_STEPS
-         
-      ) %>% 
-         purrr::discard(is.null) %>% 
-         purrr::discard(isFALSE) %>% 
+
+      ) %>%
+         purrr::discard(is.null) %>%
+         purrr::discard(BBmisc::isFALSE) %>%
          structure(class = "ogs5_num_bloc")
-      
+
       valid_ogs5_num_bloc(x$input$num[[paste(num_name)]])
-      
+
       return(x)
-      
+
    }

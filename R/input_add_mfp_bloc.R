@@ -2,8 +2,8 @@
 # input: ogs5-obj
 # output: updated ogs5-obj
 
-input_add_mfp_bloc <- 
-   
+input_add_mfp_bloc <-
+
    function(
       x = list(),
       COMPONENTS = NULL,
@@ -26,31 +26,31 @@ input_add_mfp_bloc <-
       SPECIFIC_HEAT_SOURCE = NULL,
       TEMPERATURE = NULL,
       VISCOSITY = character(NULL)
-      
+
    ){
-      
+
       mfp_name <- FLUID_NAME
-      
+
       # validate input
       valid_ogs5(x)
-      
-      # look if ogs5-obj$input$mfp eximfps and valid, otherwise create 
+
+      # look if ogs5-obj$input$mfp eximfps and valid, otherwise create
       if (!("mfp" %in% names(x$input))) {
-         x$input$mfp <- create_ogs5_mfp() 
+         x$input$mfp <- create_ogs5_mfp()
       } else {
-         
+
          valid_ogs5_mfp(x$input$mfp)
-         
+
          if (mfp_name %in% names(x$input$mfp)) {
             stop("mfp_name does already exist", call. = FALSE)
          }
-         
+
       }
-      
+
       # create and add sublist to mfp-list
-      
+
       x$input$mfp[[paste(mfp_name)]] <- list(
-         
+
          "COMPONENTS" = COMPONENTS,
          "COMPRESSIBILITY" = COMPRESSIBILITY,
          "DAT_TYPE" = DAT_TYPE,
@@ -71,14 +71,14 @@ input_add_mfp_bloc <-
          "SPECIFIC_HEAT_SOURCE" = SPECIFIC_HEAT_SOURCE,
          "TEMPERATURE" = TEMPERATURE,
          "VISCOSITY" = VISCOSITY
-         
-      ) %>% 
-         purrr::discard(is.null) %>% 
-         purrr::discard(isFALSE) %>% 
+
+      ) %>%
+         purrr::discard(is.null) %>%
+         purrr::discard(BBmisc::isFALSE) %>%
          structure(class = "ogs5_mfp_bloc")
-      
+
       valid_ogs5_mfp_bloc(x$input$mfp[[paste(mfp_name)]])
-      
+
       return(x)
-      
+
    }
