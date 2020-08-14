@@ -1,0 +1,29 @@
+Package: r2ogs
+Title: An API to the OpenGeoSys Multiphysics Simulator. 
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Johannes",
+           family = "Boog",
+           role = c("aut", "cre"),
+           email = "johannesboog@yahoo.de",
+           comment = structure("https://orcid.org/0000-0003-1094-9255",
+                                .Names = "ORCID"))
+Description: Define and manage simulations using OpenGeoSys.
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports:
+    BBmisc,
+    magrittr,
+    reticulate,
+    plyr,
+    dplyr,
+    purrr,
+    readr,
+    stringr,
+    tidyr,
+    tibble
+Depends: 
+    R (>= 2.10)
