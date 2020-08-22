@@ -90,7 +90,7 @@ ogs5_read_tecplot_domain<-function(filename){
   # remove empty columns
   df<- df[, sapply(df, function(i) !all(is.na(i)))] %>%
     apply(2,as.numeric) %>%
-    dplyr::tbl_df()
+    tibble::as_tibble()
 
   #=== combine all
   colnames(df)<-header
