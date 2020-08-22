@@ -1,6 +1,11 @@
 context("minimal working example for whole package")
 
+test_that("all input files exist in the directory", {
 
+    written_file_extensions <- list.files("tmp/ex1") %>%
+        stringr::str_remove("ex1.") # retain only suffixes such as bc, ic, ...
+        expect_true(all(names(ex1$input) %in% written_file_extensions))
+})
 
 test_that("ex1 gives the correct results", {
     # run ogs5 simulation, ex1 is in tests/testthat/temp
@@ -10,7 +15,7 @@ test_that("ex1 gives the correct results", {
              log_path = "/tmp/ex1/log")
 
     # read tecplot results
-    tec_df <- ogs5_read_many_tecplots(filepath = "/tmp/ex1",
+    tec_df <- ogs5_read_many_tecplots(filepath = "tmp/ex1",
                                       geo_object = "domain")
     # load original result
     tracer_sol <- unlist(read.table(file = "../../data/ex1_tracer_result.txt"))
