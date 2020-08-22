@@ -4,9 +4,11 @@
 # A temporary folder for input- and outputfiles will be created
 # in tests/testthat and after execution automatically erased.
 
+tmp <- tempdir() # temporary location
+
 # define ogs5 obj ---------------------------------------------------------
 ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L,
-                   sim_path = "tmp/ex1")
+                   sim_path = tmp)
 
 ## add input file blocs ----------------------------------------------------
 ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "waterflow",
