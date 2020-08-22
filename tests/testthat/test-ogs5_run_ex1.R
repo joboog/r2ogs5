@@ -13,7 +13,7 @@ test_that("ex1 gives the correct results", {
     tec_df <- ogs5_read_many_tecplots(filepath = "/tmp/ex1",
                                       geo_object = "domain")
     # load original result
-    tracer_sol <- unlist(read.table(file = "tracer_sol.txt"))
+    tracer_sol <- unlist(read.table(file = "../../data/ex1_tracer_result.txt"))
     # # stored via
     # write.table(tec_df$Tracer, file="tests/testthat/tracer_sol.txt",
     #             row.names = FALSE, col.names = FALSE)
