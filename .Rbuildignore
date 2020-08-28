@@ -3,6 +3,8 @@
 ^packrat/
 ^\.Rprofile$
 ^LICENSE\.md$
+^README\.Rmd$
+^\.gitlab-ci\.yml$
 ^inst/ogs/
 ^tmp/
 ^doc$

@@ -1,0 +1,9 @@
+image: rocker/tidyverse 
+
+test:
+  script:
+    - R -e 'install.packages(c("testthat", "packrat"))'
+    - R -e 'packrat::restore(restart = FALSE, overwrite.dirty = TRUE)'
+    - R CMD build . --no-build-vignettes --no-manual
+    - R CMD check *tar.gz --no-build-vignettes --no-manual
+
