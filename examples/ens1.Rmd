@@ -1,0 +1,217 @@
+---
+title: "Example 2 -- Define Ensemble Run"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, results = "hide",
+                      error = FALSE, message = FALSE)
+```
+
+**Remember:** `.Rmd` files are executed with respect to their directory, not the
+project working directory.
+
+```{r}
+# define ogs5 obj ---------------------------------------------------------
+ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L, sim_path = "tmp/ex1")
+
+ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
+                          PRIMARY_VARIABLE = "PRESSURE1")
+
+ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "tracer", PCS_TYPE = "MASS_TRANSPORT",
+                          PRIMARY_VARIABLE = "Tracer1", RELOAD = c("1", "1"))
+
+ex1 <- input_add_bc_bloc(x=ex1, bc_name = "pressure_out",
+                         PRIMARY_VARIABLE = "PRESSURE1",
+                         DIS_TYPE = "CONSTANT 9810", PCS_TYPE = "LIQUID_FLOW",
+                         GEO_TYPE = "POINT point1")
+
+ex1 <- input_add_bc_bloc(x=ex1, bc_name = "tracer_in", PRIMARY_VARIABLE = "Tracer",
+                         DIS_TYPE = "CONSTANT 1.19438", PCS_TYPE = "MASS_TRANSPORT",
+                         GEO_TYPE = "POINT point0", TIM_TYPE = "CURVE 1")
+
+ex1 <- input_add_ic_bloc(x = ex1, ic_name = "pressure", PCS_TYPE = "LIQUID_FLOW",
+                         PRIMARY_VARIABLE = "PRESSURE1", GEO_TYPE = "DOMAIN",
+                         DIS_TYPE = "CONSTANT 9810")
+
+ex1 <- input_add_ic_bloc(x = ex1, ic_name = "tracer", PCS_TYPE = "MASS_TRANSPORT",
+                         PRIMARY_VARIABLE = "Tracer", GEO_TYPE = "DOMAIN",
+                         DIS_TYPE = "CONSTANT 0.0")
+
+ex1 <- input_add_mcp_bloc(x = ex1, NAME = "Tracer", MOBILE = 1)
+
+ex1 <- input_add_mfp_bloc(x = ex1, FLUID_NAME = "water", FLUID_TYPE = "LIQUID",
+                          DENSITY = "1 1.0E+3", VISCOSITY = "1 1.0E-3")
+
+ex1 <- input_add_mmp_bloc(x = ex1, GEOMETRY_DIMENSION = "1", GEOMETRY_AREA = "1.2",
+                          POROSITY = "1 0.38",
+                          PERMEABILITY_TENSOR = "ISOTROPIC 1.0E-8",
+                          MASS_DISPERSION = "1 1.0",
+                          TORTUOSITY = "1 1.0", NAME = "gravel")
+
+ex1 <- input_add_msp_bloc(x = ex1, NAME = "gravel" , DENSITY = "1 1.8E+3")
+
+ex1 <- input_add_num_bloc(x = ex1, num_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
+                          LINEAR_SOLVER = "2 6 1.0E-14 100 1.0 100 4")
+
+ex1 <- input_add_num_bloc(x = ex1, num_name = "tracer", PCS_TYPE = "MASS_TRANSPORT",
+                          LINEAR_SOLVER = "2 6 1.0E-14 100 1.0 100 4")
+
+ex1 <- input_add_out_bloc(x = ex1, out_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
+                          NOD_VALUES = "PRESSURE1\n VELOCITY_X1", GEO_TYPE = "DOMAIN",
+                          DAT_TYPE = "PVD", TIM_TYPE = "STEPS 10")
+
+ex1 <- input_add_out_bloc(x = ex1, out_name = "tracer", PCS_TYPE = "MASS_TRANSPORT",
+                          NOD_VALUES = "Tracer", GEO_TYPE = "DOMAIN",
+                          DAT_TYPE = "PVD", TIM_TYPE = "STEPS 10")
+
+ex1 <- input_add_out_bloc(x = ex1, out_name = "tracer_tec",
+                          PCS_TYPE = "MASS_TRANSPORT",
+                          NOD_VALUES = "Tracer", GEO_TYPE = "DOMAIN",
+                          DAT_TYPE = "TECPLOT", TIM_TYPE = "STEPS 1")
+
+ex1 <- input_add_st_bloc(x = ex1, st_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
+                         PRIMARY_VARIABLE = "PRESSURE1", GEO_TYPE = "POINT point0",
+                         DIS_TYPE = "CONSTANT_NEUMANN 7.8611E-06")
+
+ex1 <- input_add_tim_bloc(x = ex1,  tim_name = "waterflow",
+                          PCS_TYPE = "LIQUID_FLOW", TIME_START = "0",
+                          TIME_END = "36000000", TIME_STEPS = "229 3600")
+
+ex1 <- input_add_tim_bloc(x = ex1,  tim_name = "tracer",
+                          PCS_TYPE = "MASS_TRANSPORT", TIME_START = "0",
+                          TIME_END = "36000000", TIME_STEPS = "229 3600")
+
+ex1 <- input_add_rfd_bloc(x = ex1, rfd_name = "tracer", mkey = "CURVES",
+                    data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),
+                                          conc=c(1,1,0,0,0)))
+
+ex1 <- input_add_gli_points(x = ex1,
+                        ogs5_points = tibble::tibble(x = c(0, 4.7), y = c(0,0),
+                                                 z = c(0,0),
+                                                 name = c("point0", "point1")))
+
+mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
+ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
+                          NODES = mesh_lst[[1]],
+                          ELEMENTS = mesh_lst[[2]])
+```
+
+
+## Preprocessing
+
+Define parameter table for ensemble.
+```{r results = "markup"}
+para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 10),
+                       tracer_input_concentration = seq(0.1, 1, length.out = 5)) %>% 
+            tibble::as_tibble()
+
+head(para_df)
+```
+
+
+Define the ensemble runs.
+```{r}
+ens1 = create_ens(base_sim = ex1, parameter_tbl = para_df, name = "tracersim",
+                  path = "tmp")
+
+# ensemble_add_sims <- functoin(ensemble = list())
+# add sims
+for (i in 1:dim(attributes(ens1)$sim_plan)[1]){
+
+  # define new ogs5 obj based on attributes(ens1)$base_sim 
+  tmp <- attributes(ens1)$base_sim
+ 
+  # set parameters
+  tmp$input$mmp$gravel$MASS_DISPERSION <- 
+    paste("1 ", round(attributes(ens1)$sim_plan[i, "mass_dispersion"], 2))
+  
+  tmp$input$bc$tracer_in$DIS_TYPE <- 
+    paste("CONSTANT", attributes(ens1)$sim_plan[i, "tracer_input_concentration"])
+  
+  # add to ens1
+  ens1 <- ens_add_ogs5(x = ens1, ogs5_obj = tmp)
+}
+```
+
+Write all input files.
+```{r}
+ens_write_inputfiles(ens1)
+```
+
+## Simulate
+
+Execute simulations.
+```{r}
+ens_run(ens1, 
+        ogs_exe = "../inst/ogs/ogs_5.76",
+        log_output = TRUE,
+        wait = FALSE)
+
+```
+
+Read output.
+```{r}
+ens1 <- ens_get_output(ens1, type = "all")
+```
+
+## Postprocessing
+
+```{r}
+# create tibble of all outputted *.tec files
+tracer_out_df <- tibble::tibble()
+
+for (i in 1:length(ens1)){
+  tracer_out_df <- tracer_out_df %>% 
+                    dplyr::bind_rows(
+                      ens1[[i]]$output$tracer_tec[[1]] %>% 
+                        dplyr::mutate(sim_name = attributes(ens1[[i]])$sim_name)
+                    )   
+}
+```
+
+
+```{r}
+# linke output with paramter table
+tracer_out_df <-
+  tracer_out_df %>% 
+                  dplyr::filter(X == 4.7) %>% 
+                  dplyr::left_join(attributes(ens1)$sim_plan, by= "sim_name") %>% 
+                  dplyr::mutate(TIME = TIME/(3600*24))
+```
+
+
+## Visualization
+
+```{r fig.align="center", fig.asp=0.5}
+library("ggridges")
+
+tracer_out_df %>% 
+  dplyr::filter(X == 4.7) %>% 
+  
+  ggplot2::ggplot(ggplot2::aes(x = TIME, y = mass_dispersion, 
+             height= (Tracer), group = mass_dispersion,
+             fill = Tracer))+
+    ggridges::geom_density_ridges_gradient(stat = "identity", 
+                                           rel_min_height = 0.01,
+                                           panel_scaling = TRUE)+
+    
+    ggplot2::facet_grid(.~tracer_input_concentration)+
+  
+    ggridges::theme_ridges()+
+    ggplot2::theme(axis.text.x.bottom = ggplot2::element_text(angle = 30) )+
+    ggplot2::labs(x = expression(Time~(days)),
+         y = expression(Dispersion~Length~(m)),
+         fill = expression(c[Tracer]~(mg~L^{-1}))
+    )
+```
+
+## Clear ip
+```{r}
+unlink(attributes(ens1)$path, recursive = TRUE)
+```
+
