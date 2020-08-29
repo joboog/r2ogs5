@@ -424,6 +424,23 @@ ogs5_list_output.ogs5_out <-
 # output ogs5_pqc sublist ------------------------------------------
 
 # output ogs5_rei sublist ------------------------------------------
+ogs5_list_output.ogs5_rei <-
+
+  function(ogs5_sublist){
+
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_rei")
+
+    ogs5_mkey <- ogs5_keywordlist$rei$mkey
+
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("#STOP", "\n")
+  }
+
 
 # method for ogs5_rfd sublist ------------------------------------------
 ogs5_list_output.ogs5_rfd <-
