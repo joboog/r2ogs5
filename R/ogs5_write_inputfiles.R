@@ -206,7 +206,7 @@ ogs5_list_output.ogs5_gli <-
     for (i in seq_len(ogs5_sublist %>% length())){
 
       # print points
-      if ("points" == names(ogs5_sublist[i])){
+      if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "points")) {
 
         cat("#POINTS\n")
 
@@ -225,7 +225,7 @@ ogs5_list_output.ogs5_gli <-
       }
 
       # print ply and srf
-      if ("polylines" == names(ogs5_sublist[i])){
+      if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "polyline")) {
 
         ogs5_mkey = "POLYLINE"
         for (j in seq_len(ogs5_sublist[[i]] %>% length())){
@@ -235,7 +235,7 @@ ogs5_list_output.ogs5_gli <-
         }
       }
 
-      if ("surfaces" == names(ogs5_sublist[i])){
+      if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "surface")) {
 
         ogs5_mkey = "SURFACE"
         for (j in seq_len(ogs5_sublist[[i]] %>% length())){
