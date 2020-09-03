@@ -228,12 +228,22 @@ ogs5_list_output.ogs5_gli <-
       if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "polyline")) {
 
         ogs5_mkey = "POLYLINE"
-        for (j in seq_len(ogs5_sublist[[i]] %>% length())){
-          ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]][[j]],
-                               mkey = ogs5_mkey)
+        skey_str <- sapply(
+          names(ogs5_sublist[[i]]),
+          function(x) {
+            if (x == "POINTS") {    # line breaks after each point
+              skey <- paste0("\n", "$", x, "\n ",
+                      paste(ogs5_sublist[[i]][[x]], collapse="\n "))
+            } else {               # normal procedure, no line breaks
+            skey <- paste0("\n", "$", x, "\n ",
+                    paste(ogs5_sublist[[i]][[x]], collapse=" "))
+            }
+            return(skey)
+        })
+
+        cat(paste0("#", ogs5_mkey), skey_str, "\n")
           cat("\n")
         }
-      }
 
       if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "surface")) {
 
