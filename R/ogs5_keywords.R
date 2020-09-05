@@ -374,9 +374,51 @@ ogs5_get_keywordlist <- function(){
                         $USE_PRECALCULATED_FILES
                         $USE_VELOCITIES_FOR_TRANSPORT "
 
-  # pqc ---------------------------------------------------------------------
-  ogs5_keywordlist$pqc$mkey <- "#ende
-                        #libprint"
+# pqc ---------------------------------------------------------------------
+ogs5_keywordlist$pqc$mkey <- "#ende
+                             #libprint
+                             CALCULATE_VALUES
+                             COPY
+                             DATABASE
+                             DUMP
+                             END
+                             EQUILIBRIUM_PHASES
+                             EXCHANGE
+                             EXCHANGE_MASTER_SPECIES
+                             EXCHANGE_SPECIES
+                             GAS_PHASE
+                             INCLUDE$
+                             INCREMENTAL_REACTIONS
+                             INVERSE_MODELING
+                             ISOTOPES
+                             ISOTOPES_ALPHAS
+                             ISOTOPES_RATIOS
+                             KINETICS
+                             KNOBS
+                             LLNL_AQUEOUS_MODEL_PARAMETERS
+                             MIX
+                             NAMED_EXPRESSIONS
+                             PHASES
+                             PITZER
+                             PRINT
+                             RATES
+                             REACTION
+                             REACTION_PRESSURE
+                             REACTION_TEMPERATURE
+                             SAVE
+                             SELECTED_OUTPUT
+                             SIT
+                             SOLID_SOLUTIONS
+                             SOLUTION
+                             SOLUTION_MASTER_SPECIES
+                             SOLUTION_SPECIES
+                             SURFACE
+                             SURFACE_MASTER_SPECIES
+                             SURFACE_SPECIES
+                             USE
+                             USER_PRINT
+                             USER_PUNCH "
+
 
   # rei ---------------------------------------------------------------------
   ogs5_keywordlist$rei$mkey <- "#REACTION_INTERFACE"
