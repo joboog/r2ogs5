@@ -27,14 +27,21 @@ ogs5_write_inputfiles <-
 
     # loop through ogs5-obj and print all sublists
      for (i in names(ogs5_obj$input)){
-       filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", i)
+       if (i == "dat") {
+         filename <- paste0(folderpath, "/phreeqc.dat")
+       } else {
+         filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", i)
+       }
        ogs5_list <- ogs5_obj$input[[paste(i)]]
        ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
      }
     }
     else {
-
+      if (type == "dat") {
+        filename <- paste0(folderpath, "/phreeqc.dat")
+      } else {
       filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", type)
+      }
       ogs5_list <- ogs5_obj$input[[paste(type)]]
       ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
     }
