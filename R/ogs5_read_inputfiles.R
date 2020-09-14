@@ -37,7 +37,6 @@ ogs5_read_inputfile_tolist <- function(filepath){
                     stringr::str_extract_all("\\w+") %>%
                     stringr::str_c(mkey)
             l[[paste0(tmp1)]] <- list()
-            #print(paste0("mkey: ", tmp1, " i: ", i))
             mkey <- mkey + 1
             skey <- 0 # set back to 0
             i <- i + 1
@@ -46,17 +45,17 @@ ogs5_read_inputfile_tolist <- function(filepath){
             if (is_skey) {
                 tmp2 <- chr[i] %>% stringr::str_extract_all("\\w+")
                 l[[paste0(tmp1)]][[paste0(tmp2)]] <- list()
-                #print(paste0("skey: ", tmp2, " i: ", i))
                 i <- i + 1
                 skey <- skey + 1
             } else {
                 # add entry to list
                 j <- 1
                 while(!any(c(is_skey, is_mkey))) {
-                    tmp3 <- chr[i] %>% stringr::str_squish()
+                    tmp3 <- chr[i] %>%
+                            stringr::str_squish()
+
                     if (chr[i] != "" & skey != 0){
                         l[[paste0(tmp1)]][[skey]][j] <- tmp3
-                        #(paste0(": ", tmp3, " i: ", i))
                         j <- j + 1
                     } else { # if skey is 0
                         if (chr[i] != "") {
@@ -76,6 +75,8 @@ ogs5_read_inputfile_tolist <- function(filepath){
 
 
 ogs5_read_pqc_input_tolist <- function(filepath) {
+
+    # same function as before, for *.pqc and phreeqc.dat files
 
     # get character vector of file
     chr <- scan(
@@ -117,17 +118,119 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
 }
 
 
-ogs5_get_ogs5_from_list <-
-    function(ogs5_obj, filepath, ogs5_list = NULL, file_ext) {
 
-    # function that handles all the exceptions depending on file_ext
+ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
+                                              filepath,
+                                              file_ext,
+                                              overwrite) {
+
+    # The function calls ogs5_read_inputfile_tolist or
+    # ogs5_read_pqc_input_tolist and assings the correct classes and
+    # data formats depending on the file_ext to sublists (main keys) and adds
+    # ogs5 blocs to an ogs5 object
+
 
     valid_ogs5(ogs5_obj)
 
+    existing_blocs <- ogs5_obj$input[[paste0(file_ext)]]
+
+
+
     # add the list of blocs in the right format & class from ogs5_list
-    ogs5_obj$input[[paste0(file_ext)]] <-
+    new_blocs <-
 
         switch(file_ext,
+
+               "bc" = ogs5_read_inputfile_tolist(filepath) %>%
+                   lapply(function(x) {
+                       # unlist the bottom entry & assing class
+                       x <- lapply(x, unlist)
+                       x <- structure(x, class = "ogs5_bc_condition")
+                       return(x)}) %>%
+                   structure(class = "ogs5_bc"),
+
+               "dat" = ogs5_read_pqc_input_tolist(filepath) %>%
+                   lapply(function(x) {
+                       x <- structure(x, class = "ogs5_dat_bloc")
+                       return(x)}) %>%
+                   structure(class = "ogs5_phreeqc_dat"),
+
+# .gli input file ---------------------------------------------------------
+               "gli" =                              # loop over bloc names!
+                names(ogs5_list <- ogs5_read_inputfile_tolist(filepath)) %>%
+                lapply(function(blc_name) {
+
+                    bloc <- ogs5_list[[paste0(blc_name)]]
+
+                    # POINTS: convert into tibble
+                    if (stringr::str_detect(blc_name, "POINTS")) {
+                    suppressWarnings(
+                     suppressMessages(
+                     bloc <- bloc %>%
+                     sapply(stringr::str_split, " ") %>%
+                     unlist %>%
+                     matrix(nrow = length(bloc), byrow = TRUE) %>%
+                     tibble::as_tibble(.name_repair = "unique") %>%
+                     dplyr::rename_at( # one after $NAME
+                         .vars = which(stringr::str_detect(., "\\$")) + 1,
+                         .funs = ~"name") %>%
+                     dplyr::select_if(!stringr::str_detect(., "\\$")) %>%
+                     dplyr::rename_at(2:4, ~c("x", "y", "z")) %>%
+                     dplyr::mutate_at(.vars = c("x", "y", "z"),
+                                      .funs = as.double) %>%
+                     tibble::as_tibble() %>%
+                     tibble::column_to_rownames("...1") %>%
+                     dplyr::select(x, y, z, name)
+
+
+                            ))
+
+                    } else {
+
+                    #  unlist all other blocs (POLYLINE, SURFACE) & add class
+                    # POLYLINE
+                    if (stringr::str_detect(blc_name, "POLYLINE")) {
+                        bloc <- structure(bloc, class = "ogs5_gli_polyline")
+
+                    # SURFACE
+                    } else if (stringr::str_detect(blc_name, "SURFACE")) {
+                        bloc <- structure(bloc, class = "ogs5_gli_surfaces")
+                    }
+                       }
+                       return(bloc) # return bloc
+                }) %>%
+                'names<-' (c(names(ogs5_list))) %>% # restore bloc names
+                structure(class = "ogs5_gli"),      # add input class
+
+# -------------------------------------------------------------------------
+                "ic" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        # unlist the bottom entry & assing class
+                        x <- lapply(x, unlist)
+                        x <- structure(x, class = "ogs5_ic_condition")
+                        return(x)}) %>%
+                    structure(class = "ogs5_ic"),
+
+                "mcp" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- lapply(x, unlist)
+                        x <- structure(x, class = "ogs5_mcp_component")
+                        return(x)}) %>%
+                    structure(class = "ogs5_mcp"),
+
+                "mfp" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- lapply(x, unlist)
+                        x <- structure(x, class = "ogs5_mfp_bloc")
+                        return(x)}) %>%
+                    structure(class = "ogs5_mfp"),
+
+                "mmp" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- lapply(x, unlist)
+                        x <- structure(x, class = "ogs5_mmp_bloc")
+                        return(x)}) %>%
+                    structure(class = "ogs5_mmp"),
 
 # .msh input file ---------------------------------------------------------
                "msh" =                                   # loop over blocs
@@ -176,23 +279,91 @@ ogs5_get_ogs5_from_list <-
                 }) %>%                                     # add input class
                 structure(class = "ogs5_msh"),
 
-# .rfd input file ---------------------------------------------------------
+# -------------------------------------------------------------------------
+                "msp" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- lapply(x, unlist)
+                        x <- structure(x, class = "ogs5_msp_bloc")
+                        return(x)}) %>%
+                    structure(class = "ogs5_msp"),
 
+                "num" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- lapply(x, unlist)
+                        x <- structure(x, class = "ogs5_num_bloc")
+                        return(x)}) %>%
+                    structure(class = "ogs5_num"),
+
+                "out" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- lapply(x, function(x){
+                            x <- unlist(x)
+                            if (length(x) > 1) {
+                                x  <- paste0(x, collapse = "\n ")
+                            }
+                            return(x)})
+                        x <- structure(x, class = "ogs5_out_bloc")
+                        return(x)}) %>%
+                    structure(class = "ogs5_out"),
+
+                "pcs" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- lapply(x, function(x){
+                                return(unlist(stringr::str_split(x, " ")))
+                        })
+                        x <- structure(x, class = "ogs5_pcs_process")
+                        return(x)}) %>%
+                    structure(class = "ogs5_pcs"),
+
+                "pqc" = ogs5_read_pqc_input_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- structure(x, class = "ogs5_pqc_filebloc")
+                        return(x)}) %>%
+                    structure(class = "ogs5_pqc"),
+
+                "rei" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
+                        x <- lapply(x, unlist)
+                        x <- structure(x, class = "ogs5_rei_bloc")
+                        return(x)}) %>%
+                    structure(class = "ogs5_rei"),
+
+# .rfd input file ---------------------------------------------------------
                 "rfd" =
                 names(ogs5_list <- ogs5_read_inputfile_tolist(filepath)) %>%
                 lapply(function(blc_name) {
                 bloc <- ogs5_list[[paste0(blc_name)]]
 
                 if (stringr::str_detect(blc_name, "CURVES")) {
-                # coerce to tibble
+
+                    # check for column names
+                    clnme <- bloc %>%
+                            names() %>%
+                            stringr::str_split("\"") %>%
+                            unlist() %>%
+                            stringr::str_extract_all("\\w+") %>%
+                            unlist()
+                    data_key_ind <- which(tolower(clnme) == "data")
+
+                    if (length(clnme) != data_key_ind) {
+                        # columnames exist
+                        clnme <- clnme[(data_key_ind + 1):length(clnme)]
+
+                    } else {
+                        # assing default columnames
+                        clnme <- c("time", "value")
+                    }
+
+                    # coerce to tibble
                     bloc <- bloc %>%
-                        sapply(stringr::str_split, " ") %>%
-                        unlist %>%
-                        as.double() %>%
-                        matrix(nrow = length(bloc[[1]]), byrow = TRUE) %>%
-                        # assign column names
-                        'colnames<-' (c("time", "conc")) %>%
-                        tibble::as_tibble()
+                           sapply(stringr::str_split, " ") %>%
+                           unlist %>%
+                           as.double() %>%
+                           matrix(nrow = length(bloc[[1]]), byrow = TRUE) %>%
+                           # assign column names
+                           'colnames<-' (clnme) %>%
+                           tibble::as_tibble()
+
                 } else {
                 # other eventual blocs
                     bloc <- lapply(bloc, unlist)
@@ -203,217 +374,88 @@ ogs5_get_ogs5_from_list <-
                 }) %>%
                 append("CURVES", after = 0) %>%   # insert mkey = "CURVES"
                 'names<-' (c("mkey", "data")) %>%
+                structure(class = "ogs5_rfd_bloc") %>%
                 list() %>% # wrap in list
                 'names<-' (c("CURVES1")) %>% # name list
                 structure(class = "ogs5_rfd"),
 
-# .gli input file ---------------------------------------------------------
-               "gli" =                              # loop over bloc names!
-                names(ogs5_list <- ogs5_read_inputfile_tolist(filepath)) %>%
-                lapply(function(blc_name) {
-
-                bloc <- ogs5_list[[paste0(blc_name)]]
-
-                # POINTS: convert into tibble
-                if (stringr::str_detect(blc_name, "POINTS")) {
-                suppressWarnings(
-                suppressMessages(
-                    bloc <- bloc %>%
-                        sapply(stringr::str_split, " ") %>%
-                        unlist %>%
-                        matrix(nrow = length(bloc), byrow = TRUE) %>%
-                        tibble::as_tibble(.name_repair = "unique") %>%
-                        dplyr::rename_at( # one after $NAME
-                            .vars = which(stringr::str_detect(., "\\$")) + 1,
-                            .funs = ~"name") %>%
-                        dplyr::select_if(!stringr::str_detect(., "\\$")) %>%
-                        dplyr::rename_at(2:4, ~c("x", "y", "z")) %>%
-                        dplyr::mutate_at(.vars = c("x", "y", "z"),
-                                         .funs = as.double) %>%
-                        tibble::as_tibble() %>%
-                        tibble::column_to_rownames("...1") %>%
-                        dplyr::select(x, y, z, name)
-
-
-                    ))
-
-                } else {
-
-                    #  unlist all other blocs (POLYLINE, SURFACE) & add class
-
-                    # POLYLINE
-                    if (stringr::str_detect(blc_name, "POLYLINE")) {
-                        bloc <- structure(bloc, class = "ogs5_gli_polyline")
-
-                    # SURFACE
-                    } else if (stringr::str_detect(blc_name, "SURFACE")) {
-                        bloc <- structure(bloc, class = "ogs5_gli_surfaces")
-                    }
-                }
-                return(bloc)                                # return bloc
-                }) %>%
-                'names<-' (c(names(ogs5_list))) %>% # restore bloc names
-                structure(class = "ogs5_gli"),      # add input class
-
-
-# bc, ic, mmp, msp, mfp ---------------------------------------------------
-
-                "bc" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        # unlist the bottom entry & assing class
+# ------------------------------------------------------------------------
+                "st" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(x) {
                         x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_bc_condition")
+                        x <- structure(x, class = "ogs5_st_condition")
                         return(x)}) %>%
-                        structure(class = "ogs5_bc"),
-
-                "ic" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        # unlist the bottom entry & assing class
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_ic_condition")
-                        return(x)}) %>%
-                        structure(class = "ogs5_ic"),
-
-               "pcs" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_pcs_process")
-                        return(x)}) %>%
-                        structure(class = "ogs5_pcs"),
-
-               "mmp" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_mmp_bloc")
-                        return(x)}) %>%
-                        structure(class = "ogs5_mmp"),
-
-                "mcp" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_mcp_component")
-                        return(x)}) %>%
-                        structure(class = "ogs5_mcp"),
-
-                "mfp" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_mfp_bloc")
-                        return(x)}) %>%
-                        structure(class = "ogs5_mfp"),
-
-                "msp" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_msp_bloc")
-                        return(x)}) %>%
-                        structure(class = "ogs5_msp"),
-                "num" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_num_bloc")
-                        return(x)}) %>%
-                        structure(class = "ogs5_num"),
-                "out" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, function(x){
-                            if (length(x) > 1) {
-                                x[-length(x)]  <- paste0(x[-length(x)], "\n")
-                                return(x)
-                            }
-                            return(unlist(x))})
-                        x <- structure(x, class = "ogs5_out_bloc")
-                        return(x)}) %>%
-                        structure(class = "ogs5_out"),
+                    structure(class = "ogs5_st"),
 
                 "tim" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
+                    lapply(function(x) {
                         x <- lapply(x, unlist)
                         x <- structure(x, class = "ogs5_tim_bloc")
                         return(x)}) %>%
                         structure(class = "ogs5_tim"),
 
-                "st" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_st_condition")
-                        return(x)}) %>%
-                        structure(class = "ogs5_st"),
-
-                "rei" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_rei_bloc")
-                        return(x)}) %>%
-                        structure(class = "ogs5_rei"),
-
-
-# pqc and phreeqc.dat -----------------------------------------------------
-
-                "pqc" = ogs5_read_pqc_input_tolist(filepath) %>%
-                        lapply(function(x) {
-                            x <- structure(x, class = "ogs5_pqc_filebloc")
-                            return(x)}) %>%
-                        structure(class = "ogs5_pqc"),
-
-                "dat" = ogs5_read_pqc_input_tolist(filepath) %>%
-                        lapply(function(x) {
-                            x <- structure(x, class = "ogs5_dat_bloc")
-                            return(x)}) %>%
-                        structure(class = "ogs5_phreeqc_dat"),
-
-                NULL # all other, eg. cct, fct, rei, krc, gem at the moment
+                NULL # all other, eg. cct, fct, krc, gem at the moment
                )
+
+
+    if (!overwrite) {
+
+        # check if input exists (overwrite == FALSE)
+        if (is.null(existing_blocs)) {
+
+            # input file does not yet exist, assign whole set of blocs
+            ogs5_obj$input[[paste0(file_ext)]] <- new_blocs
+        }
+
+        # else proceed to return ogs5 object as-is
+
+    } else {
+
+        # overwrite
+        ogs5_obj$input[[paste0(file_ext)]] <- new_blocs
+
+    }
 
     return(ogs5_obj)
 
 }
 
 
-input_add_blocs_from_file <-
+input_add_blocs_from_file <- function(ogs5_obj,
+                                      filename,
+                                      file_dir = "",
+                                      overwrite = FALSE) {
 
-    function(ogs5_obj, filename, file_dir = "") {
-
+    # function that calls upon ogs5_assign_classes_to_ogslist which in turn
+    # calls ogs5_read_inputfile_tolist to convert inputfiles into ogs5 objects.
+    # filename can be a list of filenames (name.extension), a single filename or
+    # 'all'
 
     # ! if existing ogs5 object is handed in,
     # the specified input bloc will be overwritten !
+
+    if (!dir.exists(file_dir)) {
+        stop(paste0("Cannot find directory \"", file_dir, "\""))
+    }
 
     if (is.null(ogs5_obj)) {
 
         # create new ogs5 object pointing to directory
         ogs5_obj <- create_ogs5(sim_name = filename %>%
-                                           stringr::str_extract("\\w+"),
+                                    stringr::str_extract("\\w+"),
                                 sim_id = 1L,
                                 sim_path = file_dir)
     }
 
-    if (length(filename) > 1) {
-
-        # if list of filenames supplied
-        file_ext <- filename %>%
-            stringr::str_split("\\.") %>%
-            lapply(FUN = dplyr::last)
-
-        for (i in 1:length(filename)) {
-            print(paste("Reading file", filename[[i]]))
-
-            filepath <- paste0(file_dir, "/", filename[[i]], sep = "")
-
-            ogs5_obj <-
-                ogs5_get_ogs5_from_list(ogs5_obj = ogs5_obj,
-                                        filepath,
-                                        file_ext = file_ext[[i]])
-        }
 
 
-
-    } else if (filename == "all") { # browse whole repository for input files
+    if (filename[[1]] == "all") { # browse whole repository for input files
 
         # get all filenames and extensions in filepath
         all_filenames <- list.files(file_dir) %>%
-                         stringr::str_split("\\.")
+            stringr::str_split("\\.")
         all_file_ext <- all_filenames %>%
-                        lapply(FUN = dplyr::last)
+            lapply(FUN = dplyr::last)
 
         possible_ext <- names(ogs5_get_keywordlist())
 
@@ -426,33 +468,44 @@ input_add_blocs_from_file <-
         input_file_ext <- all_file_ext[which(all_file_ext %in% possible_ext)]
 
         for (i in 1:length(input_filenames)) {
-            print(paste("Reading file", input_filenames[[i]]))
 
             filepath <- paste0(file_dir, "/", input_filenames[[i]], sep = "")
 
-            ogs5_obj <- ogs5_get_ogs5_from_list(ogs5_obj = ogs5_obj,
-                                                filepath,
-                                                file_ext = input_file_ext[[i]])
+            print(paste("Reading file", input_filenames[[i]]))
+
+            ogs5_obj <-
+                ogs5_add_input_bloc_from_ogs5list(ogs5_obj =
+                                                      ogs5_obj,
+                                                  filepath,
+                                                  file_ext =
+                                                      input_file_ext[[i]],
+                                                  overwrite)
         }
 
-    } else { # read single file ------------------------------------------------
-        filepath <- paste0(file_dir, "/", filename, sep = "")
+    } else { # read list or single file ------------------------------------
 
-        if(!file.exists(filepath)) {
-            stop(paste0("file or directory \"", filepath, "\" does not exist"))
-        }
         file_ext <- filename %>%
-                    stringr::str_split("\\.") %>%
-                    lapply(dplyr::last) %>%
-                    unlist()
+            stringr::str_split("\\.") %>%
+            lapply(FUN = dplyr::last)
 
-        # import as list and add bloc to ogs5 object
-        ogs5_obj <- ogs5_get_ogs5_from_list(ogs5_obj = ogs5_obj,
-                                            filepath,
-                                             file_ext = file_ext)
+        for (i in 1:length(filename)) {
+
+            filepath <- paste0(file_dir, "/", filename[[i]], sep = "")
+            if (!file.exists(filepath)) {
+                stop(paste0("file ", filename[[i]], " does not exist"))
+            }
+            print(paste("Reading file", filename[[i]]))
+
+            ogs5_obj <-
+                ogs5_add_input_bloc_from_ogs5list(ogs5_obj = ogs5_obj,
+                                               filepath,
+                                               file_ext = file_ext[[i]],
+                                               overwrite)
+        }
+
 
 
     }
-        return(ogs5_obj)
+    return(ogs5_obj)
 }
 

@@ -11,6 +11,9 @@
 *.html
 *.pdf
 *.png
+*.lay
+*.rfe
+
 
 packrat/lib/*
 

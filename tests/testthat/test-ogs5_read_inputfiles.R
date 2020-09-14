@@ -106,7 +106,7 @@ for (file_ext in names(ex1_input)) {
                          quiet = TRUE)
 
         # original vector from ex1
-        orig_vec <- scan(file = paste0(tmp, "/ex1.", file_ext),
+        orig_vec <- scan(file = paste0(tmp, "/ex1/ex1.", file_ext),
                          what = "character",
                          blank.lines.skip = TRUE,
                          sep = "\n",
@@ -137,9 +137,27 @@ test_that("read-in input files can be used to run ogs5", {
 })
 
 
+
+# test overwrite barrier --------------------------------------------------
+context("Existing input files are recognized and not overwritten")
+
+ex1.2 <- input_add_blocs_from_file(ex1, filename = "all",
+                                   file_dir = paste0(tmp, "/ex1"),
+                                   overwrite = FALSE)
+
+for (file_ext in names(ex1.2$input)) {
+
+    # intuition: if existing blocs are not overwritten, the names stay the same
+    test_that(paste0("existing blocs are overwritten in file *.", file_ext),
+              expect_equal(names(ex1.2$input[[paste0(file_ext)]]),
+                           names(ex1$input[[paste0(file_ext)]]))
+    )
+}
+
+
 # Engesgaard read input tests -----------------------------------------------
 
-context("Read Engesgaard benchmakr input files")
+context("Read Engesgaard benchmark input files")
 
 # loop over input files and compare
 for (file_ext in names(eg1_read$input)) {

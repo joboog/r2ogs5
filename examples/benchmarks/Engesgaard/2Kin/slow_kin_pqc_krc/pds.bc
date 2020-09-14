@@ -1,8 +1,7 @@
-GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   GROUNDWATER_FLOW
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   HEAD
  $GEO_TYPE
   POINT POINT0
@@ -12,7 +11,7 @@ GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   MASS_TRANSPORT
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   C(4)
  $GEO_TYPE
   POINT POINT0
@@ -22,7 +21,7 @@ GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   MASS_TRANSPORT
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   Ca
  $GEO_TYPE
   POINT POINT0
@@ -32,7 +31,7 @@ GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   MASS_TRANSPORT
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   Mg
  $GEO_TYPE
   POINT POINT0
@@ -42,7 +41,7 @@ GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   MASS_TRANSPORT
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   Cl
  $GEO_TYPE
   POINT POINT0
@@ -52,7 +51,7 @@ GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   MASS_TRANSPORT
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   pH
  $GEO_TYPE
   POINT POINT0
@@ -62,7 +61,7 @@ GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   MASS_TRANSPORT
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   pe
  $GEO_TYPE
   POINT POINT0
@@ -72,7 +71,7 @@ GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   MASS_TRANSPORT
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   Calcite
  $GEO_TYPE
   POINT POINT0
@@ -82,7 +81,7 @@ GeoSys-BC: Boundary Conditions ------------------------------------------------
 #BOUNDARY_CONDITION
  $PCS_TYPE
   MASS_TRANSPORT
- $PRIMARY_VARIABLE 
+ $PRIMARY_VARIABLE
   Dolomite(dis)
  $GEO_TYPE
   POINT POINT0

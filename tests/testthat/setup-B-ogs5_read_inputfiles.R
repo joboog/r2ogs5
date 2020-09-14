@@ -7,7 +7,7 @@ ex1_read <- create_ogs5(sim_name = "ex1_read", sim_id = 1L,
 
 ex1_read <- input_add_blocs_from_file(ex1_read,
                                       filename = "all",
-                                      file_dir = tmp)
+                                      file_dir = paste0(tmp, "/ex1"))
 
 # debug(ogs5_list_output.ogs5_rfd)
 ogs5_write_inputfiles(ex1_read, type = "all")

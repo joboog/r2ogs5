@@ -8,7 +8,7 @@ tmp <- tempdir() # temporary location
 # tmp <- "../../examples/tmp/ex1" # permanent location (easier for debugging)
 # define ogs5 obj ---------------------------------------------------------
 ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L,
-                   sim_path = tmp)
+                   sim_path = paste0(tmp, "/ex1"))
 
 ## add input file blocs ----------------------------------------------------
 ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "waterflow",

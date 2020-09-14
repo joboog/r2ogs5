@@ -54,8 +54,3 @@
    NEW
 #STOP
 
-; Todo
-#PROCESS
- $PCS_TYPE
-  MASS_TRANSPORT
-
