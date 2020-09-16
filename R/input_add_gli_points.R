@@ -88,7 +88,7 @@ input_add_gli_polyline <-
 
       # check if POINTS exist
       ply_points <-stringr::str_split(POINTS, " ") %>% .[[1]] %>% as.numeric()
-      if (max(ply_points) > length(x$input$gli$points[,1])) {
+      if (max(ply_points) > nrow(x$input$gli$points[,1])) {
          stop("required POINTS missing", call. = FALSE)
       }
 
