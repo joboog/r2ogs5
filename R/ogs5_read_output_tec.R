@@ -18,7 +18,7 @@ ogs5_read_tecplot <- function(filename = character(),
     df=ogs5_read_tecplot_domain(filename)
   }
   if (geo_object=="POINT"){
-    df=myReadTecPlot_POINT(filename)
+    df=ogs5_read_tecplot_point(filename)
   }
   if (geo_object=="POLYLINE"){
     stop("Function to read output on POLYLINE not implemented yet.",
