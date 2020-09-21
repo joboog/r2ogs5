@@ -117,6 +117,46 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
     return(l)
 }
 
+add_standard_blocs <- function(filepath,
+                               sub_bloc_class = NULL,
+                               bloc_class = NULL,
+                               stack_args = FALSE) {
+
+    file_ext <- filepath %>%
+                stringr::str_split("\\.") %>%
+                unlist() %>%
+                dplyr::last()
+
+     if (is.null(bloc_class)) {
+        bloc_class <- paste0("ogs5_", file_ext)
+     }
+    if (is.null(sub_bloc_class)) {
+        sub_bloc_class <- paste0("ogs5_", file_ext, "_bloc")
+    }
+
+    blocs <- ogs5_read_inputfile_tolist(filepath) %>%
+            lapply(function(bloc) {
+
+                bloc <- bloc %>%
+                        lapply(function(sub_bloc, stack_args) {
+
+                            # unlist
+                            sub_bloc <- unlist(sub_bloc)
+                            # stack skey arguments (insert \n) if required
+                            if (length(sub_bloc) > 1 & stack_args) {
+                                sub_bloc <- paste0(sub_bloc, collapse = "\n ")
+                            }
+                            return(sub_bloc)
+                        },
+                        stack_args)
+
+                bloc <- structure(bloc, class = sub_bloc_class)
+                return(bloc)
+                }) %>%
+            structure(class = bloc_class)
+            return(blocs)
+}
+
 
 
 ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
@@ -141,13 +181,8 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
         switch(file_ext,
 
-               "bc" = ogs5_read_inputfile_tolist(filepath) %>%
-                   lapply(function(x) {
-                       # unlist the bottom entry & assing class
-                       x <- lapply(x, unlist)
-                       x <- structure(x, class = "ogs5_bc_condition")
-                       return(x)}) %>%
-                   structure(class = "ogs5_bc"),
+               "bc" = add_standard_blocs(filepath,
+                                         "ogs5_bc_condition"),
 
                "dat" = ogs5_read_pqc_input_tolist(filepath) %>%
                    lapply(function(x) {
@@ -203,34 +238,15 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 structure(class = "ogs5_gli"),      # add input class
 
 # -------------------------------------------------------------------------
-                "ic" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        # unlist the bottom entry & assing class
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_ic_condition")
-                        return(x)}) %>%
-                    structure(class = "ogs5_ic"),
+                "ic" = add_standard_blocs(filepath,
+                                          "ogs5_ic_condition"),
 
-                "mcp" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_mcp_component")
-                        return(x)}) %>%
-                    structure(class = "ogs5_mcp"),
+                "mcp" = add_standard_blocs(filepath,
+                                           "ogs5_mcp_component"),
 
-                "mfp" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_mfp_bloc")
-                        return(x)}) %>%
-                    structure(class = "ogs5_mfp"),
+                "mfp" = add_standard_blocs(filepath),
 
-                "mmp" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_mmp_bloc")
-                        return(x)}) %>%
-                    structure(class = "ogs5_mmp"),
+                "mmp" = add_standard_blocs(filepath),
 
 # .msh input file ---------------------------------------------------------
                "msh" =                                   # loop over blocs
@@ -280,31 +296,12 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 structure(class = "ogs5_msh"),
 
 # -------------------------------------------------------------------------
-                "msp" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_msp_bloc")
-                        return(x)}) %>%
-                    structure(class = "ogs5_msp"),
+                "msp" = add_standard_blocs(filepath),
 
-                "num" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_num_bloc")
-                        return(x)}) %>%
-                    structure(class = "ogs5_num"),
+                "num" = add_standard_blocs(filepath),
 
-                "out" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, function(x){
-                            x <- unlist(x)
-                            if (length(x) > 1) {
-                                x  <- paste0(x, collapse = "\n ")
-                            }
-                            return(x)})
-                        x <- structure(x, class = "ogs5_out_bloc")
-                        return(x)}) %>%
-                    structure(class = "ogs5_out"),
+                "out" = add_standard_blocs(filepath,
+                                           stack_args = TRUE),
 
                 "pcs" = ogs5_read_inputfile_tolist(filepath) %>%
                     lapply(function(x) {
@@ -321,12 +318,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                         return(x)}) %>%
                     structure(class = "ogs5_pqc"),
 
-                "rei" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_rei_bloc")
-                        return(x)}) %>%
-                    structure(class = "ogs5_rei"),
+                "rei" = add_standard_blocs(filepath),
 
 # .rfd input file ---------------------------------------------------------
                 "rfd" =
@@ -380,19 +372,10 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 structure(class = "ogs5_rfd"),
 
 # ------------------------------------------------------------------------
-                "st" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_st_condition")
-                        return(x)}) %>%
-                    structure(class = "ogs5_st"),
+                "st" = add_standard_blocs(filepath,
+                                          "ogs5_st_condition"),
 
-                "tim" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(x) {
-                        x <- lapply(x, unlist)
-                        x <- structure(x, class = "ogs5_tim_bloc")
-                        return(x)}) %>%
-                        structure(class = "ogs5_tim"),
+                "tim" = add_standard_blocs(filepath),
 
                 NULL # all other, eg. cct, fct, krc, gem at the moment
                )
