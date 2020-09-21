@@ -1,0 +1,8 @@
+#COMPONENT_PROPERTIES
+ $NAME
+  ConsTracer
+ $MOBILE
+  1
+ $DIFFUSION
+  1  1.0e-9
+#STOP

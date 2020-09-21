@@ -1,0 +1,52 @@
+$OVERALL_COUPLING
+2  10
+
+#NUMERICS
+ $PCS_TYPE
+  RICHARDS_FLOW
+  $ELE_MASS_LUMPING
+ 1
+ $LINEAR_SOLVER
+  2      5 2.e-19      3000          1.0   100     4
+ $NON_LINEAR_SOLVER
+  PICARD 1e-7           20             0.
+
+ $ELE_GAUSS_POINTS
+ 2
+ $COUPLING_CONTROL
+ LMAX            1.e5
+
+#NUMERICS
+ $PCS_TYPE
+  DEFORMATION
+$LINEAR_SOLVER
+  3      5 5e-13       3000          1.0   100     4
+
+ $ELE_GAUSS_POINTS
+ 4
+
+ $COUPLING_CONTROL
+ LMAX            1e-10
+
+#NUMERICS
+ $PCS_TYPE
+  HEAT_TRANSPORT
+ $LINEAR_SOLVER
+  3      0 1.e-10       2000           1.0   1       4
+ $ELE_GAUSS_POINTS
+  2
+ $COUPLING_CONTROL
+ LMAX            380
+
+#NUMERICS
+ $PCS_TYPE
+  MASS_TRANSPORT
+ $LINEAR_SOLVER
+  3     6 1.e-10       2000           0.5   1       2
+ $ELE_GAUSS_POINTS
+  2
+ $COUPLING_CONTROL
+ LMAX            1e-6
+
+
+#STOP

@@ -1,0 +1,10 @@
+#TIME_STEPPING
+  $PCS_TYPE
+    LIQUID_FLOW
+  $TIME_STEPS
+    1 1
+  $TIME_END
+    1
+  $TIME_START
+    0.0
+#STOP

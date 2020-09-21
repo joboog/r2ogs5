@@ -1,0 +1,8 @@
+#NUMERICS
+ $PCS_TYPE
+  AIR_FLOW
+ $LINEAR_SOLVER
+  2      6 1.e-015       100            1.0   101     4
+ $NON_LINEAR_SOLVER
+  PICARD 1e-3            10             0.0
+#STOP

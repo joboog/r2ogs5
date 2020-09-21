@@ -1,0 +1,11 @@
+
+#COMPONENT_PROPERTIES
+ $NAME
+  SorbDecay
+ $MOBILE
+  1
+ $DECAY
+  1  2.0e-7   1.0
+ $ISOTHERM
+  1  6.8e-5
+#STOP

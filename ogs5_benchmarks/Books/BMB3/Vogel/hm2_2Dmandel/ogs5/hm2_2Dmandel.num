@@ -1,0 +1,6 @@
+#NUMERICS
+ $PCS_TYPE
+  DEFORMATION_FLOW
+ $LINEAR_SOLVER
+    2      1    1.e-10       10000      1.0     100      4
+#STOP

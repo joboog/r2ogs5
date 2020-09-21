@@ -1,0 +1,27 @@
+#OUTPUT
+ $PCS_TYPE
+  NO_PCS
+ $NOD_VALUES
+  HEAD
+  Cons_Tracer
+  Xylene
+  Oxygen
+  Metab_O
+  CO2
+  Biomass_Aerobic
+  Goethite
+  bioFe3
+  Metab_Fe3
+  Fe2
+  Biomass_Ironreducer
+  Sulfate
+  S
+  Meta_ProductS
+  Biomass_Sulfatereducer
+ $GEO_TYPE
+  DOMAIN
+ $DAT_TYPE
+  TECPLOT
+ $TIM_TYPE
+  STEPS 20
+#STOP
