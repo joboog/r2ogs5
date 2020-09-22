@@ -1,0 +1,6 @@
+#NUMERICS
+ $PCS_TYPE
+  DEFORMATION
+ $LINEAR_SOLVER
+petsc cg jacobi 1.e-16  2000 1.0
+#STOP

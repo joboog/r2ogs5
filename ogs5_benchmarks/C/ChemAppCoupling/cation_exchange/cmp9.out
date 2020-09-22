@@ -1,0 +1,11 @@
+#OUTPUT
+ $NOD_VALUES
+  Cl[-]
+  Ca[2+]
+  K[+]
+  Na[+]
+ $GEO_TYPE
+  POINT  POINT2
+ $DAT_TYPE
+  TECPLOT
+#STOP

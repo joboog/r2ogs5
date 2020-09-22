@@ -1,0 +1,10 @@
+
+#COMPONENT_PROPERTIES
+ $NAME
+  Tracer1
+ $MOBILE
+  1
+ $DIFFUSION
+  1 1.0e-9
+
+#STOP

@@ -1,0 +1,11 @@
+#COMPONENT_PROPERTIES
+ $NAME
+  Cl-36
+ $MOBILE
+  1
+ $DIFFUSION
+  1   5.98905e-11
+ $DECAY
+  1  7.31994E-14   1.0
+ $OutputMassOfComponentInModel
+#STOP

@@ -1,0 +1,10 @@
+
+#COMPONENT_PROPERTIES
+ $NAME
+  Decay
+ $MOBILE
+  1
+ $DECAY
+  1  2.0e-7   1.0
+
+#STOP
