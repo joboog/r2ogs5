@@ -123,7 +123,10 @@ ogs5_read_tecplot_point <- function(filename = character()){
   }
 
   # get header first
-  df <- readr::read_delim(filename, " ", escape_double = FALSE, col_names = FALSE, trim_ws = TRUE, skip = 1)
+  suppressWarnings(
+    suppressMessages(
+      df <- readr::read_delim(filename, " ", escape_double = FALSE, col_names = FALSE,
+                              trim_ws = TRUE, skip = 1)))
 
   header <- dplyr::tbl_df(df) %>%
     dplyr::slice(1) %>%
@@ -141,6 +144,10 @@ ogs5_read_tecplot_point <- function(filename = character()){
                      trim_ws = TRUE, skip = 3)))
   df <- as.data.frame(df)
   df <- df[, !sapply(df, is.character)]
+
+  # exclude the empty column
+  has_data <- function(x) { !all(is.na(x)) }
+  df <- df %>% dplyr::select_if(has_data)
 
   # set column names
   colnames(df) <- header
