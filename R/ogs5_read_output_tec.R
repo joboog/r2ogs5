@@ -40,9 +40,11 @@ ogs5_read_tecplot_domain<-function(filename){
   # this function reads an individual tecplot file (*.tec)
   # of $GEOMETRY_TYPE DOMAINfrom ogs5 simulations and returns a dataframe
   # filename: path + name of the *.tec file
+  # or url of raw file on github/gitlab repository
 
     # check filepath
-  if (!(file.exists(filename))){
+  if (file.exists(filename) | (RCurl::url.exists(filename))){
+  } else if (!(file.exists(filename)) & (!(RCurl::url.exists(filename)))){
     stop("'filename' does not exist.", call = FALSE)
   }
   if (stringr::str_detect(filename, "domain")==FALSE){
@@ -114,8 +116,10 @@ ogs5_read_tecplot_point <- function(filename = character()){
   # content:
   # reads tecplot file from point source with any kind of components
   # filename: path+name of *.tec file
+  # or url of raw file on github/gitlab repository
 
-  if (!(file.exists(filename))){
+  if (file.exists(filename) | (RCurl::url.exists(filename))){
+  } else if (!(file.exists(filename)) & (!(RCurl::url.exists(filename)))){
     stop("'filename' does not exist.", call = FALSE)
   }
   if (stringr::str_detect(filename, "POINT")==FALSE){
