@@ -8,8 +8,11 @@ ogs5_write_inputfiles <-
 
     # validate input
     valid_ogs5(ogs5_obj)
-    if (!(type %in% names(ogs5_keywordlist) | type == "all")) {
+    if (!(type %in% c(names(ogs5_keywordlist), "dat") | type == "all")) {
       stop("wrong type entered", call. = FALSE)
+    }
+    if (type == "dat") {
+      warning("This method is only tested for phreeqc.dat files")
     }
 
     if (is.null(folderpath)){
@@ -206,7 +209,7 @@ ogs5_list_output.ogs5_gli <-
     for (i in seq_len(ogs5_sublist %>% length())){
 
       # print points
-      if ("points" == names(ogs5_sublist[i])){
+      if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "points")) {
 
         cat("#POINTS\n")
 
@@ -225,17 +228,27 @@ ogs5_list_output.ogs5_gli <-
       }
 
       # print ply and srf
-      if ("polylines" == names(ogs5_sublist[i])){
+      if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "polyline")) {
 
         ogs5_mkey = "POLYLINE"
-        for (j in seq_len(ogs5_sublist[[i]] %>% length())){
-          ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]][[j]],
-                               mkey = ogs5_mkey)
+        skey_str <- sapply(
+          names(ogs5_sublist[[i]]),
+          function(x) {
+            if (x == "POINTS") {    # line breaks after each point
+              skey <- paste0("\n", "$", x, "\n ",
+                      paste(ogs5_sublist[[i]][[x]], collapse="\n "))
+            } else {               # normal procedure, no line breaks
+            skey <- paste0("\n", "$", x, "\n ",
+                    paste(ogs5_sublist[[i]][[x]], collapse=" "))
+            }
+            return(skey)
+        })
+
+        cat(paste0("#", ogs5_mkey), skey_str, "\n")
           cat("\n")
         }
-      }
 
-      if ("surfaces" == names(ogs5_sublist[i])){
+      if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "surface")) {
 
         ogs5_mkey = "SURFACE"
         for (j in seq_len(ogs5_sublist[[i]] %>% length())){
@@ -422,8 +435,66 @@ ogs5_list_output.ogs5_out <-
   }
 
 # output ogs5_pqc sublist ------------------------------------------
+ogs5_list_output.ogs5_pqc <-
+
+  function(ogs5_sublist){
+
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_pqc")
+
+    for (i in seq_len(ogs5_sublist %>% length())) {
+
+        mkey <- names(ogs5_sublist)[i]
+        skey_str <- sapply(
+            ogs5_sublist[[i]],
+          function(x) {paste0("\n", x)}
+        )
+
+        cat(mkey, skey_str, "\n\n")
+      }
+    cat("END", "\n")
+  }
+
+
+# output ogs5_phreeqc.dat sublist ------------------------------------------
+ogs5_list_output.ogs5_phreeqc_dat <-
+
+  function(ogs5_sublist){
+
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_phreeqc_dat")
+
+    for (i in seq_len(ogs5_sublist %>% length())) {
+
+      mkey <- names(ogs5_sublist)[i]
+      skey_str <- sapply(
+        ogs5_sublist[[i]],
+        function(x) {paste0("\n", x)}
+      )
+
+      cat(mkey, skey_str, "\n\n")
+    }
+    cat("END", "\n")
+  }
 
 # output ogs5_rei sublist ------------------------------------------
+ogs5_list_output.ogs5_rei <-
+
+  function(ogs5_sublist){
+
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_rei")
+
+    ogs5_mkey <- ogs5_keywordlist$rei$mkey
+
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("#STOP", "\n")
+  }
+
 
 # method for ogs5_rfd sublist ------------------------------------------
 ogs5_list_output.ogs5_rfd <-
