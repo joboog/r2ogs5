@@ -1,5 +1,73 @@
 # read in ex1 input files -------------------------------------------------
 
+
+
+# helper function to test read/write functionality ------------------------
+
+read_write_test <-
+    function(ogs5_obj, bm_dir, bm_name) {
+
+        # loop over input files and compare
+        for (file_ext in names(ogs5_obj$input)) {
+
+            test_that(
+                paste0("Reading and writing inputfile .",
+                         file_ext,
+                        " changes nothing"), {
+
+                   if (file_ext == "dat") {
+                        read_filepath <- paste0(bm_dir, "/phreeqc.dat")
+                   } else {
+                   read_filepath <- paste0(attributes(ogs5_obj)$sim_path, "/",
+                                           attributes(ogs5_obj)$sim_name, ".",
+                                           file_ext)
+                   }
+                   # read-in and written vector (see setup-B)
+                   read_vec <- scan(file = read_filepath,
+                                    what = "character",
+                                    blank.lines.skip = TRUE,
+                                    sep = "\n",
+                                    quiet = TRUE) %>%
+                       stringr::str_squish()
+                   # extra remove empty lines
+                   read_vec <- read_vec[which(read_vec != "")]
+                   # remove '#' lines
+                   read_vec <- read_vec[which(read_vec != "#")]
+
+                   if (file_ext == "dat") {
+                       filepath <- paste0(bm_dir, "/phreeqc.dat")
+                   } else {
+                       filepath <- paste0(bm_dir, "/", bm_name, ".", file_ext)
+                   }
+                   # original vector from ex1
+                   orig_vec <- scan(file = filepath,
+                                    what = "character",
+                                    blank.lines.skip = TRUE,
+                                    sep = "\n",
+                                    quiet = TRUE) %>%
+                       stringr::str_squish()
+                   orig_vec <- orig_vec[which(orig_vec != "")]
+                   orig_vec <- orig_vec[which(orig_vec != "#")]
+
+                   # remove elements after 'STOP'
+                   if (length(orig_vec) != length(read_vec)) {
+                       stop_ind <- which(orig_vec == "#STOP" |
+                                         orig_vec == "END")
+                       orig_vec <- orig_vec[
+                           -c((stop_ind + 1):length(orig_vec))
+                       ]
+                   }
+
+                   # TEST
+                   expect_equal(orig_vec, read_vec)
+               })
+    }
+}
+
+###########################################################################
+####                read read and write ex1 input files                 ###
+###########################################################################
+
 # create ogs5 object to compare to ex1 in subfolder ex1_read
 # tmp <- "examples/tmp/ex1"
 ex1_read <- create_ogs5(sim_name = "ex1_read", sim_id = 1L,
@@ -14,18 +82,19 @@ ogs5_write_inputfiles(ex1_read, type = "all")
 
 
 ###########################################################################
-####                read in Engesgaard benchmark input files            ###
+####           read and write Engesgaard benchmark input files          ###
 ###########################################################################
 
 
 # Engsesgaard/2Kin/slow_kin_pqc -------------------------------------------
 
-bm_dir <- "../../examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc"
-#bm_dir <- "examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc"
+eg1_dir <- "../../examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc"
+# eg1_dir <- "examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc"
 
 # create new ogs5 object in temporary directory
 eg1_read <- create_ogs5(sim_name = "eg1_read", sim_id = 1L,
                    sim_path = paste0(tmp, "/eg1_read"))
+
 
 # read in input files from benchmark folder
 eg1_read <- input_add_blocs_from_file(eg1_read,
@@ -46,10 +115,42 @@ eg1_read <- input_add_blocs_from_file(eg1_read,
                                                       "pds.st",
                                                       "phreeqc.dat",
                                                       "pds.pqc"),
-                                      file_dir = bm_dir)
+                                      file_dir = eg1_dir)
 
 ogs5_write_inputfiles(eg1_read, type = "all")
 
 # Engsesgaard/2Kin/slow_kin_pqc_kcr -------------------------------------------
 
-# TODO
+
+eg2_dir <- "../../examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc_krc"
+#eg2_dir <- "examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc_krc"
+# tmp <- "examples/tmp"
+# create new ogs5 object in temporary directory
+eg2_read <- create_ogs5(sim_name = "eg2_read", sim_id = 1L,
+                        sim_path = paste0(tmp, "/eg2_read"))
+
+
+
+# read in input files from benchmark folder
+eg2_read <- input_add_blocs_from_file(eg2_read,
+                                      filename = list("pds.msh",
+                                                      "pds.bc",
+                                                      "pds.gli",
+                                                      "pds.ic",
+                                                      "pds.mcp",
+                                                      "pds.mfp",
+                                                      "pds.mmp",
+                                                      "pds.msh",
+                                                      "pds.msp",
+                                                      "pds.num",
+                                                      "pds.out",
+                                                      "pds.pcs",
+                                                      "pds.rei",
+                                                      "pds.tim",
+                                                      "pds.st",
+                                                      "phreeqc.dat",
+                                                      "pds.pqc",
+                                                      "pds.krc"),
+                                      file_dir = eg2_dir)
+
+ogs5_write_inputfiles(eg2_read, type = "all")

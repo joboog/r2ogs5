@@ -111,6 +111,80 @@ ogs5_read_tecplot_domain<-function(filename){
   return(df)
 }
 
+
+# Read *.tec file for POLYLINE ----------------------------------------------
+
+ogs5_read_tecplot_polyline <- function(filename) {
+
+  # content:
+  # this function reads an individual tecplot file (*.tec)
+  # of $GEOMETRY_TYPE POLYLINE from ogs5 simulations and returns a dataframe
+  # filename: path + name of the *.tec file
+
+  # check filepath
+  if (!(file.exists(filename))) {
+    stop("'filename' does not exist.", call = FALSE)
+  }
+  if (stringr::str_detect(filename, "polyline|ply|LINE") == FALSE) {
+    return(NULL)
+  }
+
+  #=== get header =====================================================
+
+  # read second line
+  header <- readLines(con = filename, n = 2L)[2]
+  # remove pattern
+  header <- gsub("VARIABLES =", "", header)
+  header <- gsub("\"", "", header)
+
+  # split by ","
+  header <- header %>%
+            stringr::str_squish() %>%
+            stringr::str_split(" ") %>%
+            unlist()
+
+  #=== get data =======================================================
+
+  #=== get time
+  ts <- readLines(con=filename, n = -1L, ok = TRUE) %>%
+        stringr::str_squish()
+
+  ts <- ts %>%
+        stringr::str_extract("ZONE T=\"TIME=\\d+\\.\\d+e\\+\\d+") %>%
+        na.omit() %>%
+        gsub(pattern="ZONE T=\"TIME=", replacement="") %>%
+        as.numeric()
+
+  #=== get point data
+  suppressWarnings(
+    suppressMessages(
+      df <- readr::read_delim(filename,
+                              " ", escape_double = FALSE, col_names = FALSE,
+                              trim_ws = TRUE, skip = 3)))
+
+  # extract all lines with elements in first column that do not match pattern
+  df <- df %>%
+    dplyr::filter(
+      !is.na(stringr::str_extract(X1,"\\d+\\.\\d+e\\+\\d+")) |
+        !is.na(stringr::str_extract(X1,"\\d+\\.\\d+e\\-\\d+"))
+    )
+  # remove empty columns
+  df <- df[, sapply(df, function(i) !all(is.na(i)))] %>%
+    apply(2,as.numeric) %>%
+    tibble::as_tibble()
+
+  #=== combine all
+  colnames(df) <- header
+
+  # create df with point coordinates and time
+  # then add as TIME column
+  df <- df %>%
+    dplyr::bind_cols(TIME = rep(ts, rep(nrow(df)/length(ts), length(ts)))) %>%
+    dplyr::select(TIME, dplyr::everything())
+
+  return(df)
+}
+
 ogs5_read_tecplot_point <- function(filename = character()){
 
   # content:
