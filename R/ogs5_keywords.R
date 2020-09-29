@@ -63,7 +63,6 @@ ogs5_get_keywordlist <- function(){
   # gli ---------------------------------------------------------------------
   ogs5_keywordlist$gli$mkey <- "#POINTS
                         #POLYLINE
-                        #STOP
                         #SURFACE
                         #VOLUME "
   ogs5_keywordlist$gli$skey <- "$EPSILON
@@ -464,17 +463,23 @@ ogs5_keywordlist$pqc$mkey <- "#ende
 
   # st ----------------------------------------------------------------------
   ogs5_keywordlist$st$mkey <- "#SOURCE_TERM"
-  ogs5_keywordlist$st$skey <- "$CRITICAL_TIME
-                        $INDEPENDENT
+  ogs5_keywordlist$st$skey <- "
+                        $AIR_BREAKING
+                        $CHANNEL
+                        $COMP_NAME
+                        $CONSTRAINED
+                        $DISTRIBUTE_VOLUME_FLUX
+                        $DIS_TYPE
+                        $EXPLICIT_SURFACE_WATER_PRESSURE
+                        $FCT_TYPE
+                        $GEO_TYPE
+                        $MSH_TYPE
+                        $NEGLECT_SURFACE_WATER_PRESSURE
+                        $NODE_AVERAGING
                         $PCS_TYPE
-                        $SUBSTEPS
-                        $TIME_CONTROL
-                        $TIME_END
-                        $TIME_FIXED_POINTS
-                        $TIME_SPLITS
-                        $TIME_START
-                        $TIME_STEPS
-                        $TIME_UNIT "
+                        $PRIMARY_VARIABLE
+                        $TIME_INTERPOLATION
+                        $TIM_TYPE "
 
   ogs5_keywordlist <- ogs5_extract_ogs5_keywordlist(ogs5_keywordlist)
   return(ogs5_keywordlist)
