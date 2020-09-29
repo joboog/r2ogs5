@@ -94,18 +94,8 @@ test_that("respective classes are assigned", {
 })
 
 
-# produce OGS5 output to compare
-ogs5_run(ogs5_obj = ex1_read, ogs_exe = "../../inst/ogs/ogs_5.76",
-         run_path = NULL,
-         log_output = TRUE,
-         log_path = paste0(tmp, "/ex1_read/log"))
-
-
 context("Read ex1 input files")
-
 read_write_test(ex1_read, bm_dir =  paste0(tmp, "/ex1"), bm_name = "ex1")
-
-
 
 # test overwrite barrier --------------------------------------------------
 context("Existing input files are recognized and not overwritten")
@@ -131,25 +121,5 @@ read_write_test(eg1_read, bm_dir = eg1_dir, bm_name = "pds")
 
 context("Read Engesgaard pqc_kcr benchmark input files")
 read_write_test(eg2_read, bm_dir = eg2_dir, bm_name = "pds")
-
-
-
-
-
-# test overwrite barrier --------------------------------------------------
-context("Existing input files are recognized and not overwritten")
-
-ex1.2 <- input_add_blocs_from_file(ex1, filename = "all",
-                                   file_dir = paste0(tmp, "/ex1"),
-                                   overwrite = FALSE)
-
-for (file_ext in names(ex1.2$input)) {
-
-    # intuition: if existing blocs are not overwritten, the names stay the same
-    test_that(paste0("existing blocs are overwritten in file *.", file_ext),
-              expect_equal(names(ex1.2$input[[paste0(file_ext)]]),
-                           names(ex1$input[[paste0(file_ext)]]))
-    )
-}
 
 
