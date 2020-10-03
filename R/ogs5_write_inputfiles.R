@@ -6,6 +6,10 @@ ogs5_write_inputfiles <-
 
   function(ogs5_obj = list(), type = "all", folderpath = NULL){
 
+    # disable scientific numbers when calling this function
+    nosci_op <- options(scipen = 999)
+    withr::defer(options(nosci_op))
+
     # validate input
     valid_ogs5(ogs5_obj)
     if (!(type %in% c(names(ogs5_keywordlist), "dat") | type == "all")) {
@@ -50,6 +54,7 @@ ogs5_write_inputfiles <-
 ogs5_write_tofile <-
 
   function(filename = character(), text_output_fct){
+
     sink(filename, type = "output")
     text_output_fct
     sink()
