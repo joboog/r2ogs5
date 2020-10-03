@@ -177,13 +177,31 @@ ogs5_list_output.ogs5_fct <-
     stopifnot(class(ogs5_sublist) == "ogs5_fct")
 
     for (i in seq_len(ogs5_sublist %>% length())){
-      ogs5_print_fct_bloc(ogs5_fct_bloc = ogs5_sublist[[i]],
+      ogs5_print_fct_bloc(mkey_bloc = ogs5_sublist[[i]],
                           mkey = "FUNCTION")
       cat("\n")
     }
     cat("#STOP", "\n")
   }
 
+ogs5_print_fct_bloc <- function(mkey_bloc, mkey) {
+
+  other_skeys <- which(names(mkey_bloc) != "DATA")
+  skey_str <- sapply(
+    names(mkey_bloc)[other_skeys],
+    function(x) {
+      paste0("\n", "$", x, "\n ",
+             paste(mkey_bloc[[x]], collapse=" ")
+      )
+    }
+  )
+  cat(paste0("#", mkey), skey_str, "\n")
+
+  # paste DATA
+  cat(" $DATA\n")
+  cat(apply(mkey_bloc[["DATA"]], 1, paste0, collapse=" "), sep = "\n")
+
+}
 
 # output ogs5_fct bloc ----------------------------------------------------
 ogs5_fct_bloc_output <-
@@ -206,6 +224,7 @@ ogs5_fct_bloc_output <-
     }
     cat("#STOP", "\n")
   }
+
 
 
 # output ogs5_gem sublist ------------------------------------------
@@ -272,6 +291,7 @@ ogs5_list_output.ogs5_gli <-
     }
     cat("#STOP", "\n")
   }
+
 
 
 # output ogs5_ic sublist ------------------------------------------
