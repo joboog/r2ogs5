@@ -14,7 +14,10 @@ test_that("respective classes are assigned", {
     # cct classes
     # MISSING
     # fct classes
-    # MISSING
+    expect_silent(valid_ogs5_fct(fct_read$input$fct))
+    expect_silent(valid_ogs5_fct_bloc(
+       fct_read$input$fct$FUNCTION1
+    ))
     # gem clases
     # MISSING
     # gli classes
@@ -123,3 +126,17 @@ context("Read Engesgaard pqc_kcr benchmark input files")
 read_write_test(eg2_read, bm_dir = eg2_dir, bm_name = "pds")
 
 
+
+
+
+
+
+
+
+
+
+
+# *.fct input files -------------------------------------------------------
+
+context("Read fct input files")
+read_write_test(fct_read, bm_dir = fct_dir, bm_name = "trans_bd_homo")

@@ -7,6 +7,7 @@
 read_write_test <-
     function(ogs5_obj, bm_dir, bm_name) {
 
+
         # loop over input files and compare
         for (file_ext in names(ogs5_obj$input)) {
 
@@ -154,3 +155,30 @@ eg2_read <- input_add_blocs_from_file(eg2_read,
                                       file_dir = eg2_dir)
 
 ogs5_write_inputfiles(eg2_read, type = "all")
+
+
+
+
+
+
+
+
+
+
+
+
+# read GROUNDWATER_FLOW/Transient_flow ------------------------------------
+
+fct_dir <- "../../examples/benchmarks/Transient_flow"
+fct_read <- create_ogs5(sim_name = "fct_read", sim_id = 1L,
+                        sim_path = paste0(tmp, "/fct_read"))
+
+fct_read <- input_add_blocs_from_file(fct_read,
+                          filename = "trans_bd_homo.fct",
+                          file_dir = fct_dir)
+
+# disable scientific numbers when calling this function
+nosci_op <- options(scipen = 999)
+withr::defer(options(nosci_op))
+
+ogs5_write_inputfiles(fct_read, type = "all")
