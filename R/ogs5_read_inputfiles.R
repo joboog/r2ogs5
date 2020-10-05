@@ -199,10 +199,24 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
                     # POINTS: convert into tibble
                     if (stringr::str_detect(blc_name, "POINTS")) {
-                    suppressWarnings(
-                     suppressMessages(
+
                      bloc <- bloc %>%
-                     sapply(stringr::str_split, " ") %>%
+                        stringr::str_split(" ")
+                     # check for missing names
+                     bloc <- bloc %>%
+                         lapply(function(subbloc) {
+
+                             if (!any(subbloc == "$NAME")) {
+                                 subbloc <- c(subbloc, "$NAME", "")
+                             }
+                             # make sure only rownames, xyz and names are there
+                             subbloc <- c(subbloc[1:4], tail(subbloc, 2))
+                             return(subbloc)
+                         })
+                     # pack into tibble
+                suppressWarnings(
+                 suppressMessages(
+                     bloc <- bloc %>%
                      unlist %>%
                      matrix(nrow = length(bloc), byrow = TRUE) %>%
                      tibble::as_tibble(.name_repair = "unique") %>%
@@ -216,8 +230,6 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                      tibble::as_tibble() %>%
                      tibble::column_to_rownames("...1") %>%
                      dplyr::select(x, y, z, name)
-
-
                             ))
 
                     } else {
