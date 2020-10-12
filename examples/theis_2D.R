@@ -107,13 +107,13 @@ theis_2D <- input_add_gli_polyline(x = theis_2D, ply_name = "bottom_bc",
 # ad msh bloc
 # load from local directory
 # nodes
-msh_nodes <- readr::read_delim("og5s_benchmarks/H/Theis_2D/Thies_quad_2d.msh",
+msh_nodes <- readr::read_delim("ogs5_benchmarks/H/Theis_2D/Thies_quad_2d.msh",
                                delim = " ", col_types = "_ddd",
                                col_names = c("x", "y", "z"),
                                skip = 5, n_max = 7500) %>% tibble::as_tibble()
 
 # elements
-msh_elements <- readr::read_delim("og5s_benchmarks/H/Theis_2D/Thies_quad_2d.msh",
+msh_elements <- readr::read_delim("ogs5_benchmarks/H/Theis_2D/Thies_quad_2d.msh",
                                delim = " ", col_types = "_ccdddd",
                                col_names = c("material_id", "ele_type", "node1", "node2", "node3", "node4"),
                                skip = 7507, n_max = 7326) %>% tibble::as_tibble()
