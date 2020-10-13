@@ -7,22 +7,27 @@ ogs5_read_inputfile_tolist <- function(filepath){
 
     # get character vector of file
     chr <- scan(
-            file = filepath,
-            what = "character",
-            blank.lines.skip = TRUE,
-            sep = "\n",
-            quiet = TRUE
-            # specify encoding??
-            )
+        file = filepath,
+        what = "character",
+        blank.lines.skip = TRUE,
+        sep = "\n",
+        quiet = TRUE
+        # specify encoding??
+    )
 
     # remove comments // and ;
     chr <-  chr %>%
         stringr::str_remove("//.+|\\;.+") %>%
         stringr::str_squish()
 
+    mkey_positions <- stringr::str_which(chr, "#")
+    skey_positions <- chr %>%
+        stringr::str_starts("\\$") %>%
+        which()
+
     # iterate over character vector
     l <- list()
-    i <-1
+    i <- 1
     mkey <- 1
     skey <- 0
     while (!(stringr::str_detect(chr[i], "#STOP"))) {
@@ -39,22 +44,34 @@ ogs5_read_inputfile_tolist <- function(filepath){
             l[[paste0(tmp1)]] <- list()
             mkey <- mkey + 1
             skey <- 0 # set back to 0
+
+            if (length(skey_positions) != 0 |
+                stringr::str_starts(chr[i + 1], "\\$")) {
+
+                # determine positions of skeys under this mkey
+                next_mkey <- mkey_positions[which(mkey_positions - i > 0)]
+                next_mkey <- next_mkey[next_mkey == min(next_mkey)]
+                skey_pos <- skey_positions[i < skey_positions &
+                                               skey_positions < next_mkey]
+
+                l[[paste0(tmp1)]] <- vector(mode = "list", length(skey_pos))
+                names(l[[paste0(tmp1)]]) <- chr[skey_pos] %>%
+                    stringr::str_remove("\\$")
+            }
             i <- i + 1
         } else {
             # create sublist if skey found
             if (is_skey) {
-                tmp2 <- chr[i] %>% stringr::str_extract_all("\\w+")
-                l[[paste0(tmp1)]][[paste0(tmp2)]] <- list()
-                i <- i + 1
                 skey <- skey + 1
+                i <- i + 1
             } else {
                 # add entry to list
                 j <- 1
                 while(!any(c(is_skey, is_mkey))) {
                     tmp3 <- chr[i] %>%
-                            stringr::str_squish()
+                        stringr::str_squish()
 
-                    if (chr[i] != "" & skey != 0){
+                    if (chr[i] != "" & skey != 0) {
                         l[[paste0(tmp1)]][[skey]][j] <- tmp3
                         j <- j + 1
                     } else { # if skey is 0
@@ -235,7 +252,52 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
                "bc" = add_standard_blocs(filepath,
                                          "ogs5_bc_condition"),
+# .cct input file ---------------------------------------------------------
+               "cct" = ogs5_read_inputfile_tolist(filepath) %>%
+                   lapply(function(bloc) {
 
+                       neighbor_skeys <- which(names(bloc) == "NEIGHBOR")
+                       other_skeys <- which(names(bloc) != "NEIGHBOR")
+
+                       bloc[neighbor_skeys] <- bloc[neighbor_skeys] %>%
+                           lapply(function(skey_bloc) {
+                               list(skey_bloc[1:2], # first two single numbers
+                                    skey_bloc[-c(1, 2)] %>%
+                                    lapply(stringr::str_split, " ") %>%
+                                    unlist %>%
+                                    as.double %>%
+                                    matrix(nrow = length(skey_bloc[-c(1:2)]),
+                                           byrow = TRUE) %>%
+                                    'colnames<-' (c("x", "y")) %>%
+                                    tibble::as_tibble()
+                               )
+                           })
+
+                       bloc[other_skeys] <- bloc[other_skeys] %>%
+                           lapply(unlist)
+                       bloc <- structure(bloc, class = "ogs5_cct_bloc")
+
+                   }) %>% structure(class = "ogs5_cct"),
+
+               
+# .fct input file ---------------------------------------------------------
+                "fct" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(bloc) {
+                        bloc[["DATA"]] <- bloc[["DATA"]] %>%
+                            lapply(stringr::str_split, " ") %>%
+                            unlist %>%
+                            as.double %>%
+                            matrix(nrow = length(bloc[["DATA"]]),
+                                   byrow = TRUE) %>%
+                            'colnames<-' (c("x", "y")) %>%
+                            tibble::as_tibble()
+
+                        other_skeys <- which(names(bloc) != "DATA")
+                        bloc[other_skeys] <- bloc[other_skeys] %>%
+                            lapply(unlist)
+                        bloc <- structure(bloc, class = "ogs5_fct_bloc")
+
+                    }) %>% structure(class = "ogs5_fct"),
 # .gli input file ---------------------------------------------------------
                "gli" =                              # loop over bloc names!
                 names(ogs5_list <- ogs5_read_inputfile_tolist(filepath)) %>%
@@ -295,23 +357,6 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 'names<-' (c(names(ogs5_list))) %>% # restore bloc names
                 structure(class = "ogs5_gli"),      # add input class
 
-# .fct input file ---------------------------------------------------------
-                "fct" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(bloc) {
-                    bloc[["DATA"]] <- bloc[["DATA"]] %>%
-                        lapply(stringr::str_split, " ") %>%
-                        unlist %>%
-                        as.double %>%
-                        matrix(nrow = length(bloc[["DATA"]]), byrow = TRUE) %>%
-                        'colnames<-' (c("x", "y")) %>%
-                        tibble::as_tibble()
-
-                    other_skeys <- which(names(bloc) != "DATA")
-                    bloc[other_skeys] <- bloc[other_skeys] %>%
-                        lapply(unlist)
-                    bloc <- structure(bloc, class = "ogs5_fct_bloc")
-
-                }) %>% structure(class = "ogs5_fct"),
 
 # -------------------------------------------------------------------------
                 "ic" = add_standard_blocs(filepath,
