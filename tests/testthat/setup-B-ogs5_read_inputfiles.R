@@ -174,7 +174,7 @@ fct_read <- create_ogs5(sim_name = "fct_read", sim_id = 1L,
                         sim_path = paste0(tmp, "/fct_read"))
 
 fct_read <- input_add_blocs_from_file(fct_read,
-                          filename = "trans_bd_homo.fct",
+                          filename = "all",
                           file_dir = fct_dir)
 
 # disable scientific numbers when calling this function
