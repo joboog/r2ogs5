@@ -30,6 +30,12 @@ ogs5_get_keywordlist <- function(){
                         $NEIGHBOR
                         $NNEIGHBORS "
 
+  # ddc ---------------------------------------------------------------------
+  ogs5_keywordlist$ddc$mkey <- "#DOMAIN"  # added by hand
+  ogs5_keywordlist$ddc$skey <- "$NODES_INNER
+                          $ELEMENTS"
+
+
   # fct ---------------------------------------------------------------------
   ogs5_keywordlist$fct$mkey <- "#FUNCTION"
   ogs5_keywordlist$fct$skey <- "$DATA
