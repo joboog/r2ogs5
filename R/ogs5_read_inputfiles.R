@@ -41,7 +41,15 @@ ogs5_read_inputfile_tolist <- function(filepath){
         if (is_mkey) {
             tmp1 <- chr[i] %>%
                     stringr::str_extract_all("\\w+") %>%
+                    unlist()
+
+            if (length(tmp1) > 1) {
+                tmp1 <- tmp1 %>% paste0(collapse = "_")
+            } else {
+                tmp1 <- tmp1 %>%
                     stringr::str_c(mkey)
+            }
+
             l[[paste0(tmp1)]] <- list()
             mkey <- mkey + 1
             skey <- 0 # set back to 0
@@ -66,8 +74,15 @@ ogs5_read_inputfile_tolist <- function(filepath){
                 if (!exists("tmp1")) { # if there is no mkey at all
                     l[[paste0(chr[i] %>% stringr::str_remove("\\$"))]] <- list()
                 }
-                skey <- skey + 1
+                tmp2 <- chr[i] %>% stringr::str_extract_all("\\w+") %>% unlist()
+
+                if (length(tmp2) > 1) {
+                    tmp2 <- tmp2 %>% paste0(collapse = "_")
+                }
+
+                l[[paste0(tmp1)]][[paste0(tmp2)]] <- list()
                 i <- i + 1
+                skey <- skey + 1
             } else {
                 # add entry to list
                 j <- 1
@@ -200,7 +215,7 @@ ogs5_add_input_bloc_from_addfile <- function(ogs5_obj,
 add_standard_blocs <- function(filepath,
                                sub_bloc_class = NULL,
                                bloc_class = NULL,
-                               stack_args = FALSE) {
+                               convert_fun = I) {
 
     file_ext <- filepath %>%
                 stringr::str_split("\\.") %>%
@@ -218,17 +233,15 @@ add_standard_blocs <- function(filepath,
             lapply(function(bloc) {
 
                 bloc <- bloc %>%
-                        lapply(function(sub_bloc, stack_args) {
+                        lapply(function(sub_bloc) {
 
                             # unlist
-                            sub_bloc <- unlist(sub_bloc)
-                            # stack skey arguments (insert \n) if required
-                            if (length(sub_bloc) > 1 & stack_args) {
-                                sub_bloc <- paste0(sub_bloc, collapse = "\n ")
-                            }
+                            sub_bloc <- unlist(sub_bloc) %>%
+                                        convert_fun()
+
+
                             return(sub_bloc)
-                        },
-                        stack_args)
+                        })
 
                 bloc <- structure(bloc, class = sub_bloc_class)
                 return(bloc)
@@ -289,6 +302,9 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                        bloc <- structure(bloc, class = "ogs5_cct_bloc")
 
                    }) %>% structure(class = "ogs5_cct"),
+
+                 "ddc" = add_standard_blocs(filepath,
+                                          convert_fun = as.numeric),
 
 
 # .fct input file ---------------------------------------------------------
@@ -402,7 +418,6 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 'names<-' (c(names(ogs5_list))) %>% # restore bloc names
                 structure(class = "ogs5_gli"),      # add input class
 
-
 # -------------------------------------------------------------------------
                 "ic" = add_standard_blocs(filepath,
                                           "ogs5_ic_condition"),
@@ -478,8 +493,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
                 "num" = add_standard_blocs(filepath),
 
-                "out" = add_standard_blocs(filepath,
-                                           stack_args = TRUE),
+                "out" = add_standard_blocs(filepath),
 
                 "pcs" = ogs5_read_inputfile_tolist(filepath) %>%
                     lapply(function(x) {
@@ -509,7 +523,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                     # check for column names
                     clnme <- bloc %>%
                             names() %>%
-                            stringr::str_split("\"") %>%
+                            stringr::str_split("_") %>%
                             unlist() %>%
                             stringr::str_extract_all("\\w+") %>%
                             unlist()
