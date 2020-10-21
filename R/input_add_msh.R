@@ -45,12 +45,12 @@ input_add_msh_bloc <-
     }
 
     # check ELEMENTS
-    if (!(tibble::is_tibble(ELEMENTS))){
+    if (!(tibble::is_tibble(ELEMENTS[[1]]))){
       stop("ELEMENTS has to be a 'tibble' ",
            call. = FALSE)
     }
 
-    if (!all(c("material_id", "ele_type", "node1", "node2") %in% names(ELEMENTS))){
+    if (!all(c("material_id", "ele_type", "node1", "node2") %in% names(ELEMENTS[[1]]))){
       stop("ELEMENTS has to have headers: 'material_id', 'ele_type', 'node1', 'node2', ...",
            call. = FALSE)
     }

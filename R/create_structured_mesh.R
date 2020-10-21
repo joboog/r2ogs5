@@ -194,5 +194,9 @@ create_structured_mesh_nodes_ele <-
                                 z_vector = xyz_vector[[3]])
   }
 
+  ele_df <- ele_df %>%
+    dplyr::mutate(nr = 1:length(ele_type) - 1) %>%
+    dplyr::select(nr, dplyr::everything())
+
   return(list(NODES = nodes_df, ELEMENTS = ele_df))
 }
