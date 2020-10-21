@@ -1,8 +1,9 @@
 bm <- menu(choices = c("Engesgaard",       #1
                        "Transient_flow",   #2
                        "PETSC",            #3
-                       "all",              #4
-                       "none"),            #5
+                       "McWhorter",        #4
+                       "all",              #5
+                       "none"),            #6
            title = "Which benchmarks do you want to run?")
 
 # Here, the re-written inputfiles for the Engesgaard benchmarks are handed over
@@ -10,8 +11,8 @@ bm <- menu(choices = c("Engesgaard",       #1
 # 1. Make sure they run (compiled version works)
 # 2. produce the same result as in
 # https://github.com/ufz/ogs5-benchmarks_ref/tree/master/C/Engesgaard
-if (bm == 4) {
-    bm <- c(1, 2, 3)
+if (bm == 5) {
+    bm <- c(1, 2, 3, 4)
 }
 
 if (1 %in% bm) {
@@ -112,5 +113,21 @@ test_that("vtk output is produced",
               paste0(attributes(cct_read)$sim_path, "/decal0000.vtk")))
 )
 
+} else if (4 %in% bm) {
+
+# McWhorter benchmark -----------------------------------------------------
+    context("MPI/McWhorter")
+    ogs5_run(ddc_read,
+             ogs_exe = "../../inst/ogs/ogs_mpi",
+             run_path = NULL,
+             log_output = TRUE,
+             log_path = paste0(tmp, "/ddc_read/log"),
+             use_mpi = TRUE,
+             number_of_cores = 4)
+    test_that("tec output is produced",
+              expect_true(file.exists(
+                  paste0(attributes(ddc_read)$sim_path,
+                         "/ddc_read_time_POINT4.tec")))
+    )
 }
 

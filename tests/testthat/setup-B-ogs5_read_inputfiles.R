@@ -251,3 +251,26 @@ cct_read <-  input_add_blocs_from_file(cct_read,
                                        file_dir = cct_dir)
 
 ogs5_write_inputfiles(cct_read, type = "all")
+
+
+ddc_dir <- "../../examples/benchmarks/McWhorter"
+ddc_read <- create_ogs5(sim_name = "ddc_read", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ddc_read"))
+
+ddc_read <- input_add_blocs_from_file(ddc_read,
+                                      filename = list("mcwt.ddc",
+                                                      "mcwt.gli",
+                                                      "mcwt.ic",
+                                                      "mcwt.mfp",
+                                                      "mcwt.mmp",
+                                                      "mcwt.msh",
+                                                      "mcwt.num",
+                                                      "mcwt.out",
+                                                      "mcwt.pcs",
+                                                      "mcwt.st",
+                                                      "mcwt.tim",
+                                                      "mcwt.bc"),
+                                      file_dir = ddc_dir,
+                                      overwrite = TRUE)
+
+ogs5_write_inputfiles(ddc_read, type = "all")
