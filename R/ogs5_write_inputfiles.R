@@ -50,6 +50,7 @@ ogs5_write_inputfiles <-
 ogs5_write_tofile <-
 
   function(filename = character(), text_output_fct){
+
     sink(filename, type = "output")
     text_output_fct
     sink()
@@ -120,6 +121,14 @@ ogs5_list_output.ogs5_bc <-
     ogs5_mkey <- ogs5_keywordlist$bc$mkey
 
     for (i in seq_len(ogs5_sublist %>% length())){
+
+      if (any(names(ogs5_sublist[[i]]) == "DIS_TYPE") &
+          any(stringr::str_detect(ogs5_sublist[[i]][["DIS_TYPE"]], "LINEAR"))) {
+
+        ogs5_sublist[[i]][["DIS_TYPE"]] <- ogs5_sublist[[i]][["DIS_TYPE"]] %>%
+          paste0(collapse = "  \n") # stack arguments
+      }
+
       ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
                            mkey = ogs5_mkey)
       cat("\n")
@@ -172,13 +181,31 @@ ogs5_list_output.ogs5_fct <-
     stopifnot(class(ogs5_sublist) == "ogs5_fct")
 
     for (i in seq_len(ogs5_sublist %>% length())){
-      ogs5_print_fct_bloc(ogs5_fct_bloc = ogs5_sublist[[i]],
+      ogs5_print_fct_bloc(mkey_bloc = ogs5_sublist[[i]],
                           mkey = "FUNCTION")
       cat("\n")
     }
     cat("#STOP", "\n")
   }
 
+ogs5_print_fct_bloc <- function(mkey_bloc, mkey) {
+
+  other_skeys <- which(names(mkey_bloc) != "DATA")
+  skey_str <- sapply(
+    names(mkey_bloc)[other_skeys],
+    function(x) {
+      paste0("\n", "$", x, "\n ",
+             paste(mkey_bloc[[x]], collapse=" ")
+      )
+    }
+  )
+  cat(paste0("#", mkey), skey_str, "\n")
+
+  # paste DATA
+  cat(" $DATA\n")
+  cat(apply(mkey_bloc[["DATA"]], 1, paste0, collapse=" "), sep = "\n")
+
+}
 
 # output ogs5_fct bloc ----------------------------------------------------
 ogs5_fct_bloc_output <-
@@ -201,6 +228,7 @@ ogs5_fct_bloc_output <-
     }
     cat("#STOP", "\n")
   }
+
 
 
 # output ogs5_gem sublist ------------------------------------------
@@ -235,9 +263,12 @@ ogs5_list_output.ogs5_gli <-
       }
 
       # print ply and srf
-      if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "polyline")) {
+      if (stringr::str_detect(names(ogs5_sublist)[i], "POLYLINE") |
+          stringr::str_detect(names(ogs5_sublist)[i], "SURFACE")) {
 
-        ogs5_mkey = "POLYLINE"
+        ogs5_mkey = names(ogs5_sublist)[i] %>%
+                    stringr::str_extract("[:alpha:]+")
+
         skey_str <- sapply(
           names(ogs5_sublist[[i]]),
           function(x) {
@@ -254,19 +285,11 @@ ogs5_list_output.ogs5_gli <-
         cat(paste0("#", ogs5_mkey), skey_str, "\n")
           cat("\n")
         }
-
-      if (stringr::str_detect(tolower(names(ogs5_sublist[i])), "surface")) {
-
-        ogs5_mkey = "SURFACE"
-        for (j in seq_len(ogs5_sublist[[i]] %>% length())){
-          ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]][[j]],
-                               mkey = ogs5_mkey)
-          cat("\n")
-        }
-      }
     }
     cat("#STOP", "\n")
   }
+
+
 
 
 # output ogs5_ic sublist ------------------------------------------

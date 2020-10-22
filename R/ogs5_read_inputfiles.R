@@ -249,6 +249,24 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 'names<-' (c(names(ogs5_list))) %>% # restore bloc names
                 structure(class = "ogs5_gli"),      # add input class
 
+# .fct input file ---------------------------------------------------------
+                "fct" = ogs5_read_inputfile_tolist(filepath) %>%
+                lapply(function(bloc) {
+                    bloc[["DATA"]] <- bloc[["DATA"]] %>%
+                        lapply(stringr::str_split, " ") %>%
+                        unlist %>%
+                        as.double %>%
+                        matrix(nrow = length(bloc[["DATA"]]), byrow = TRUE) %>%
+                        'colnames<-' (c("x", "y")) %>%
+                        tibble::as_tibble()
+
+                    other_skeys <- which(names(bloc) != "DATA")
+                    bloc[other_skeys] <- bloc[other_skeys] %>%
+                        lapply(unlist)
+                    bloc <- structure(bloc, class = "ogs5_fct_bloc")
+
+                }) %>% structure(class = "ogs5_fct"),
+
 # -------------------------------------------------------------------------
                 "ic" = add_standard_blocs(filepath,
                                           "ogs5_ic_condition"),
