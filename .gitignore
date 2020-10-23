@@ -5,6 +5,7 @@
 
 *.Rproj
 *.vtu
+*.vtk
 *.pvd
 *.tec
 !data/**/*.tec
