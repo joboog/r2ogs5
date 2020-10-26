@@ -65,7 +65,7 @@ ogs5_write_inputfiles <-
     }
 }
 
-ogs5_write_tofile <-
+ ogs5_write_tofile <-
 
   function(filename = character(), text_output_fct){
     sink(filename, type = "output")
