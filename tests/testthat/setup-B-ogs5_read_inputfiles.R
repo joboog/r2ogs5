@@ -8,45 +8,60 @@ read_write_test <-
     function(ogs5_obj, bm_dir, bm_name) {
 
 
-        # loop over input files and compare
-        for (file_ext in names(ogs5_obj$input)) {
+        # get filenames of written input files
+        read_filenames <- list.files(attributes(ogs5_obj)$sim_path)
+        read_basefilenames <- read_filenames %>% stringr::str_remove("\\..*")
+        read_file_ext <- read_filenames %>% stringr::str_remove(".*\\.")
+
+        # loop over filenames and read-write compare
+        for (i in 1:length(read_filenames)) {
 
             test_that(
-                paste0("Reading and writing inputfile .",
-                         file_ext,
-                        " changes nothing"), {
+                paste0("Reading and writing inputfile ",
+                       read_basefilenames[i],
+                        " changes nothing"),
+                {
 
-                   if (file_ext == "dat") {
-                        read_filepath <- paste0(bm_dir, "/phreeqc.dat")
-                   } else {
+                   # read read file (see setup-B)
+
                    read_filepath <- paste0(attributes(ogs5_obj)$sim_path, "/",
-                                           attributes(ogs5_obj)$sim_name, ".",
-                                           file_ext)
-                   }
-                   # read-in and written vector (see setup-B)
+                                           read_filenames[i])
+
                    read_vec <- scan(file = read_filepath,
                                     what = "character",
                                     blank.lines.skip = TRUE,
                                     sep = "\n",
                                     quiet = TRUE) %>%
-                       stringr::str_squish()
+                                stringr::str_squish()
                    # extra remove empty lines
                    read_vec <- read_vec[which(read_vec != "")]
                    # remove '#' lines
                    read_vec <- read_vec[which(read_vec != "#")]
 
-                   if (file_ext == "dat") {
-                       filepath <- paste0(bm_dir, "/phreeqc.dat")
+                   # read original file
+                   # remove read_basefilename, this is important for
+                   # additional files, e.g. ogs_simname_whatever.msh
+                   if (stringr::str_detect(read_filenames[i],
+                                         attributes(ogs5_obj)$sim_name)){
+
+                       # ogs_simname_whatever.msh -> bm_name_whatever.msh
+                       orig_filebasename = paste0(bm_name,
+                                                  read_filenames[i] %>%
+                                                 stringr::str_remove(
+                                                 attributes(ogs5_obj)$sim_name))
                    } else {
-                       filepath <- paste0(bm_dir, "/", bm_name, ".", file_ext)
+                       # e.g. phreeqc.dat
+                       orig_filebasename <- read_filenames[i]
                    }
-                   # original vector from ex1
-                   orig_vec <- scan(file = filepath,
+
+                   orig_filepath <- paste0(bm_dir, "/", orig_filebasename)
+
+                   orig_vec <- scan(file = orig_filepath,
                                     what = "character",
                                     blank.lines.skip = TRUE,
                                     sep = "\n",
                                     quiet = TRUE) %>%
-                       stringr::str_squish()
+                                stringr::str_squish()
                    orig_vec <- orig_vec[which(orig_vec != "")]
                    orig_vec <- orig_vec[which(orig_vec != "#")]
 
@@ -58,7 +73,7 @@ read_write_test <-
                            -c((stop_ind + 1):length(orig_vec))
                        ]
                    }
-
+                    browser()
                    # TEST
                    expect_equal(orig_vec, read_vec)
                })
@@ -75,6 +90,7 @@ ex1_read <- create_ogs5(sim_name = "ex1_read", sim_id = 1L,
                         sim_path = paste0(tmp, "/ex1_read"))
 
 ex1_read <- input_add_blocs_from_file(ex1_read,
+                                      sim_basename = "ex1",
                                       filename = "all",
                                       file_dir = paste0(tmp, "/ex1"))
 
@@ -99,6 +115,7 @@ eg1_read <- create_ogs5(sim_name = "eg1_read", sim_id = 1L,
 
 # read in input files from benchmark folder
 eg1_read <- input_add_blocs_from_file(eg1_read,
+                                      sim_basename = "pds",
                                       filename = list("pds.msh",
                                                       "pds.bc",
                                                       "pds.gli",
@@ -134,6 +151,7 @@ eg2_read <- create_ogs5(sim_name = "eg2_read", sim_id = 1L,
 
 # read in input files from benchmark folder
 eg2_read <- input_add_blocs_from_file(eg2_read,
+                                      sim_basename = "pds",
                                       filename = list("pds.msh",
                                                       "pds.bc",
                                                       "pds.gli",
@@ -174,6 +192,7 @@ fct_read <- create_ogs5(sim_name = "fct_read", sim_id = 1L,
                         sim_path = paste0(tmp, "/fct_read"))
 
 fct_read <- input_add_blocs_from_file(fct_read,
+                                      sim_basename = "trans_bd_homo",
                           filename = "all",
                           file_dir = fct_dir)
 
