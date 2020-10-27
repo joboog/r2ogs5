@@ -117,6 +117,58 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
     return(l)
 }
 
+ogs5_add_input_bloc_from_addfile <- function(ogs5_obj,
+                                             filepath,
+                                             overwrite){
+
+    valid_ogs5(ogs5_obj)
+
+    # look if ogs5-obj$input$additinoal exists and valid, otherwise create
+    if (!("additional" %in% names(ogs5_obj$input))) {
+
+        ogs5_obj$input$additional <- create_ogs5_additional()
+
+    } else {
+
+        valid_ogs5_additional(ogs5_obj$input$additional)
+    }
+
+    # check if ogs5-obj$input$additinoal subbloc exists and may skip reading
+    existing_blocs <- names(ogs5_obj$input$additional)
+    basefilename = basename(filepath)
+
+    if ((basefilename %in% existing_blocs) & !overwrite) return(ogs5_obj)
+
+
+    # add bloc
+    if (basefilename == "phreeqc.dat"){
+
+        new_bloc <- ogs5_read_pqc_input_tolist(filepath) %>%
+                        lapply(function(x) {
+                            x <- structure(x, class = "ogs5_pqc_skeybloc")
+                            return(x)}) %>%
+                        structure(class = "ogs5_pqc_filebloc")
+
+    } else {
+
+        new_bloc <- try(scan(
+                        file = filepath,
+                        what = "character",
+                        blank.lines.skip = TRUE,
+                        sep = "\n",
+                        quiet = TRUE
+                        # specify encoding??
+                        ) %>%
+                        stringr::str_replace_all("\\t", "    "))
+    }
+
+
+    ogs5_obj$input$additional[[paste0(basefilename)]] <- new_bloc
+
+    return(ogs5_obj)
+}
+
+
 add_standard_blocs <- function(filepath,
                                sub_bloc_class = NULL,
                                bloc_class = NULL,
@@ -183,12 +235,6 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
                "bc" = add_standard_blocs(filepath,
                                          "ogs5_bc_condition"),
-
-               "dat" = ogs5_read_pqc_input_tolist(filepath) %>%
-                   lapply(function(x) {
-                       x <- structure(x, class = "ogs5_dat_bloc")
-                       return(x)}) %>%
-                   structure(class = "ogs5_phreeqc_dat"),
 
 # .gli input file ---------------------------------------------------------
                "gli" =                              # loop over bloc names!
@@ -435,6 +481,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
 
 input_add_blocs_from_file <- function(ogs5_obj,
+                                      sim_basename,
                                       filename,
                                       file_dir = "",
                                       overwrite = FALSE) {
@@ -461,38 +508,55 @@ input_add_blocs_from_file <- function(ogs5_obj,
     }
 
 
-
     if (filename[[1]] == "all") { # browse whole repository for input files
 
         # get all filenames and extensions in filepath
-        all_filenames <- list.files(file_dir) %>%
-            stringr::str_split("\\.")
-        all_file_ext <- all_filenames %>%
-            lapply(FUN = dplyr::last)
+        all_filenames <- list.files(file_dir)
+        all_basefilenames <- all_filenames %>% stringr::str_remove("\\..*")
+        all_file_ext <- all_filenames %>% stringr::str_remove(".*\\.")
 
         possible_ext <- names(ogs5_get_keywordlist())
 
-        # filter out input files, ignore all others
+        # filter out ogs5 input files and extensions
         input_filenames <-
-            all_filenames[which(all_file_ext %in% possible_ext)] %>%
-            lapply(FUN = paste0, collapse = ".")
+            all_filenames[(all_file_ext %in% possible_ext) &
+                          (all_basefilenames == sim_basename)] #%>%
 
-        # get existing input file extensions
-        input_file_ext <- all_file_ext[which(all_file_ext %in% possible_ext)]
+        input_file_ext <- input_filenames %>% stringr::str_remove(".*\\.")
 
+        # filter additional files for third-party software e.g. phreeqc.dat
+        add_filenames = all_filenames[!(all_filenames %in% input_filenames)]
+
+        # read ogs5 input files
         for (i in 1:length(input_filenames)) {
 
-            filepath <- paste0(file_dir, "/", input_filenames[[i]], sep = "")
+            filepath <- paste0(file_dir, "/", input_filenames[i], sep = "")
 
-            print(paste("Reading file", input_filenames[[i]]))
+            print(paste("Reading file", input_filenames[i]))
 
             ogs5_obj <-
                 ogs5_add_input_bloc_from_ogs5list(ogs5_obj =
                                                       ogs5_obj,
                                                   filepath,
                                                   file_ext =
-                                                      input_file_ext[[i]],
+                                                      input_file_ext[i],
                                                   overwrite)
+        }
+
+        # read additional files
+        if (length(add_filenames>0)) {
+
+            for (i in 1:length(add_filenames)) {
+
+                filepath <- paste0(file_dir, "/", add_filenames[i], sep = "")
+
+                print(paste("Reading file", add_filenames[i]))
+
+                ogs5_obj <-
+                    ogs5_add_input_bloc_from_addfile(ogs5_obj = ogs5_obj,
+                                                     filepath,
+                                                     overwrite)
+            }
         }
 
     } else { # read list or single file ------------------------------------
@@ -515,9 +579,6 @@ input_add_blocs_from_file <- function(ogs5_obj,
                                                file_ext = file_ext[[i]],
                                                overwrite)
         }
-
-
-
     }
     return(ogs5_obj)
 }
