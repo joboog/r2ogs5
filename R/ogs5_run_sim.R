@@ -8,7 +8,7 @@ ogs5_run <- function(ogs5_obj = list(),
                      log_output = TRUE,
                      log_path = NULL,
                      use_mpi = FALSE,
-                     number_of_cores = parallel::detectCores(),
+                     number_of_cores = NULL,
                      wait = TRUE){
 
   # validate input
@@ -44,11 +44,12 @@ ogs5_run <- function(ogs5_obj = list(),
     stop("use_mpi must be logical")
   }
   if (use_mpi) {
-    if (!(is.integer(number_of_cores) &
-        number_of_cores <= parallel::detectCores())) {
+    if ((number_of_cores %% 1 != 0) &
+        number_of_cores > parallel::detectCores()) {
         stop("number_of_cores needs to be an integer that does not
              exceed the available number of CPUs")
     } else {
+      warning("number_of_cores has to agree with the partitioning of the mesh!")
       ogs_exe <- paste0("mpirun --oversubscribe -np ",
                         number_of_cores, " ", ogs_exe)
     }
