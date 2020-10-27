@@ -68,7 +68,6 @@ ogs5_write_inputfiles <-
 ogs5_write_tofile <-
 
   function(filename = character(), text_output_fct){
-
     sink(filename, type = "output")
     text_output_fct
     sink()
@@ -79,17 +78,22 @@ ogs5_write_tofile <-
 # define as class specific method?
 ogs5_print_mkey_bloc <-
 
-  function(mkey_bloc = list(), mkey = character(NULL)){
+  function(mkey_bloc = list(), mkey = character(NULL), stack = FALSE) {
 
     skey_str <- sapply(
-      names(mkey_bloc),
+      c(1:length(mkey_bloc)),
       function(x) {
-        paste0("\n", "$", x, "\n ",
-               paste(mkey_bloc[[x]], collapse=" ")
-        )
+        if (stack) {
+          paste0("\n", "$", names(mkey_bloc)[x], "\n ",
+                 paste(mkey_bloc[[x]], collapse="\n")
+          )
+        } else {
+          paste0("\n", "$", names(mkey_bloc)[x], "\n ",
+                 paste(mkey_bloc[[x]], collapse=" ")
+          )
+        }
       }
     )
-
     cat(paste0("#", mkey), skey_str, "\n")
   }
 
@@ -179,6 +183,21 @@ ogs5_list_output.ogs5_cct <-
 
     # check ogs5_sublist
     stopifnot(class(ogs5_sublist) == "ogs5_cct")
+    # tibble to character vector
+    ogs5_sublist <-
+      ogs5_sublist %>%
+      lapply(function(bloc){
+        tibble_skeys <- which(names(bloc) == "NEIGHBOR")
+        for(i in tibble_skeys) {
+            bloc[[i]][[2]] <- bloc[[i]][[2]] %>%
+            apply(1, function(row) {
+              paste0(paste(row, collapse = " "), "\n")
+            })
+            bloc[[i]] <- c(paste0(bloc[[i]][[1]], "\n"),
+                                    bloc[[i]][[2]])
+        }
+        return(bloc)
+    })
 
     ogs5_mkey <- ogs5_get_keywordlist()$cct$mkey
 
@@ -250,6 +269,22 @@ ogs5_fct_bloc_output <-
 
 
 # output ogs5_gem sublist ------------------------------------------
+ogs5_list_output.ogs5_gem <-
+
+  function(ogs5_sublist){
+
+    # check ogs5_sublist
+    stopifnot(class(ogs5_sublist) == "ogs5_gem")
+
+    ogs5_mkey <- ogs5_get_keywordlist()$gem$mkey
+
+    for (i in seq_len(ogs5_sublist %>% length())){
+      ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                           mkey = ogs5_mkey)
+      cat("\n")
+    }
+    cat("#STOP", "\n")
+  }
 
 # method for ogs5_gli sublist ------------------------------------------
 ogs5_list_output.ogs5_gli <-
@@ -270,7 +305,13 @@ ogs5_list_output.ogs5_gli <-
               tibble::rownames_to_column() %>%
               dplyr::mutate(rowname = as.numeric(rowname)) %>%
               as.data.frame()
-        df$name <-stringr::str_c("$NAME ", df$name)
+        noname <- which(df$name == "")
+        df$name <- stringr::str_c("$NAME ", df$name)
+        df$name[noname] <- ""
+
+        if (any(colnames(df) == "md")) {
+          df$md <-stringr::str_c("$MD ", df$md)
+        }
         names(df) <- NULL
         #df %>% print(row.names = TRUE)
 
@@ -306,11 +347,6 @@ ogs5_list_output.ogs5_gli <-
     }
     cat("#STOP", "\n")
   }
-
-
-
-
-# output ogs5_ic sublist ------------------------------------------
 
 # output ogs5_krc sublist ------------------------------------------
 ogs5_list_output.ogs5_krc <-
@@ -392,7 +428,7 @@ ogs5_list_output.ogs5_mmp <-
 
     for (i in seq_len(ogs5_sublist %>% length())){
       ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
-                           mkey = ogs5_mkey)
+                           mkey = ogs5_mkey, stack = TRUE)
       cat("\n")
     }
     cat("#STOP", "\n")
@@ -444,18 +480,22 @@ ogs5_print_msh_mkey_bloc <-
     cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
 
     # print ELEMENTS
-    df <- mkey_bloc$ELEMENTS %>%
-          tibble::rownames_to_column() %>%
-          dplyr::mutate(rowname = as.numeric(rowname) - 1) %>%
-         tidyr::replace_na(list(node3 = "", node4 = "", node5 = "",
-                          node6 = "", node7 = "", node8 = "")) %>%
-          as.data.frame()
-    rownames(df) <- rownames(df) %>% as.numeric() %>% -1
-    names(df) <- NULL
-    cat("$ELEMENTS\n", length(df[[1]]), "\n")
-    #df %>% print(row.names = TRUE)
-    #cat(" ", paste(colnames(df)), "\n")
-    cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
+    n_ele <- lapply(mkey_bloc$ELEMENTS, nrow) %>% unlist %>% sum
+    cat("$ELEMENTS\n", n_ele, "\n")
+    # loop over geometries
+    for (geometry in names(mkey_bloc$ELEMENTS)) {
+
+      df <- mkey_bloc$ELEMENTS[[paste0(geometry)]] %>%
+        #tibble::rownames_to_column() %>%
+        #dplyr::mutate(rowname = as.numeric(rowname) - 1) %>%
+        tidyr::replace_na(list(node3 = "", node4 = "", node5 = "",
+                               node6 = "", node7 = "", node8 = "")) %>%
+        as.data.frame()
+      # rownames(df) <- rownames(df) %>% as.numeric() %>% -1
+      names(df) <- NULL
+      cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
+    }
+
   }
 
 # method for ogs5_msp sublist ------------------------------------------
@@ -506,7 +546,8 @@ ogs5_list_output.ogs5_out <-
 
     for (i in seq_len(ogs5_sublist %>% length())){
       ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
-                           mkey = ogs5_mkey)
+                           mkey = ogs5_mkey,
+                           stack = TRUE)
       cat("\n")
     }
     cat("#STOP", "\n")
@@ -646,7 +687,7 @@ ogs5_list_output.ogs5_tim <-
 
     for (i in seq_len(ogs5_sublist %>% length())){
       ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
-                           mkey = ogs5_mkey)
+                           mkey = ogs5_mkey, stack = TRUE)
       cat("\n")
     }
     cat("#STOP", "\n")
