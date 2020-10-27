@@ -16,7 +16,6 @@ ogs5_generate_script <- function(benchmark_dir,
     #                      script_path = "examples/bm1_script.R")
 
 # -------------------------------------------------------------------------
-    ogs5_keywordlist <<- ogs5_get_keywordlist()
 
     # check if directory exists
     if (!dir.exists(benchmark_dir)) {
@@ -177,7 +176,7 @@ ogs5_generate_arg_string <- function(sub_list, file_ext) {
         arg_name <- names(sub_list)[i]
 
         # check if arg_name is a valid Skey
-        if (!arg_name %in% ogs5_keywordlist[[paste(file_ext)]]$skey) {
+        if (!arg_name %in% ogs5_get_keywordlist()[[paste(file_ext)]]$skey) {
             arg_name <- paste0("# ", arg_name, " = ! is not a valid skey !")
         } else {
             arg_name <- paste0(arg_name, " = ")

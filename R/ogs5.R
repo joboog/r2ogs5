@@ -21,10 +21,6 @@ create_ogs5 <- function(
       stop("'sim_id' has to be of type integer", call. = FALSE)
    }
 
-
-   # create keywordlist variable in the global environment
-   .GlobalEnv$ogs5_keywordlist <- ogs5_get_keywordlist()
-
    # define ogs5-obj
    x <- list(input=list(), output=list())
 

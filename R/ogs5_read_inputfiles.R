@@ -90,8 +90,8 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
 
     chr <- chr[which(chr != "#")] # remove '#' lines
 
-    pqc_mkeys <- ogs5_keywordlist$pqc$mkey[
-                    which(!ogs5_keywordlist$pqc$mkey == "ende")
+    pqc_mkeys <- ogs5_get_keywordlist()$pqc$mkey[
+                    which(!ogs5_get_keywordlist()$pqc$mkey == "ende")
                     ]
     l <- list()
     i <- 1
