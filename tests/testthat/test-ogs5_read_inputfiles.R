@@ -104,6 +104,7 @@ read_write_test(ex1_read, bm_dir =  paste0(tmp, "/ex1"), bm_name = "ex1")
 context("Existing input files are recognized and not overwritten")
 
 ex1.2 <- input_add_blocs_from_file(ex1, filename = "all",
+                                   sim_basename = "ex1",
                                    file_dir = paste0(tmp, "/ex1"),
                                    overwrite = FALSE)
 

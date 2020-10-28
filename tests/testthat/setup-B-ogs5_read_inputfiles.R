@@ -73,7 +73,6 @@ read_write_test <-
                            -c((stop_ind + 1):length(orig_vec))
                        ]
                    }
-                    browser()
                    # TEST
                    expect_equal(orig_vec, read_vec)
                })

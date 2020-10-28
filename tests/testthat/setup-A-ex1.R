@@ -1,4 +1,4 @@
-test# Setup file to run test-ogs5_run_ex1
+# Setup file to run test-ogs5_run_ex1
 
 # Setup files are automatically run when calling test(), before the test files.
 # A temporary folder for input- and outputfiles will be created
