@@ -290,7 +290,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
                    }) %>% structure(class = "ogs5_cct"),
 
-               
+
 # .fct input file ---------------------------------------------------------
                 "fct" = ogs5_read_inputfile_tolist(filepath) %>%
                     lapply(function(bloc) {
