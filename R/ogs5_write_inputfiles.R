@@ -1,14 +1,16 @@
-# function to write ogs5-mkeybloc input files -------------------------------------
+# function to write ogs5-mkeybloc input files ----------------------------------
 
 
-#  write input file -------------------------------------------------------
+#  write input file ------------------------------------------------------------
 ogs5_write_inputfiles <-
 
   function(ogs5_obj = list(), type = "all", folderpath = NULL){
 
     # validate input
     valid_ogs5(ogs5_obj)
-    if (!(type %in% c(names(ogs5_get_keywordlist()), "dat") | type == "all")) {
+
+    if (!(type %in% c(names(ogs5_get_keywordlist()), "additional") |
+          type == "all")) {
       stop("wrong type entered", call. = FALSE)
     }
     if (type == "dat") {
@@ -23,29 +25,45 @@ ogs5_write_inputfiles <-
       dir.create(folderpath, recursive = TRUE)
     }
 
+
     if (type == "all") {
 
-    # loop through ogs5-obj and print all sublists
-     for (i in names(ogs5_obj$input)){
-       if (i == "dat") {
-         filename <- paste0(folderpath, "/phreeqc.dat")
+      # loop through ogs5-obj and print all sublists
+      for (i in names(ogs5_obj$input)){
+
+       if (i == "additional"){
+         # loop over ogs5$input$additional and print sub blocs as files
+
+         ogs5_list <- ogs5_obj$input[[paste(i)]]
+         ogs5_write_ogs5_additional(folderpath, ogs5_list)
+
        } else {
-         filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", i)
-       }
-       ogs5_list <- ogs5_obj$input[[paste(i)]]
-       ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
-     }
-    }
-    else {
-      if (type == "dat") {
-        filename <- paste0(folderpath, "/phreeqc.dat")
-      } else {
-      filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", type)
+         # write file for specific ogs5_$input class
+         filename <- paste0(folderpath,
+                               attributes(ogs5_obj)$sim_name, ".", i)
+
+         ogs5_list <- ogs5_obj$input[[paste(i)]]
+         ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
+        }
       }
-      ogs5_list <- ogs5_obj$input[[paste(type)]]
-      ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
+
+    } else { # if type != "all"
+
+      if (i == "additional"){
+        # loop over ogs5$input$additional and print sub blocs as files
+
+        ogs5_list <- ogs5_obj$input[[paste(i)]]
+        ogs5_write_ogs5_additional(folderpath, ogs5_list)
+
+      } else {
+
+        filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", type)
+
+        ogs5_list <- ogs5_obj$input[[paste(type)]]
+        ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
+      }
     }
-  }
+}
 
 ogs5_write_tofile <-
 
@@ -516,23 +534,22 @@ ogs5_list_output.ogs5_pqc <-
   }
 
 
-# output ogs5_phreeqc.dat sublist ------------------------------------------
-ogs5_list_output.ogs5_phreeqc_dat <-
-
+# output ogs5_pqc_filebloc sublist ------------------------------------------
+ogs5_list_output.ogs5_pqc_filebloc <-
   function(ogs5_sublist){
 
     # check ogs5_sublist
-    stopifnot(class(ogs5_sublist) == "ogs5_phreeqc_dat")
+    stopifnot(class(ogs5_sublist) == "ogs5_pqc_filebloc")
 
     for (i in seq_len(ogs5_sublist %>% length())) {
 
       mkey <- names(ogs5_sublist)[i]
       skey_str <- sapply(
         ogs5_sublist[[i]],
-        function(x) {paste0("\n", x)}
+        function(x) {paste0("\n ", x)}
       )
 
-      cat(mkey, skey_str, "\n\n")
+      cat(mkey, skey_str, "\n\n\n")
     }
     cat("END", "\n")
   }
@@ -635,3 +652,27 @@ ogs5_list_output.ogs5_tim <-
     cat("#STOP", "\n")
   }
 
+# output ogs5_additional_bloc ------------------------------------------
+ogs5_write_ogs5_additional <-
+
+  function(folderpath, ogs5_list){
+
+    # check ogs5_sublist
+    stopifnot(class(ogs5_list) == "ogs5_additional")
+
+    for (i in seq_len(ogs5_list %>% length())){
+
+      ogs5_sublist <- ogs5_list[[i]]
+      filename = paste0(folderpath, names(ogs5_list)[i])
+
+      if (class(ogs5_sublist) == "character") {
+        ogs5_write_tofile(filename,
+                          cat(paste0(ogs5_sublist, collapse = "\n")))
+      }
+
+      if (class(ogs5_sublist) == "ogs5_pqc_filebloc") {
+        ogs5_write_tofile(filename, ogs5_list_output(ogs5_sublist))
+
+      }
+    }
+  }
