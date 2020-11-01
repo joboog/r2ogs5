@@ -1,7 +1,4 @@
-# function to write ogs5-mkeybloc input files ----------------------------------
 
-
-#  write input file ------------------------------------------------------------
 ogs5_write_inputfiles <-
 
   function(ogs5_obj = list(), type = "all", folderpath = NULL){

@@ -1,18 +1,15 @@
-# function to add out-bloc to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
 input_add_out_bloc <-
 
   function(
     x = list(),
-    out_name = character(NULL),
+    out_name = NULL,
 
     AMPLIFIER = NULL,
-    DAT_TYPE = character(NULL),
+    DAT_TYPE = NULL,
     DIS_TYPE = NULL,
     ELE_VALUES = NULL,
-    GEO_TYPE = character(NULL),
+    GEO_TYPE = NULL,
     MFP_VALUES = NULL,
     MMP_VALUES = NULL,
     MSH_TYPE = NULL,
@@ -21,7 +18,7 @@ input_add_out_bloc <-
     PCS_TYPE = NULL,
     RWPT_VALUES = NULL,
     TECPLOT_ZONE_SHARE = FALSE,
-    TIM_TYPE = character(NULL),
+    TIM_TYPE = NULL,
     VARIABLESHARING = FALSE
 
   ){

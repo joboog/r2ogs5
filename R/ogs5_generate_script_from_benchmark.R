@@ -174,7 +174,9 @@ ogs5_generate_arg_string <- function(sub_list, file_ext) {
     arg_string <- NULL
     for (i in seq_len(sub_list %>% length())) {
         arg_name <- names(sub_list)[i]
-
+        if (is.null(arg_name)) {
+            arg_name <- "null"
+        }
         # check if arg_name is a valid Skey
         if (!arg_name %in% ogs5_get_keywordlist()[[paste(file_ext)]]$skey) {
             arg_name <- paste0("# ", arg_name, " = ! is not a valid skey !")

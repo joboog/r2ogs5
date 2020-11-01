@@ -1,8 +1,4 @@
-# Functions to read and process outputted *.tec files
 
-
-
-# generic to ogs5_read_tecplot-- ------------------------------------------
 ogs5_read_tecplot <- function(filename = character(),
                               geo_object = character()){
 
@@ -12,7 +8,7 @@ ogs5_read_tecplot <- function(filename = character(),
   # filename: path+name of file
   # geo_object: associated geometric domain
   #
-  # returns: dataframe of *.tec
+  # returns:
 
   if (geo_object=="domain"){
     df=ogs5_read_tecplot_domain(filename)
@@ -34,7 +30,15 @@ ogs5_read_tecplot <- function(filename = character(),
 
 # Read *.tec file for whole domain ----------------------------------------
 
-ogs5_read_tecplot_domain<-function(filename){
+
+#' ogs5_read_tecplot_domain
+#'
+#' @param filepath path to filename
+#'
+#' @return
+#'
+#' @examples
+ogs5_read_tecplot_domain<-function(filepath){
 
   # content:
   # this function reads an individual tecplot file (*.tec)
@@ -43,18 +47,18 @@ ogs5_read_tecplot_domain<-function(filename){
   # or url of raw file on github/gitlab repository
 
     # check filepath
-  if (file.exists(filename) | (RCurl::url.exists(filename))){
-  } else if (!(file.exists(filename)) & (!(RCurl::url.exists(filename)))){
+  if (file.exists(filepath) | (RCurl::url.exists(filepath))){
+  } else if (!(file.exists(filepath)) & (!(RCurl::url.exists(filepath)))){
     stop("'filename' does not exist.", call = FALSE)
   }
-  if (stringr::str_detect(filename, "domain")==FALSE){
+  if (stringr::str_detect(filepath, "domain")==FALSE){
     return(NULL)
   }
 
   #=== get header =====================================================
 
   # read first line
-  header <- readLines(con=filename,n=1L)
+  header <- readLines(con=filepath,n=1L)
   # remove pattern
   header <- gsub("VARIABLES  =","",header)
   header<- gsub("\"", "", header)
@@ -70,7 +74,7 @@ ogs5_read_tecplot_domain<-function(filename){
   #=== get data =======================================================
 
   #=== get time
-  ts<-readLines(con=filename, n = -1L, ok = TRUE)
+  ts<-readLines(con=filepath, n = -1L, ok = TRUE)
   ts<-ts %>%
     stringr::str_extract("ZONE T=\"\\d+\\.\\d+e\\+\\d+") %>%
     na.omit() %>%
@@ -80,7 +84,7 @@ ogs5_read_tecplot_domain<-function(filename){
   #=== get point data
   suppressWarnings(
     suppressMessages(
-      df <- readr::read_delim(filename,
+      df <- readr::read_delim(filepath,
                               " ", escape_double = FALSE, col_names = FALSE,
                               trim_ws = TRUE, skip = 3)))
 
@@ -114,7 +118,14 @@ ogs5_read_tecplot_domain<-function(filename){
 
 # Read *.tec file for POLYLINE ----------------------------------------------
 
-ogs5_read_tecplot_polyline <- function(filename) {
+#' ogs5_read_tecplot_polyline
+#'
+#' @param filepath path to the filename
+#'
+#' @return
+#'
+#' @examples
+ogs5_read_tecplot_polyline <- function(filepath) {
 
   # content:
   # this function reads an individual tecplot file (*.tec)
@@ -122,17 +133,17 @@ ogs5_read_tecplot_polyline <- function(filename) {
   # filename: path + name of the *.tec file
 
   # check filepath
-  if (!(file.exists(filename))) {
+  if (!(file.exists(filepath))) {
     stop("'filename' does not exist.", call = FALSE)
   }
-  if (stringr::str_detect(filename, "polyline|ply|LINE") == FALSE) {
+  if (stringr::str_detect(filepath, "polyline|ply|LINE") == FALSE) {
     return(NULL)
   }
 
   #=== get header =====================================================
 
   # read second line
-  header <- readLines(con = filename, n = 2L)[2]
+  header <- readLines(con = filepath, n = 2L)[2]
   # remove pattern
   header <- gsub("VARIABLES =", "", header)
   header <- gsub("\"", "", header)
@@ -146,7 +157,7 @@ ogs5_read_tecplot_polyline <- function(filename) {
   #=== get data =======================================================
 
   #=== get time
-  ts <- readLines(con=filename, n = -1L, ok = TRUE) %>%
+  ts <- readLines(con=filepath, n = -1L, ok = TRUE) %>%
         stringr::str_squish()
 
   ts <- ts %>%
@@ -158,7 +169,7 @@ ogs5_read_tecplot_polyline <- function(filename) {
   #=== get point data
   suppressWarnings(
     suppressMessages(
-      df <- readr::read_delim(filename,
+      df <- readr::read_delim(filepath,
                               " ", escape_double = FALSE, col_names = FALSE,
                               trim_ws = TRUE, skip = 3)))
 
@@ -185,25 +196,32 @@ ogs5_read_tecplot_polyline <- function(filename) {
   return(df)
 }
 
-ogs5_read_tecplot_point <- function(filename = character()){
+#' ogs5_read_tecplot_point
+#'
+#' @param filepath path to the filename
+#'
+#' @return
+#'
+#' @examples
+ogs5_read_tecplot_point <- function(filepath){
 
   # content:
   # reads tecplot file from point source with any kind of components
   # filename: path+name of *.tec file
   # or url of raw file on github/gitlab repository
 
-  if (file.exists(filename) | (RCurl::url.exists(filename))){
-  } else if (!(file.exists(filename)) & (!(RCurl::url.exists(filename)))){
+  if (file.exists(filepath) | (RCurl::url.exists(filepath))){
+  } else if (!(file.exists(filepath)) & (!(RCurl::url.exists(filepath)))){
     stop("'filename' does not exist.", call = FALSE)
   }
-  if (stringr::str_detect(filename, "POINT")==FALSE){
+  if (!stringr::str_detect(filepath, "POINT|point")){
     return(NULL)
   }
 
   # get header first
   suppressWarnings(
     suppressMessages(
-      df <- readr::read_delim(filename, " ", escape_double = FALSE, col_names = FALSE,
+      df <- readr::read_delim(filepath, " ", escape_double = FALSE, col_names = FALSE,
                               trim_ws = TRUE, skip = 1)))
 
   header <- dplyr::tbl_df(df) %>%
@@ -218,7 +236,7 @@ ogs5_read_tecplot_point <- function(filename = character()){
   # read data
   suppressWarnings(
     suppressMessages(
-    df <- readr::read_delim(filename, " ", escape_double = FALSE, col_names = FALSE,
+    df <- readr::read_delim(filepath, " ", escape_double = FALSE, col_names = FALSE,
                      trim_ws = TRUE, skip = 3)))
   df <- as.data.frame(df)
   df <- df[, !sapply(df, is.character)]
@@ -233,6 +251,21 @@ ogs5_read_tecplot_point <- function(filename = character()){
   return(df)
 }
 
+#' ogs5_read_many_tecplots
+#'
+#' Function to read in any [*.tec]-files inside a directory. Calls on the
+#' functions \code{ogs5_read_tecplot_point}, \code{ogs5_read_tecplot_polyline},
+#' \code{ogs5_read_tecplot_domain} depending on the specified *geo_object* type.
+#'
+#' @param filepath (*character*) path to [*.tec]-files.
+#' @param geo_object (*character*) Name for the type of geometric ogs object
+#' the tec file is associated with. Can be any of "POINT", "POLYLINE", "
+#' SURFACE", "domain".
+#'
+#' @return *Data.frame* with timeseries of the simulation reasults.
+#' @export
+#'
+#' @examples
 ogs5_read_many_tecplots <- function(filepath = character(),
                                     geo_object = character()){
 
@@ -257,21 +290,20 @@ ogs5_read_many_tecplots <- function(filepath = character(),
             " 'POLYLINE' and 'SURFACE'."), call. = FALSE)
   }
 
-  df=plyr::ldply(
-    list.files(
-      path=filepath,
-      pattern=".tec",
-      full.names=TRUE
-    )[which(
-      stringr::str_detect(
+  df <- plyr::ldply(
+      list.files(
+        path=filepath,
+        pattern=".tec",
+        full.names=TRUE
+    )[stringr::str_which(
         string=list.files(
           path=filepath,
           pattern=".tec",
           full.names=TRUE
         ),
-        pattern=geo_object
-      )==TRUE
-    )],
+        pattern=paste0(tolower(geo_object), "|", geo_object)
+      )
+      ],
     function(filename) {
 
       df <- ogs5_read_tecplot(filename = filename,
@@ -280,5 +312,6 @@ ogs5_read_many_tecplots <- function(filepath = character(),
       return(df)
     }
   )
+  return(df)
 }
 

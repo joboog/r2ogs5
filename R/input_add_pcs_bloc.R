@@ -1,10 +1,3 @@
-# add pcs-bloc to ogs5-obj
-
-# steps:
-# look if sub-list names pcs exists in input list
-# if not, define a sub-list in input names pcs
-# add pcs-blocs as additional list
-
 
 input_add_pcs_bloc <-
 

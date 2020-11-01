@@ -1,10 +1,3 @@
-# definitions for the ensemble-class ----------------------------------
-
-# this class is used to gather individual ogs objects and provides wrapper
-# functions to define, execute and process mulitple simulations.
-# For instance, if runs with parameter sets are desired, this class provides
-# functoins to defined ogs objects with the desired parameters values.
-
 create_ens <- function(
     base_sim = list(),
     parameter_tbl = tbl(),

@@ -1,13 +1,6 @@
-# add krc-bloc to ogs5-obj
 
-# steps:
-# look if sub-list names krc exists in input list
-# if not, define a sub-list in input names krc
-# add krc-blocs as additional list
+input_add_krc_bloc <-
 
-
-input_add_krc_bloc <- 
-  
   function(
     x = list(),
     krc_name = character(NULL),
@@ -16,11 +9,11 @@ input_add_krc_bloc <-
       #BLOB_PROPERTIES
       #KINREACTIONDATA
       #MICROBE_PROPERTIES
-      #REACTION 
-    
+      #REACTION
+
     #skey:
     ACTIVITY_MODEL = NULL,
-    ALLOW_REACTIONS = NULL, 
+    ALLOW_REACTIONS = NULL,
     BACTERIACAPACITY = NULL,
     BACTERIAL_YIELD = NULL,
     BACTERIANAME = NULL,
@@ -88,28 +81,28 @@ input_add_krc_bloc <-
     drmc = NULL,
     drmc_PARAMETERS = NULL
   ){
-    
+
     # validate input
     valid_ogs5(x)
-    
-    # look if ogs5-obj$input$krc exists and valid, otherwise create 
+
+    # look if ogs5-obj$input$krc exists and valid, otherwise create
     if (!("krc" %in% names(x$input))) {
-      x$input$krc <- create_ogs5_krc() 
+      x$input$krc <- create_ogs5_krc()
     } else {
-      
+
       valid_ogs5_krc(x$input$krc)
-      
+
       if (krc_name %in% names(x$input$krc)) {
         stop("krc_name does already exist", call. = FALSE)
       }
     }
-    
+
     # create and add sublist to krc-list
-    
+
     x$input$krc[[paste(krc_name)]] <- list(
-      
+
       "ACTIVITY_MODEL" = ACTIVITY_MODEL,
-      "ALLOW_REACTIONS" = ALLOW_REACTIONS, 
+      "ALLOW_REACTIONS" = ALLOW_REACTIONS,
       "BACTERIACAPACITY" = BACTERIACAPACITY,
       "BACTERIAL_YIELD" = BACTERIAL_YIELD,
       "BACTERIANAME" = BACTERIANAME,
@@ -176,13 +169,13 @@ input_add_krc_bloc <-
       "UI" = UI,
       "drmc" = drmc,
       "drmc_PARAMETERS" = drmc_PARAMETERS
-    ) %>% 
-      purrr::discard(is.null) %>% 
-      purrr::discard(BBmisc::isFALSE) %>% 
+    ) %>%
+      purrr::discard(is.null) %>%
+      purrr::discard(BBmisc::isFALSE) %>%
       structure(class = "ogs5_krc_bloc")
-    
+
     valid_ogs5_krc_bloc(x$input$krc[[paste(krc_name)]])
-    
+
     return(x)
-    
+
   }

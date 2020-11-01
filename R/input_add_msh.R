@@ -1,3 +1,4 @@
+
 input_add_msh_bloc <-
 
   function(
@@ -6,7 +7,7 @@ input_add_msh_bloc <-
     AREA = NULL,
     AXISYMMETRY = NULL,
     CROSS_SECTION = NULL,
-    ELEMENTS =tibble::tibble(), # material_id ele_type node1 node2 (node3, node4)
+    ELEMENTS = tibble::tibble(), # material_id ele_type node1 node2 (node3, node4)
     GEO_NAME = NULL,
     GEO_TYPE = NULL,
     LAYER = NULL,

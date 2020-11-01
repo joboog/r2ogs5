@@ -1,6 +1,4 @@
 
-# a constructor for the ogs5 base-class
-
 create_ogs5 <- function(
    #x = list(input=list(), output=list(mod)),
    sim_name = character(NULL),

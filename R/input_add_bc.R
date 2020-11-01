@@ -1,6 +1,3 @@
-# function to add bc_condition-bloc to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
 input_add_bc_bloc <-
 
