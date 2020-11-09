@@ -10,6 +10,8 @@ read_write_test <-
 
         # get filenames of written input files
         read_filenames <- list.files(attributes(ogs5_obj)$sim_path)
+        # exclude log folder
+        read_filenames <- read_filenames[which(read_filenames != "log")]
         read_basefilenames <- read_filenames %>% stringr::str_remove("\\..*")
         read_file_ext <- read_filenames %>% stringr::str_remove(".*\\.")
 
@@ -90,10 +92,23 @@ ex1_read <- create_ogs5(sim_name = "ex1_read", sim_id = 1L,
 
 ex1_read <- input_add_blocs_from_file(ex1_read,
                                       sim_basename = "ex1",
-                                      filename = "all",
+                                      filename = list(
+                                                      "ex1.pcs",
+                                                      "ex1.bc",
+                                                      "ex1.gli",
+                                                      "ex1.ic",
+                                                      "ex1.mcp",
+                                                      "ex1.mfp",
+                                                      "ex1.mmp",
+                                                      "ex1.msh",
+                                                      "ex1.msp",
+                                                      "ex1.num",
+                                                      "ex1.out",
+                                                      "ex1.rfd",
+                                                      "ex1.st",
+                                                      "ex1.tim"),
                                       file_dir = paste0(tmp, "/ex1"))
 
-# debug(ogs5_list_output.ogs5_rfd)
 ogs5_write_inputfiles(ex1_read, type = "all")
 
 
@@ -110,7 +125,6 @@ eg1_dir <- "../../examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc"
 # create new ogs5 object in temporary directory
 eg1_read <- create_ogs5(sim_name = "eg1_read", sim_id = 1L,
                    sim_path = paste0(tmp, "/eg1_read"))
-
 
 # read in input files from benchmark folder
 eg1_read <- input_add_blocs_from_file(eg1_read,
@@ -173,17 +187,6 @@ eg2_read <- input_add_blocs_from_file(eg2_read,
 
 ogs5_write_inputfiles(eg2_read, type = "all")
 
-
-
-
-
-
-
-
-
-
-
-
 # read GROUNDWATER_FLOW/Transient_flow ------------------------------------
 
 fct_dir <- "../../examples/benchmarks/Transient_flow"
@@ -192,7 +195,18 @@ fct_read <- create_ogs5(sim_name = "fct_read", sim_id = 1L,
 
 fct_read <- input_add_blocs_from_file(fct_read,
                                       sim_basename = "trans_bd_homo",
-                          filename = "all",
+                          filename = list("trans_bd_homo.bc",
+                                          "trans_bd_homo.fct",
+                                          "trans_bd_homo.gli",
+                                          "trans_bd_homo.ic",
+                                          "trans_bd_homo.mfp",
+                                          "trans_bd_homo.mmp",
+                                          "trans_bd_homo.msh",
+                                          "trans_bd_homo.num",
+                                          "trans_bd_homo.out",
+                                          "trans_bd_homo.pcs",
+                                          "trans_bd_homo.st",
+                                          "trans_bd_homo.tim"),
                           file_dir = fct_dir)
 
 # disable scientific numbers when calling this function
@@ -200,3 +214,40 @@ nosci_op <- options(scipen = 999)
 withr::defer(options(nosci_op))
 
 ogs5_write_inputfiles(fct_read, type = "all")
+
+# read ConcreteCrack benchmark --------------------------------------------
+
+# cct_dir <- "examples/benchmarks/ConcreteCrack"
+cct_dir <- "../../examples/benchmarks/ConcreteCrack"
+cct_read <- create_ogs5(sim_name = "decal", sim_id = 1L,
+                        sim_path = paste0(tmp, "/cct_read"))
+#debug(input_add_blocs_from_file)
+cct_read <-  input_add_blocs_from_file(cct_read,
+                                       sim_basename = "decal",
+                                       filename = list(
+                                           "cement_bc-dat.lst",
+                                           "cement_bc-dbr-0-0000.dat",
+                                           "cement_bc-dch.dat",
+                                           "cement_bc-ipm.dat",
+                                           "decal.bc",
+                                           "decal.cct",
+                                           "decal.gem",
+                                           "decal.gli",
+                                           "decal.ic",
+                                           "decal.mcp",
+                                           "decal.mfp",
+                                           "decal.mmp",
+                                           "decal.msh",
+                                           "decal.msp",
+                                           "decal.num",
+                                           "decal.out",
+                                           "decal.pcs",
+                                           "decal.tim",
+                                           "decal_partitioned_cfg4.msh",
+                                           "decal_partitioned_nodes_4.msh",
+                                           "decal_partitioned_elems_4.msh"
+                                           ),
+                                       overwrite = TRUE,
+                                       file_dir = cct_dir)
+
+ogs5_write_inputfiles(cct_read, type = "all")

@@ -12,7 +12,10 @@ test_that("respective classes are assigned", {
         ex1_input$bc$BOUNDARY_CONDITION1
     ))
     # cct classes
-    # MISSING
+    expect_silent(valid_ogs5_cct(cct_read$input$cct))
+    expect_silent(valid_ogs5_cct_bloc(
+        cct_read$input$cct$COMMUNICATION_TABLE1
+    ))
     # fct classes
     expect_silent(valid_ogs5_fct(fct_read$input$fct))
     expect_silent(valid_ogs5_fct_bloc(
@@ -103,7 +106,12 @@ read_write_test(ex1_read, bm_dir =  paste0(tmp, "/ex1"), bm_name = "ex1")
 # test overwrite barrier --------------------------------------------------
 context("Existing input files are recognized and not overwritten")
 
-ex1.2 <- input_add_blocs_from_file(ex1, filename = "all",
+ex1.2 <- input_add_blocs_from_file(ex1, # only test a few
+                                   filename = list(
+                                       "ex1.pcs",
+                                        "ex1.bc",
+                                        "ex1.gli",
+                                        "ex1.ic"),
                                    sim_basename = "ex1",
                                    file_dir = paste0(tmp, "/ex1"),
                                    overwrite = FALSE)
@@ -126,18 +134,11 @@ read_write_test(eg1_read, bm_dir = eg1_dir, bm_name = "pds")
 context("Read Engesgaard pqc_kcr benchmark input files")
 read_write_test(eg2_read, bm_dir = eg2_dir, bm_name = "pds")
 
-
-
-
-
-
-
-
-
-
-
-
 # *.fct input files -------------------------------------------------------
-
-context("Read fct input files")
+context("Read Transient_flow benchmark input files")
 read_write_test(fct_read, bm_dir = fct_dir, bm_name = "trans_bd_homo")
+
+# read input test - ConcreteCrack -----------------------------------------
+context("Read ConcreteCrack benchmark input files")
+read_write_test(cct_read, bm_dir = cct_dir, bm_name = "decal")
+

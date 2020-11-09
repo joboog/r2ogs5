@@ -7,22 +7,28 @@ ogs5_read_inputfile_tolist <- function(filepath){
 
     # get character vector of file
     chr <- scan(
-            file = filepath,
-            what = "character",
-            blank.lines.skip = TRUE,
-            sep = "\n",
-            quiet = TRUE
-            # specify encoding??
-            )
+        file = filepath,
+        what = "character",
+        blank.lines.skip = TRUE,
+        sep = "\n",
+        quiet = TRUE
+        # specify encoding??
+    )
 
     # remove comments // and ;
     chr <-  chr %>%
         stringr::str_remove("//.+|\\;.+") %>%
         stringr::str_squish()
+    chr <- chr[which(chr != "")]
+
+    mkey_positions <- stringr::str_which(chr, "#")
+    skey_positions <- chr %>%
+        stringr::str_starts("\\$") %>%
+        which()
 
     # iterate over character vector
     l <- list()
-    i <-1
+    i <- 1
     mkey <- 1
     skey <- 0
     while (!(stringr::str_detect(chr[i], "#STOP"))) {
@@ -39,33 +45,55 @@ ogs5_read_inputfile_tolist <- function(filepath){
             l[[paste0(tmp1)]] <- list()
             mkey <- mkey + 1
             skey <- 0 # set back to 0
+
+            if (length(skey_positions) != 0 |
+                stringr::str_starts(chr[i + 1], "\\$")) {
+
+                # determine positions of skeys under this mkey
+                next_mkey <- mkey_positions[which(mkey_positions - i > 0)]
+                next_mkey <- next_mkey[next_mkey == min(next_mkey)]
+                skey_pos <- skey_positions[i < skey_positions &
+                                               skey_positions < next_mkey]
+
+                l[[paste0(tmp1)]] <- vector(mode = "list", length(skey_pos))
+                names(l[[paste0(tmp1)]]) <- chr[skey_pos] %>%
+                    stringr::str_remove("\\$")
+            }
             i <- i + 1
         } else {
             # create sublist if skey found
             if (is_skey) {
-                tmp2 <- chr[i] %>% stringr::str_extract_all("\\w+")
-                l[[paste0(tmp1)]][[paste0(tmp2)]] <- list()
-                i <- i + 1
+                if (!exists("tmp1")) { # if there is no mkey at all
+                    l[[paste0(chr[i] %>% stringr::str_remove("\\$"))]] <- list()
+                }
                 skey <- skey + 1
+                i <- i + 1
             } else {
                 # add entry to list
                 j <- 1
                 while(!any(c(is_skey, is_mkey))) {
                     tmp3 <- chr[i] %>%
-                            stringr::str_squish()
+                        stringr::str_squish()
 
-                    if (chr[i] != "" & skey != 0){
-                        l[[paste0(tmp1)]][[skey]][j] <- tmp3
-                        j <- j + 1
-                    } else { # if skey is 0
-                        if (chr[i] != "") {
+                    if(!exists("tmp1")) { # for file without # nor $
+                        l[j] <- tmp3
+                    } else {
+                        if (chr[i] != "" & skey != 0) {
+                            l[[paste0(tmp1)]][[skey]][j] <- tmp3
+                        } else if (chr[i] != "") {
                             l[[paste0(tmp1)]][j] <- tmp3
-                            j <- j + 1
                         }
                     }
+                    j <- j + 1
                     i <- i + 1 # next line
                     is_mkey <- stringr::str_starts(chr[i], "#")
                     is_skey <- stringr::str_starts(chr[i], "\\$")
+
+                    if (is.na(is_mkey) | is.na(is_skey)) {
+                        # this happens only when #STOP is missing
+                        # at the end of the file
+                        return(l)
+                    }
                 }
             }
         }
@@ -235,7 +263,55 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
                "bc" = add_standard_blocs(filepath,
                                          "ogs5_bc_condition"),
+# .cct input file ---------------------------------------------------------
+               "cct" = ogs5_read_inputfile_tolist(filepath) %>%
+                   lapply(function(bloc) {
 
+                       neighbor_skeys <- which(names(bloc) == "NEIGHBOR")
+                       other_skeys <- which(names(bloc) != "NEIGHBOR")
+
+                       bloc[neighbor_skeys] <- bloc[neighbor_skeys] %>%
+                           lapply(function(skey_bloc) {
+                               list(skey_bloc[1:2], # first two single numbers
+                                    skey_bloc[-c(1, 2)] %>%
+                                    lapply(stringr::str_split, " ") %>%
+                                    unlist %>%
+                                    as.double %>%
+                                    matrix(nrow = length(skey_bloc[-c(1:2)]),
+                                           byrow = TRUE) %>%
+                                    'colnames<-' (c("x", "y")) %>%
+                                    tibble::as_tibble()
+                               )
+                           })
+
+                       bloc[other_skeys] <- bloc[other_skeys] %>%
+                           lapply(unlist)
+                       bloc <- structure(bloc, class = "ogs5_cct_bloc")
+
+                   }) %>% structure(class = "ogs5_cct"),
+
+
+# .fct input file ---------------------------------------------------------
+                "fct" = ogs5_read_inputfile_tolist(filepath) %>%
+                    lapply(function(bloc) {
+                        bloc[["DATA"]] <- bloc[["DATA"]] %>%
+                            lapply(stringr::str_split, " ") %>%
+                            unlist %>%
+                            as.double %>%
+                            matrix(nrow = length(bloc[["DATA"]]),
+                                   byrow = TRUE) %>%
+                            'colnames<-' (c("x", "y")) %>%
+                            tibble::as_tibble()
+
+                        other_skeys <- which(names(bloc) != "DATA")
+                        bloc[other_skeys] <- bloc[other_skeys] %>%
+                            lapply(unlist)
+                        bloc <- structure(bloc, class = "ogs5_fct_bloc")
+
+                    }) %>% structure(class = "ogs5_fct"),
+
+# .gem file ---------------------------------------------------------------
+                "gem" = add_standard_blocs(filepath),
 # .gli input file ---------------------------------------------------------
                "gli" =                              # loop over bloc names!
                 names(ogs5_list <- ogs5_read_inputfile_tolist(filepath)) %>%
@@ -246,19 +322,50 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                     # POINTS: convert into tibble
                     if (stringr::str_detect(blc_name, "POINTS")) {
 
+                     # make sure only rownames, xyz and names are there
                      bloc <- bloc %>%
-                        stringr::str_split(" ")
-                     # check for missing names
-                     bloc <- bloc %>%
-                         lapply(function(subbloc) {
-
-                             if (!any(subbloc == "$NAME")) {
-                                 subbloc <- c(subbloc, "$NAME", "")
+                         stringr::str_split(" ") %>%
+                         lapply(function(sub) {
+                             dollars <- stringr::str_which(sub, "\\$")
+                             if (all(is.na(dollars))) {
+                                 sub <- sub[1:4]
+                             } else {
+                                 sub <- c(sub[1:4], sub[dollars[1]:length(sub)])
                              }
-                             # make sure only rownames, xyz and names are there
-                             subbloc <- c(subbloc[1:4], tail(subbloc, 2))
-                             return(subbloc)
+                             return(sub)
                          })
+                     # find dollar sing(s)
+                     dollars <- bloc %>%
+                         lapply(function(sub) {
+                             sub <- sub %>%
+                                 stringr::str_which("\\$")
+                                 })
+                     dollars <- dollars[
+                        which(!dollars %>% sapply(function(d) length(d) == 0))
+                        ] %>%
+                         head(1) %>%
+                         unlist
+
+                     names <- bloc %>%
+                              lapply(function(sub) {
+                                  sub[dollars] %>%
+                                      stringr::str_remove("\\$") %>%
+                                      na.omit}) %>%
+                              head(1) %>%
+                              unlist %>%
+                              tolower
+
+                     # add "" for missing $NAME or $MD
+                     max_sublength <- bloc %>% lapply(length) %>% unlist %>% max
+                     bloc <- bloc %>%
+                         lapply(function(sub) {
+                             len_dif <-  max_sublength - length(sub)
+                             if (len_dif != 0) {
+                                 sub <- c(sub, rep("", len_dif))
+                             }
+                             return(sub)
+                         })
+
                      # pack into tibble
                 suppressWarnings(
                  suppressMessages(
@@ -267,15 +374,15 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                      matrix(nrow = length(bloc), byrow = TRUE) %>%
                      tibble::as_tibble(.name_repair = "unique") %>%
                      dplyr::rename_at( # one after $NAME
-                         .vars = which(stringr::str_detect(., "\\$")) + 1,
-                         .funs = ~"name") %>%
+                         .vars = dollars + 1,
+                         .funs = ~ names) %>%
                      dplyr::select_if(!stringr::str_detect(., "\\$")) %>%
                      dplyr::rename_at(2:4, ~c("x", "y", "z")) %>%
                      dplyr::mutate_at(.vars = c("x", "y", "z"),
                                       .funs = as.double) %>%
                      tibble::as_tibble() %>%
                      tibble::column_to_rownames("...1") %>%
-                     dplyr::select(x, y, z, name)
+                     dplyr::select(x, y, z, names)
                             ))
 
                     } else {
@@ -295,23 +402,6 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 'names<-' (c(names(ogs5_list))) %>% # restore bloc names
                 structure(class = "ogs5_gli"),      # add input class
 
-# .fct input file ---------------------------------------------------------
-                "fct" = ogs5_read_inputfile_tolist(filepath) %>%
-                lapply(function(bloc) {
-                    bloc[["DATA"]] <- bloc[["DATA"]] %>%
-                        lapply(stringr::str_split, " ") %>%
-                        unlist %>%
-                        as.double %>%
-                        matrix(nrow = length(bloc[["DATA"]]), byrow = TRUE) %>%
-                        'colnames<-' (c("x", "y")) %>%
-                        tibble::as_tibble()
-
-                    other_skeys <- which(names(bloc) != "DATA")
-                    bloc[other_skeys] <- bloc[other_skeys] %>%
-                        lapply(unlist)
-                    bloc <- structure(bloc, class = "ogs5_fct_bloc")
-
-                }) %>% structure(class = "ogs5_fct"),
 
 # -------------------------------------------------------------------------
                 "ic" = add_standard_blocs(filepath,
@@ -343,20 +433,32 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
                 # Convert ELEMENTS into tibble
                 emts <- bloc[["ELEMENTS"]][-1] # leave out first line
-                mat <-  emts %>%
+                # find words
+                geometries <- stringr::str_extract(emts, "[:alpha:]+") %>%
+                                unique()
+                bloc[["ELEMENTS"]] <- vector(mode = "list", length(geometries))
+                names(bloc[["ELEMENTS"]] ) <- geometries
+
+                start <- 1
+                end <- 0
+                for (g in geometries) {
+                    n <- sum(stringr::str_detect(emts, g))
+                    end <- end + n
+                    mat <-  emts[start:end] %>%
                         lapply(stringr::str_split, " ") %>%
                         unlist %>%
-                        matrix(nrow = length(emts), byrow = TRUE)
-                colnames(mat) <- c("n",
-                                   "material_id",
-                                   "ele_type",
-                                   paste0("node", 1:(ncol(mat) - 3)))
-                bloc[["ELEMENTS"]] <-
-                        mat %>%
+                        matrix(nrow = n, byrow = TRUE)
+                    colnames(mat) <- c("nr",
+                                       "material_id",
+                                       "ele_type",
+                                       paste0("node", 1:(ncol(mat) - 3)))
+                    bloc[["ELEMENTS"]][[paste0(g)]] <- mat %>%
                         tibble::as_tibble() %>%
-                        dplyr::select(-n) %>%
+                        #dplyr::select(-n) %>%
                         dplyr::mutate_at(dplyr::vars(-ele_type),
-                                              list(as.double))
+                                         list(as.double))
+                    start <- n + start
+                }
 
                 # unlist all other blocs
                 other_skeys <- which(!(names(bloc) == "NODES" |
@@ -516,6 +618,7 @@ input_add_blocs_from_file <- function(ogs5_obj,
         all_file_ext <- all_filenames %>% stringr::str_remove(".*\\.")
 
         possible_ext <- names(ogs5_get_keywordlist())
+        ignore_ext <- c("vtu", "vtk", "pvd", "tec") # to be continued...
 
         # filter out ogs5 input files and extensions
         input_filenames <-
@@ -525,7 +628,8 @@ input_add_blocs_from_file <- function(ogs5_obj,
         input_file_ext <- input_filenames %>% stringr::str_remove(".*\\.")
 
         # filter additional files for third-party software e.g. phreeqc.dat
-        add_filenames = all_filenames[!(all_filenames %in% input_filenames)]
+        add_filenames = all_filenames[!(all_filenames %in% input_filenames) &
+                                          !(all_file_ext %in% ignore_ext)]
 
         # read ogs5 input files
         for (i in 1:length(input_filenames)) {
@@ -535,11 +639,9 @@ input_add_blocs_from_file <- function(ogs5_obj,
             print(paste("Reading file", input_filenames[i]))
 
             ogs5_obj <-
-                ogs5_add_input_bloc_from_ogs5list(ogs5_obj =
-                                                      ogs5_obj,
+                ogs5_add_input_bloc_from_ogs5list(ogs5_obj = ogs5_obj,
                                                   filepath,
-                                                  file_ext =
-                                                      input_file_ext[i],
+                                                  file_ext = input_file_ext[i],
                                                   overwrite)
         }
 
@@ -573,11 +675,23 @@ input_add_blocs_from_file <- function(ogs5_obj,
             }
             print(paste("Reading file", filename[[i]]))
 
-            ogs5_obj <-
-                ogs5_add_input_bloc_from_ogs5list(ogs5_obj = ogs5_obj,
-                                               filepath,
-                                               file_ext = file_ext[[i]],
-                                               overwrite)
+            base_name_i <- basename(filepath) %>%
+                stringr::str_remove(paste0(".", file_ext[i]))
+            if(base_name_i == sim_basename) {
+                ogs5_obj <-
+                    ogs5_add_input_bloc_from_ogs5list(ogs5_obj = ogs5_obj,
+                                                      filepath,
+                                                      file_ext = file_ext[[i]],
+                                                      overwrite)
+            } else {
+                # additional files with other basenames
+                ogs5_obj <-
+                    ogs5_add_input_bloc_from_addfile(ogs5_obj = ogs5_obj,
+                                                     filepath,
+                                                     overwrite)
+            }
+
+
         }
     }
     return(ogs5_obj)
