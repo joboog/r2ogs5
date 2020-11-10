@@ -19,7 +19,7 @@ test_that("respective classes are assigned", {
     # ddc classes
     expect_silent(valid_ogs5_ddc(ddc_read$input$ddc))
     expect_silent(valid_ogs5_ddc_bloc(
-        ddc_read$input$ddc$DOMAIN_0
+        ddc_read$input$ddc$`DOMAIN 0`
     ))
     # fct classes
     expect_silent(valid_ogs5_fct(fct_read$input$fct))

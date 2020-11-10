@@ -123,13 +123,13 @@ ogs5_list_output.ogs5_ddc <-
 
     for (i in seq_len(ogs5_sublist %>% length())){
 
-      mkey <- names(ogs5_sublist)[i] %>% stringr::str_remove("_\\d")
+      mkey <- names(ogs5_sublist)[i] %>% stringr::str_remove(" \\d")
       mkey_nr <- names(ogs5_sublist)[i] %>% stringr::str_extract("\\d+")
 
       skey_str <- sapply(
         names(ogs5_sublist[[i]]),
         function(skey_name) {
-            skey <- skey_name %>% stringr::str_remove("_\\d+")
+            skey <- skey_name %>% stringr::str_remove(" \\d+")
             skey_nr <- skey_name %>% stringr::str_extract("\\d+")
 
             paste0("\n", "$", skey, " ", skey_nr, "\n ",

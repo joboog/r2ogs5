@@ -20,7 +20,7 @@ read_write_test <-
 
             test_that(
                 paste0("Reading and writing inputfile ",
-                       read_basefilenames[i],
+                       read_filenames[i],
                         " changes nothing"),
                 {
 
@@ -258,6 +258,7 @@ ddc_read <- create_ogs5(sim_name = "ddc_read", sim_id = 1L,
                         sim_path = paste0(tmp, "/ddc_read"))
 
 ddc_read <- input_add_blocs_from_file(ddc_read,
+                                      sim_basename = "mcwt",
                                       filename = list("mcwt.ddc",
                                                       "mcwt.gli",
                                                       "mcwt.ic",

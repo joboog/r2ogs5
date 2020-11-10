@@ -44,7 +44,7 @@ ogs5_read_inputfile_tolist <- function(filepath){
                     unlist()
 
             if (length(tmp1) > 1) {
-                tmp1 <- tmp1 %>% paste0(collapse = "_")
+                tmp1 <- tmp1 %>% paste0(collapse = " ")
             } else {
                 tmp1 <- tmp1 %>%
                     stringr::str_c(mkey)
@@ -71,16 +71,6 @@ ogs5_read_inputfile_tolist <- function(filepath){
         } else {
             # create sublist if skey found
             if (is_skey) {
-                if (!exists("tmp1")) { # if there is no mkey at all
-                    l[[paste0(chr[i] %>% stringr::str_remove("\\$"))]] <- list()
-                }
-                tmp2 <- chr[i] %>% stringr::str_extract_all("\\w+") %>% unlist()
-
-                if (length(tmp2) > 1) {
-                    tmp2 <- tmp2 %>% paste0(collapse = "_")
-                }
-
-                l[[paste0(tmp1)]][[paste0(tmp2)]] <- list()
                 i <- i + 1
                 skey <- skey + 1
             } else {
@@ -350,26 +340,21 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                              }
                              return(sub)
                          })
-                     # find dollar sing(s)
-                     dollars <- bloc %>%
-                         lapply(function(sub) {
-                             sub <- sub %>%
-                                 stringr::str_which("\\$")
-                                 })
-                     dollars <- dollars[
-                        which(!dollars %>% sapply(function(d) length(d) == 0))
-                        ] %>%
-                         head(1) %>%
-                         unlist
 
-                     names <- bloc %>%
+                     names_loc <- bloc %>%
                               lapply(function(sub) {
-                                  sub[dollars] %>%
-                                      stringr::str_remove("\\$") %>%
-                                      na.omit}) %>%
-                              head(1) %>%
-                              unlist %>%
-                              tolower
+                                  name_loc <-
+                                      stringr::str_which(sub, "\\$") + 1
+                                  return(name_loc)
+                                  })
+                     col_name <- 1:length(bloc) %>%
+                                sapply(function(i) {
+                                    return(bloc[[i]][names_loc[[i]] - 1])
+                                }) %>%
+                         unlist %>%
+                         tolower %>%
+                         stringr::str_remove("\\$") %>%
+                         unique
 
                      # add "" for missing $NAME or $MD
                      max_sublength <- bloc %>% lapply(length) %>% unlist %>% max
@@ -390,15 +375,15 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                      matrix(nrow = length(bloc), byrow = TRUE) %>%
                      tibble::as_tibble(.name_repair = "unique") %>%
                      dplyr::rename_at( # one after $NAME
-                         .vars = dollars + 1,
-                         .funs = ~ names) %>%
+                         .vars = unique(unlist(names_loc)),
+                         .funs = ~ col_name) %>%
                      dplyr::select_if(!stringr::str_detect(., "\\$")) %>%
                      dplyr::rename_at(2:4, ~c("x", "y", "z")) %>%
                      dplyr::mutate_at(.vars = c("x", "y", "z"),
                                       .funs = as.double) %>%
                      tibble::as_tibble() %>%
                      tibble::column_to_rownames("...1") %>%
-                     dplyr::select(x, y, z, names)
+                     dplyr::select(x, y, z, col_name)
                             ))
 
                     } else {
@@ -523,7 +508,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                     # check for column names
                     clnme <- bloc %>%
                             names() %>%
-                            stringr::str_split("_") %>%
+                            stringr::str_split(" ") %>%
                             unlist() %>%
                             stringr::str_extract_all("\\w+") %>%
                             unlist()
