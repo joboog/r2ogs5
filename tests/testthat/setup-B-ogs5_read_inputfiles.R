@@ -18,6 +18,10 @@ read_write_test <-
         # loop over filenames and read-write compare
         for (i in 1:length(read_filenames)) {
 
+            if(read_file_ext[i] %in% c("vtu", "vtk", "pvd", "tec", "asc")) {
+                next
+            }
+
             test_that(
                 paste0("Reading and writing inputfile ",
                        read_filenames[i],

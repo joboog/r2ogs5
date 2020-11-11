@@ -20,12 +20,12 @@ if (1 %in% bm) {
 # ENGESGAARD --------------------------------------------------------------
 
     # run ogs from compiled directory
-    ogs5_run(ogs5_obj = eg1_read, ogs_exe = "../../inst/ogs/build/bin/ogs",
+    ogs5_run(ogs5_obj = eg1_read, ogs_exe = "../../inst/ogs/ogs_5.76",
              run_path = NULL,
              log_output = TRUE,
              log_path = paste0(tmp, "/eg1_read/log"))
 
-    ogs5_run(ogs5_obj = eg2_read, ogs_exe = "../../inst/ogs/build/bin/ogs",
+    ogs5_run(ogs5_obj = eg2_read, ogs_exe = "../../inst/ogs/ogs_5.76",
              run_path = NULL,
              log_output = TRUE,
              log_path = paste0(tmp, "/eg2_read/log"))
