@@ -1,7 +1,34 @@
-# function to add rei-bloc to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
+#' input_add_rei_bloc
+#' @description Adds a sub-bloc to **rei** bloc of *ogs5* for defining a
+#'   reaction interface. For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/rei.html)
+#' @param x Simulation object of class *ogs5*.
+#' @param rei_name Name of the **rei** sub-bloc.
+#' @param ALL_PCS_DUMP
+#' @param DISSOLVED_NEUTRAL_CO2_SPECIES_NAME
+#' @param HEATPUMP_2DH_TO_2DV
+#' @param INITIAL_CONDITION_OUTPUT
+#' @param MOL_PER
+#' @param PCS_RENAME_INIT
+#' @param PCS_RENAME_POST
+#' @param PCS_RENAME_PRE
+#' @param POROSITY_RESTART
+#' @param PRESSURE
+#' @param P_VLE
+#' @param RESIDUAL
+#' @param SODIUM_SPECIES_NAME
+#' @param SOLID_SPECIES_DUMP_MOLES
+#' @param TEMPERATURE
+#' @param UPDATE_INITIAL_SOLID_COMPOSITION
+#' @param VLE
+#' @param WATER_CONCENTRATION
+#' @param WATER_SATURATION_LIMIT
+#' @param WATER_SPECIES_NAME
+#'
+#' @return Updated *ogs5* object.
+#' @export
 input_add_rei_bloc <-
 
   function(

@@ -1,10 +1,28 @@
 # definitions for the ensemble-class ----------------------------------
 
-# this class is used to gather individual ogs objects and provides wrapper
-# functions to define, execute and process mulitple simulations.
-# For instance, if runs with parameter sets are desired, this class provides
-# functoins to defined ogs objects with the desired parameters values.
+#
 
+#' create_ens
+#' @description Constructor for class *ens*. Takes an instance of class *ogs5*
+#'   as basis to create a collection of *ogs5* instances to be used in ensemble
+#'   simulations. Class *ens* provides wrapper functions to define, execute and
+#'   process multiple simulations.
+#' @param base_sim Instance of class *ogs5* to be used as basis. *ogs5*
+#' @param parameter_tbl Table defining the parameters and values for ensemble
+#'   runs. *tibble()*, *tbl()*, *data.frame()*
+#' @param name Name for the ensemble.
+#' @param path Path where to place all individual ensemble runs.
+#'
+#' @return Instance of class *ens*
+#' @export
+#'
+#' @examples
+#' para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 10),
+#'               tracer_input_concentration = seq(0.1, 1, length.out = 5)) %>%
+#'               tibble::as_tibble()
+#'
+#' ens1 = create_ens(base_sim = ex1, parameter_tbl = para_df,
+#'                   name = "tracersim", path = "path/to/my/ens")
 create_ens <- function(
     base_sim = list(),
     parameter_tbl = tbl(),
@@ -57,12 +75,13 @@ create_ens <- function(
     )
 }
 
-# validator for ens class
 
+#' valid_ens
+#' @description Validates instance of class *ens*.
+#' @param x Instance of class *ens*.
 valid_ens <- function(x){
 
     if (!class(x)=="ens") {
         stop("x is not of class 'ens' ", call. = FALSE)
     }
 }
-

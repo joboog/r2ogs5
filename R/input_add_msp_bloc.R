@@ -1,7 +1,37 @@
-# function to add msp_component to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
+#' input_add_msp_bloc
+#' @description Adds a sub-bloc to **msp** bloc of *ogs5* for defining solid
+#'   properties. For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msp.html)
+#' @param x Simulation object of class *ogs5*.
+#' @param BIOT_CONSTANT
+#' @param CREEP
+#' @param DENSITY
+#' @param ELASTICITY
+#' @param EXCAVATION
+#' @param E_Function
+#' @param GRAVITY_CONSTANT
+#' @param MICRO_STRUCTURE_PLAS
+#' @param NAME Name of the solid. *character*
+#' @param NON_REACTIVE_FRACTION
+#' @param PLASTICITY
+#' @param REACTIVE_SYSTEM
+#' @param SOLID_BULK_MODULUS
+#' @param SPECIFIC_HEAT_SOURCE
+#' @param STRESS_INTEGRATION_TOLERANCE
+#' @param STRESS_UNIT
+#' @param SWELLING_PRESSURE_TYPE
+#' @param THERMAL
+#' @param THRESHOLD_DEV_STR
+#' @param TIME_DEPENDENT_YOUNGS_POISSON
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' ogs5_obj <- input_add_msp_bloc(ogs5_obj, NAME = "SOLID_PROPERTIES1",
+#'                                DENSITY = "1 1.80000e+003")
 input_add_msp_bloc <-
 
    function(

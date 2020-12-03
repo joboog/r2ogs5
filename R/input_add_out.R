@@ -1,7 +1,34 @@
-# function to add out-bloc to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
+#' input_add_out_bloc
+#' @description Adds a sub-bloc to **out** bloc of *ogs5* for defining
+#'  simulation output conditions. For additional documentatoin of the input
+#'  parameters see the [ogs5 keyword docs](
+#'  https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/out.html).
+#' @param x Simulation object of class *ogs5*.
+#' @param out_name Name of the **out** sub-bloc. *character*
+#' @param AMPLIFIER
+#' @param DAT_TYPE
+#' @param DIS_TYPE
+#' @param ELE_VALUES
+#' @param GEO_TYPE
+#' @param MFP_VALUES
+#' @param MMP_VALUES
+#' @param MSH_TYPE
+#' @param NOD_VALUES
+#' @param PCON_VALUES
+#' @param PCS_TYPE
+#' @param RWPT_VALUES
+#' @param TECPLOT_ZONE_SHARE
+#' @param TIM_TYPE
+#' @param VARIABLESHARING
+#'
+#' @return Updated *ogs5* object.
+#' @export
+#' @examples
+#' ogs5_obj <- input_add_out_bloc(ogs5_obj, out_name = "OUTPUT1",
+#'                    NOD_VALUES = "C(4) Ca Mg Cl pH pe Calcite Dolomite(dis)",
+#'                    GEO_TYPE = "POINT POINT2",
+#'                    DAT_TYPE = "TECPLOT")
 input_add_out_bloc <-
 
   function(

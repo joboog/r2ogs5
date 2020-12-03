@@ -1,7 +1,40 @@
-# function to add num_component to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
+#' input_add_num_bloc
+#' @description Adds a sub-bloc to **num** bloc of *ogs5* for defining numerical
+#'   solver properties. For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/num.html).
+#' @param x Simulation object of class *ogs5*.
+#' @param num_name Name of the sub-bloc.
+#' @param COUPLED_PROCESS
+#' @param COUPLING_CONTROL
+#' @param COUPLING_ITERATIONS
+#' @param DYNAMIC_DAMPING
+#' @param ELE_GAUSS_POINTS
+#' @param ELE_MASS_LUMPING
+#' @param ELE_SUPG
+#' @param ELE_UPWINDING
+#' @param EXTERNAL_SOLVER_OPTION
+#' @param FEM_FCT
+#' @param GRAVITY_PROFILE
+#' @param LINEAR_SOLVER
+#' @param LOCAL_PICARD1
+#' @param NON_LINEAR_ITERATION
+#' @param NON_LINEAR_SOLVER
+#' @param NON_LINEAR_UPDATE_VELOCITY
+#' @param OVERALL_COUPLING
+#' @param PCS_TYPE
+#' @param PLASTICITY_TOLERANCE
+#' @param RENUMBER
+#' @param TIME_STEPS
+#'
+#' @return Updated *ogs5* object.
+#' @export
+#' @examples
+#' ogs5_obj <- input_add_num_bloc(ogs5_obj, num_name = "NUMERICS1",
+#'                                PCS_TYPE = "GROUNDWATER_FLOW",
+#'                                ELE_GAUSS_POINTS = "3",
+#'                                LINEAR_SOLVER = "2 6 1.e-014 1000 1.0 1 2")
 input_add_num_bloc <-
 
    function(

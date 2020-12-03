@@ -1,22 +1,13 @@
 # support functions to create ens object ----------------------------------
 
-
-# ens_create_from_base_sim <- function(x, ...){
-#
-# create new model derived from attributes(x)$base_sim
-# update parameter (...) values
-#
-# }
-
+#' ens_add_ogs5
+#' @description Adds an *ogs5* instance to an existing *ens* instance.
+#' @param x Instanc of class *ens*.
+#' @param ogs5_obj Instanc of class *ogs5* to be added to *x*.
+#'
+#' @return Extended instance *x*.
+#' @export
 ens_add_ogs5 <- function(x, ogs5_obj){
-
-    # this function adds an ogs5 object to an existing ensemble obj
-    # x: ... ensemble object
-    # ogs5_obj: ...ogs5 sim object
-
-    # ! extend functoin to directly reuse base_sim of x
-    # and modify parameters
-
 
     # validate
     valid_ens(x)
@@ -42,12 +33,13 @@ ens_add_ogs5 <- function(x, ogs5_obj){
     return(x)
 }
 
+#' ens_write_inputfiles
+#' @description Wrapper function to write input files for all *ogs5* simulation
+#'   objects belonging to an *ens* instance.
+#' @param Instanc of class *ens* containing the simulation objects.
+#' @param type Type of input files to write, see [ogs5_write_inputfiles()].
+#' @export
 ens_write_inputfiles <- function(x, type = "all"){
-
-    # wrapper for ogs5_write_inputfiles(ogs5_obj)
-    # x: ...ogs5 ensemble
-    # type: ... type of inputfile
-
 
     valid_ens(x)
 
@@ -56,13 +48,30 @@ ens_write_inputfiles <- function(x, type = "all"){
     }
 }
 
+#' ens_run
+#' @description Wrapper to execute [ogs5_run()] for all included *ogs5* objects
+#'   included.
+#' @param x  Instanc of class *ens* containing the simulation objects.
+#' @param ogs_exe Path to ogs5 executable. *character*
+#' @param log_output Write log output? *logical*
+#' @param wait If *TRUE* R starts the individual simulations runs sequentially,
+#'   to say, it waits until a run finishes before starting the next. If *FALSE*
+#'   all runs will be started the same time. *logical*
+#' @return
+#' @export
+#'
+#' @examples
+#' ens_run(ens1,
+#'         ogs_exe = "../inst/ogs/ogs_5.76",
+#'         log_output = TRUE,
+#'         wait = FALSE)
 ens_run <- function(x, ogs_exe, log_output = TRUE , wait = FALSE){
 
     # wrapper for ogs5_run()
     # x: ...ogs5 ensemble
     # exe_path: ... path to ogs5 executable
     # log_output: should output be logged?
-    # wait:     ... should R wait for the simulation runs to be finished?
+    # wait:
 
     valid_ens(x)
 
@@ -75,6 +84,20 @@ ens_run <- function(x, ogs_exe, log_output = TRUE , wait = FALSE){
     }
 }
 
+#' ens_get_output
+#' @description Wrapper to retrieve output for all included *ogs5* simulation
+#'   objects.
+#' @param x  Instanc of class *ens* containing the simulation objects.
+#' @param type If 'all' retrieve all produced output, if 'specific'
+#'   retrieve output stated in a certain *OUT* bloc of the *ogs5* simulation
+#'   objects.
+#' @param If *type* = 'specific', state names (*list(character)*) of the *OUT*
+#'   blocs you wish to retrieve output for.
+#'
+#' @return Extended *x* with added output.
+#' @export
+#' @examples
+#' ens1 <- ens_get_output(ens1, type = "all")
 ens_get_output <- function(x, type = "all", ...){
 
     valid_ens(x)

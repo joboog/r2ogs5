@@ -2,6 +2,44 @@
 # input: ogs5-obj
 # output: updated ogs5-obj
 
+#' input_add_mcp_bloc
+#' @description Adds a sub-bloc to **mcp** bloc of *ogs5* for defining component
+#'  properties. For additional documentatoin of the input parameters
+#'  see the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mcp.html)
+#' @param x *ogs5* simulation object.
+#' @param ACENTRIC_FACTOR
+#' @param A_ZERO
+#' @param BUBBLE_VELOCITY
+#' @param CRITICAL_PRESSURE
+#' @param CRITICAL_TEMPERATURE
+#' @param DECAY
+#' @param DIFFUSION
+#' @param FLUID_ID
+#' @param FLUID_PHASE
+#' @param FORMULA
+#' @param ISOTHERM
+#' @param MAXIMUM_AQUEOUS_SOLUBILITY
+#' @param MINERAL_DENSITY
+#' @param MOBILE
+#' @param MOLAR_DENSITY
+#' @param MOLAR_VOLUME
+#' @param MOLAR_WEIGHT
+#' @param MOL_MASS
+#' @param NAME Component name. *character*
+#' @param OutputMassOfComponentInModel
+#' @param TRANSPORT_PHASE
+#' @param VALENCE
+#' @param VOLUME_DIFFUSION
+#'
+#' @return Updated *ogs5* object.
+#' @export
+#'
+#' @examples
+#' ogs5_obj <- input_add_mcp_bloc(ogs5_obj, NAME = "C(4)",
+#'                                MOBILE = "1",
+#'                                DIFFUSION = "1 0.0e-9",
+#'                                VALENCE = "-2")
 input_add_mcp_bloc <-
 
    function(

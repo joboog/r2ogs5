@@ -1,6 +1,17 @@
 
-# a constructor for the ogs5 base-class
-
+#' create_ogs5
+#' @description Constructor for the *ogs5* base-class
+#' @param sim_name Name of the simulation. character
+#' @param sim_id ID of the simulation. integer
+#' @param sim_path Path where to export the input files and to run the
+#'   simulation. character
+#'
+#' @return Object of class *og5*
+#' @export
+#'
+#' @examples
+#' ogs5_obj <- create_ogs5(sim_name = "ogs5_obj", sim_id = 1L,
+#'               sim_path = "examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc",)
 create_ogs5 <- function(
    #x = list(input=list(), output=list(mod)),
    sim_name = character(NULL),
@@ -33,9 +44,9 @@ create_ogs5 <- function(
    )
 }
 
-
-# validator for ogs5-base class
-
+#' valid_ogs5
+#' @description  Validator for *ogs5* base class
+#' @param x Object of class *ogs5* to validate.
 valid_ogs5 <- function(x){
 
    if (!class(x)=="ogs5") {
@@ -49,7 +60,3 @@ valid_ogs5 <- function(x){
    }
 
 }
-
-# validator for ogs5-obj before execution of run
-# define when all input objects have been defined
-# shoul dbe used right before printing og5-obj, or running simulations

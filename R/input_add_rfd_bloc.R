@@ -1,7 +1,24 @@
-# function to add rfd-bloc to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
+#' input_add_rfd_bloc
+#' @description Adds a sub-bloc to **rfd** bloc of *ogs5* for defining time
+#'   dependent functions. For additional documentation of the input parameters
+#'   see the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/rfd.html).
+#' @param x Simulation object of class *ogs5*.
+#' @param rfd_name Name of the **rfd** sub-bloc.
+#' @param mkey ogs5 #-keyword: c("CURVE", "CURVES"). *character*
+#' @param data *Tibble* with two *numeric* columns. One colum has to be named
+#'   "time".
+#' @param INTERPOLATION
+#' @param MSH_TYPE
+#'
+#' @return Updated *ogs5* object.
+#' @export
+#' @example
+#' ogs5_obj <- input_add_rfd_bloc(x = ogs5_obj,
+#'              rfd_name = "tracer", mkey = "CURVES",
+#'              data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),
+#'                                    conc=c(1,1,0,0,0)))
 input_add_rfd_bloc <-
 
   function(

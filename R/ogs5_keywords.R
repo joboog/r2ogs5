@@ -1,5 +1,8 @@
 
-# ogs5 keyword list -------------------------------------------------------
+#' ogs5_get_keywordlist
+#' @description Get all **OpenGeoSys-v5** keywords as *list*.
+#' @return *List* of keywords.
+#' @export
 ogs5_get_keywordlist <- function(){
 
   ogs5_keywordlist <- list()

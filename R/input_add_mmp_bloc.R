@@ -1,7 +1,71 @@
-# function to add mmp_component to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
+#' input_add_mmp_bloc
+#' @description Adds a sub-bloc to **mmp** bloc of *ogs5* for defining material
+#'   properties. For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mmp.html)
+#' @param x Simulation object of class *ogs5*.
+#' @param CAPILLARY_PRESSURE
+#' @param CHANNEL
+#' @param COMPOUND_DEPENDENT_DT
+#' @param CONDUCTIVITY_MODEL
+#' @param CONVERSION_FACTOR
+#' @param DATA
+#' @param DIFFUSION
+#' @param DIS_TYPE
+#' @param ELEMENT_VOLUME_MULTIPLYER
+#' @param EVAPORATION
+#' @param FLOWLINEARITY
+#' @param GEOMETRY_AREA
+#' @param GEOMETRY_DIMENSION
+#' @param GEOMETRY_INCLINATION
+#' @param GEO_TYPE
+#' @param HEAT_DISPERSION
+#' @param HEAT_TRANSFER
+#' @param INTERPHASE_FRICTION
+#' @param MASS_DISPERSION
+#' @param MMP_TYPE
+#' @param MSH_TYPE
+#' @param NAME
+#' @param ORGANIC_CARBON
+#' @param PARTICLE_DIAMETER
+#' @param PCS_TYPE
+#' @param PERMEABILITY_DISTRIBUTION
+#' @param PERMEABILITY_FUNCTION_DEFORMATION
+#' @param PERMEABILITY_FUNCTION_EFFSTRESS
+#' @param PERMEABILITY_FUNCTION_POROSITY
+#' @param PERMEABILITY_FUNCTION_PRESSURE
+#' @param PERMEABILITY_FUNCTION_STRAIN
+#' @param PERMEABILITY_FUNCTION_STRESS
+#' @param PERMEABILITY_FUNCTION_VELOCITY
+#' @param PERMEABILITY_SATURATION
+#' @param PERMEABILITY_TENSOR
+#' @param POROSITY
+#' @param POROSITY_DISTRIBUTION
+#' @param RILL
+#' @param SPECIFIC_STORAGE
+#' @param STORAGE
+#' @param STORAGE_FUNCTION_EFFSTRESS
+#' @param SURFACE_FRICTION
+#' @param TORTUOSITY
+#' @param TRANSFER_COEFFICIENT
+#' @param UNCONFINED
+#' @param VOL_BIO
+#' @param VOL_MAT
+#' @param WIDTH
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' ogs5_obj <- input_add_mmp_bloc(ogs5_obj, NAME = "MEDIUM_PROPERTIES1",
+#'                                GEOMETRY_DIMENSION = "1",
+#'                                GEOMETRY_AREA = "1.000000e+000",
+#'                                POROSITY = "1 0.32",
+#'                                VOL_MAT = "1 0.68",
+#'                                TORTUOSITY = "1 1.000000e+000",
+#'                                PERMEABILITY_TENSOR = "ISOTROPIC 1.15700e-12",
+#'                                MASS_DISPERSION = "1 0.0067 0.1000")
 input_add_mmp_bloc <-
 
    function(

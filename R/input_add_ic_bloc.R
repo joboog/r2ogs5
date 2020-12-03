@@ -2,6 +2,28 @@
 # input: ogs5-obj
 # output: updated ogs5-obj
 
+#' input_add_ic_bloc
+#' @description Adds a sub-bloc to **ic** bloc of *ogs5* for defining an initial
+#'   condition (IC). For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/ic.html).
+#' @param x Simulation object of class *ogs5*.
+#' @param ic_name Name of the initial condition.
+#' @param COMP_NAME Name of the component.
+#' @param DIS_TYPE Distribution type of intial condition.
+#' @param GEO_TYPE Name of a geometry defined in **gml** to be apply the IC on.
+#' @param PCS_TYPE Apply IC for the process defined in **pcs**.
+#' @param PRIMARY_VARIABLE Apply IC for the primary variable defined in **pcs**.
+#'
+#' @return Updated *ogs5* object.
+#' @export
+#'
+#' @examples
+#' ogs5_obj <- input_add_ic_bloc(ogs5_obj, ic_name = "INITIAL_CONDITION1",
+#'  PCS_TYPE = "GROUNDWATER_FLOW",
+#' PRIMARY_VARIABLE = "HEAD",
+#' GEO_TYPE = "DOMAIN",
+#' DIS_TYPE = "CONSTANT 1.0")
 input_add_ic_bloc <-
 
    function(

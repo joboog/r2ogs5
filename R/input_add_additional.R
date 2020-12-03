@@ -1,12 +1,15 @@
 
+#' input_add_file_as_additional_bloc
+#' @description Adds a complete file as bloc to *additional* sub-bloc of *ogs5*
+#'   instance.
+#' @param x Simulation object of class *ogs5*.
+#' @param filepath Path to file to be added. *character*
+#'
+#' @return Updated *ogs5* object.
+#' @export
 input_add_file_as_additional_bloc <-
 
     function(x = list(), filepath = character(NULL)){
-
-        # add a complete file as bloc to the class 'ogs5_additional'
-        # bloc will a one element list of a character()
-        # input: ogs5-obj
-        # output: updated ogs5-obj
 
         filename = basename(filepath)
 
