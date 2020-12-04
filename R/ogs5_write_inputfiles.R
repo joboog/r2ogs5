@@ -1,7 +1,15 @@
 # function to write ogs5-mkeybloc input files ----------------------------------
 
-
-#  write input file ------------------------------------------------------------
+#' ogs5_write_inputfiles
+#' @description Export *ogs5* object and write ogs5 input files.
+#' @param ogs5_obj *ogs5* simulation object
+#' @param type *character* Type of the *ogs5* main bloc to be written. c("all", "bc", "cct",
+#'   "fct", "gem", "gli", "ic", "krc", "mcp", "mfp", "mmp", "msh", "msp", num",
+#'   "out", "pcs", "pqc", "rei", "st", "tim", "rfd", "additional")
+#' @param folderpath *character* Path to write the outpufile(s) to.
+#' @export
+#' @examples
+#' ogs5_write_inputfiles(ogs5_obj, "all")
 ogs5_write_inputfiles <-
 
   function(ogs5_obj = list(), type = "all", folderpath = NULL){
@@ -65,7 +73,11 @@ ogs5_write_inputfiles <-
     }
 }
 
- ogs5_write_tofile <-
+#' ogs5_write_tofile
+#' @description Write text output to file.
+#' @param filename Path of file to be written.
+#' @param text_output_fct Textoutput to be written.
+ogs5_write_tofile <-
 
   function(filename = character(), text_output_fct){
     sink(filename, type = "output")
@@ -76,6 +88,11 @@ ogs5_write_inputfiles <-
 # output an individual mkey bloc out of a ogs5_sublist -------------
 # input: mkey_bloc = main keywword bloc; mkey = main (#) key word
 # define as class specific method?
+#' ogs5_print_mkey_bloc
+#' @description Output *ogs5* main keyword bloc.
+#' @param mkey_bloc *ogs5* main input bloc.
+#' @param mkey Respective **ogs5** main keyword. *character*
+#' @param stack If output should be on seperate lines. *logical*
 ogs5_print_mkey_bloc <-
 
   function(mkey_bloc = list(), mkey = character(NULL), stack = FALSE) {
@@ -99,6 +116,10 @@ ogs5_print_mkey_bloc <-
 
 
 # generic to output ogs5_sublist ------------------------------------------
+#' ogs5_list_output
+#' @description Output class specific sub bloc of *ogs5* object.
+#' @param ogs5_sublist *ogs5* sub bloc.
+#' @param ... Additional arguments to pass.
 ogs5_list_output <- function(ogs5_sublist, ...) {
   UseMethod("ogs5_list_output")
 }
@@ -225,6 +246,12 @@ ogs5_list_output.ogs5_fct <-
     cat("#STOP", "\n")
   }
 
+# output ogs5_fct bloc ----------------------------------------------------
+
+#' ogs5_print_fct_bloc
+#' @description Output *ogs5* **FCT** bloc.
+#' @param mkey_bloc *ogs5* main input bloc.
+#' @param mkey Respective **ogs5** main keyword. *character*
 ogs5_print_fct_bloc <- function(mkey_bloc, mkey) {
 
   other_skeys <- which(names(mkey_bloc) != "DATA")
@@ -244,7 +271,7 @@ ogs5_print_fct_bloc <- function(mkey_bloc, mkey) {
 
 }
 
-# output ogs5_fct bloc ----------------------------------------------------
+
 ogs5_fct_bloc_output <-
 
   function(ogs5_fct_bloc){
@@ -450,6 +477,9 @@ ogs5_list_output.ogs5_msh <-
   }
 
 
+#' ogs5_print_msh_mkey_bloc
+#' @description Output *ogs5* **MSH** bloc.
+#' @param mkey_bloc *ogs5* **MSH** input bloc.
 ogs5_print_msh_mkey_bloc <-
 
   function(mkey_bloc = list()) {
@@ -694,6 +724,11 @@ ogs5_list_output.ogs5_tim <-
   }
 
 # output ogs5_additional_bloc ------------------------------------------
+
+#' ogs5_write_ogs5_additional
+#' @description Output *ogs5* **additional** bloc.
+#' @param folderpath Path to directory where to write out the file.
+#' @param ogs5_list *ogs5* **additional** bloc.
 ogs5_write_ogs5_additional <-
 
   function(folderpath, ogs5_list){
