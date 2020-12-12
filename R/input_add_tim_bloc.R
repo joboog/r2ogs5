@@ -41,12 +41,12 @@ input_add_tim_bloc <-
     INDEPENDENT = NULL,
     PCS_TYPE = NULL,
     SUBSTEPS = NULL,
+    TIME_END = NULL,
+    TIME_START = NULL,
+    TIME_STEPS = NULL,
     TIME_CONTROL = NULL,
-    TIME_END = numeric(NULL),
     TIME_FIXED_POINTS = NULL,
     TIME_SPLITS = NULL,
-    TIME_START = numeric(NULL),
-    TIME_STEPS = NULL,
     TIME_UNIT  = NULL
 
   ){
@@ -77,13 +77,14 @@ input_add_tim_bloc <-
       "INDEPENDENT" = INDEPENDENT,
       "PCS_TYPE" = PCS_TYPE,
       "SUBSTEPS" = SUBSTEPS,
-      "TIME_CONTROL" = TIME_CONTROL,
       "TIME_END" = TIME_END,
       "TIME_FIXED_POINTS" = TIME_FIXED_POINTS,
       "TIME_SPLITS" = TIME_SPLITS,
       "TIME_START" = TIME_START,
       "TIME_STEPS" = TIME_STEPS,
-      "TIME_UNIT"  = TIME_UNIT
+      "TIME_UNIT"  = TIME_UNIT,
+      "TIME_CONTROL" = TIME_CONTROL
+
 
     ) %>%
       purrr::discard(is.null) %>%
