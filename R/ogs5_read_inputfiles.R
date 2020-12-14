@@ -131,7 +131,7 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
     while (!stringr::str_detect(chr[[i]], "END")) {
 
         # check if mkey
-        if (chr[[i]] %in% pqc_mkeys) {
+        if (any(stringr::str_detect(chr[[i]], pqc_mkeys))) {
             mkey_name <- chr[[i]]
             l[[paste0(mkey_name)]] <- list()
             # step to next line
@@ -139,7 +139,7 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
 
         } else {                               # add subkeys
             j <- 1                             # subkey list index
-            while(!chr[[i]] %in% pqc_mkeys) {
+            while(!any(stringr::str_detect(chr[[i]], pqc_mkeys))) {
 
                 l[[paste0(mkey_name)]][j] <- chr[[i]]
                 j <- j + 1
@@ -355,21 +355,26 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                              }
                              return(sub)
                          })
-
-                     names_loc <- bloc %>%
-                              lapply(function(sub) {
-                                  name_loc <-
-                                      stringr::str_which(sub, "\\$") + 1
-                                  return(name_loc)
-                                  })
-                     col_name <- 1:length(bloc) %>%
-                                sapply(function(i) {
-                                    return(bloc[[i]][names_loc[[i]] - 1])
-                                }) %>%
+                     # find dollar sing(s)
+                     dollars <- bloc %>%
+                         lapply(function(sub) {
+                             sub <- sub %>%
+                                 stringr::str_which("\\$")
+                                 })
+                     dollars <- dollars[
+                        which(!dollars %>% sapply(function(d) length(d) == 0))
+                        ] %>%
                          unlist %>%
-                         tolower %>%
-                         stringr::str_remove("\\$") %>%
                          unique
+
+                     names <- bloc %>%
+                              lapply(function(sub) {
+                                  sub[dollars] %>%
+                                      stringr::str_remove("\\$") %>%
+                                      na.omit}) %>%
+                              unlist %>%
+                              tolower %>%
+                              unique
 
                      # add "" for missing $NAME or $MD
                      max_sublength <- bloc %>% lapply(length) %>% unlist %>% max
@@ -390,15 +395,15 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                      matrix(nrow = length(bloc), byrow = TRUE) %>%
                      tibble::as_tibble(.name_repair = "unique") %>%
                      dplyr::rename_at( # one after $NAME
-                         .vars = unique(unlist(names_loc)),
-                         .funs = ~ col_name) %>%
+                         .vars = dollars + 1,
+                         .funs = ~ names) %>%
                      dplyr::select_if(!stringr::str_detect(., "\\$")) %>%
                      dplyr::rename_at(2:4, ~c("x", "y", "z")) %>%
                      dplyr::mutate_at(.vars = c("x", "y", "z"),
                                       .funs = as.double) %>%
                      tibble::as_tibble() %>%
                      tibble::column_to_rownames("...1") %>%
-                     dplyr::select(x, y, z, col_name)
+                     dplyr::select(x, y, z, names)
                             ))
 
                     } else {
@@ -519,7 +524,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 lapply(function(blc_name) {
                 bloc <- ogs5_list[[paste0(blc_name)]]
 
-                if (stringr::str_detect(blc_name, "CURVES")) {
+                if (stringr::str_detect(blc_name, "CURVE")) {
 
                     # check for column names
                     clnme <- bloc %>%
@@ -549,19 +554,17 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                            'colnames<-' (clnme) %>%
                            tibble::as_tibble()
 
+                    bloc <- list(mkey = "CURVES", data = bloc)
+
                 } else {
                 # other eventual blocs
                     bloc <- lapply(bloc, unlist)
-                    bloc <- structure(bloc, class = "ogs5_rfd_bloc")
                 }
+                bloc <- structure(bloc, class = "ogs5_rfd_bloc")
 
-                return(tibble::as_tibble(bloc))
+                return(bloc)
                 }) %>%
-                append("CURVES", after = 0) %>%   # insert mkey = "CURVES"
-                'names<-' (c("mkey", "data")) %>%
-                structure(class = "ogs5_rfd_bloc") %>%
-                list() %>% # wrap in list
-                'names<-' (c("CURVES1")) %>% # name list
+                'names<-' (names(ogs5_list)) %>%
                 structure(class = "ogs5_rfd"),
 
 # ------------------------------------------------------------------------
