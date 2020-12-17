@@ -81,6 +81,14 @@ input_add_msp_bloc <-
 
       }
 
+      # automatic line break for PLASTICITY
+      if (!is.null(PLASTICITY)) {
+        PLASTICITY <- PLASTICITY %>%
+          stringr::str_split(" ") %>%
+          unlist %>%
+          paste0(collapse = "\n ")
+      }
+
       # create and add sublist to msp-list
 
       x$input$msp[[paste(msp_name)]] <- list(
