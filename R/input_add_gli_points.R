@@ -7,6 +7,8 @@
 #'   geometries. For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gli/h_points).
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
 #' @param x Simulation object of class *ogs5*.
 #' @param ogs5_points *tibble* with columns c("x", "y", "z", "name").
 #'

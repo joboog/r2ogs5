@@ -3,7 +3,7 @@
 #' @description Adds a complete file as bloc to *additional* sub-bloc of *ogs5*
 #'   instance.
 #' @param x Simulation object of class *ogs5*.
-#' @param filepath Path to file to be added. *character*
+#' @param filepath *character* Path to file to be added.
 #'
 #' @return Updated *ogs5* object.
 #' @export

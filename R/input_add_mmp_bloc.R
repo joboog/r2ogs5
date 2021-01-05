@@ -4,6 +4,9 @@
 #'   properties. For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mmp.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param CAPILLARY_PRESSURE
 #' @param CHANNEL
@@ -81,8 +84,8 @@ input_add_mmp_bloc <-
       ELEMENT_VOLUME_MULTIPLYER = NULL,
       EVAPORATION = NULL,
       FLOWLINEARITY = NULL,
-      GEOMETRY_AREA = character(NULL),
-      GEOMETRY_DIMENSION = character(NULL),
+      GEOMETRY_AREA = NULL,
+      GEOMETRY_DIMENSION = NULL,
       GEOMETRY_INCLINATION = NULL,
       GEO_TYPE = NULL,
       HEAT_DISPERSION = NULL,
@@ -91,7 +94,7 @@ input_add_mmp_bloc <-
       MASS_DISPERSION = NULL,
       MMP_TYPE = NULL,
       MSH_TYPE = NULL,
-      NAME = character(NULL),
+      NAME = NULL,
       ORGANIC_CARBON = NULL,
       PARTICLE_DIAMETER = NULL,
       PCS_TYPE = NULL,

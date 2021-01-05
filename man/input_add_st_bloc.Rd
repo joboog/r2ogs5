@@ -6,21 +6,21 @@
 \usage{
 input_add_st_bloc(
   x = list(),
-  st_name = character(NULL),
+  st_name = NULL,
   AIR_BREAKING = NULL,
   CHANNEL = NULL,
   COMP_NAME = NULL,
   CONSTRAINED = NULL,
   DISTRIBUTE_VOLUME_FLUX = NULL,
-  DIS_TYPE = character(NULL),
+  DIS_TYPE = NULL,
   EXPLICIT_SURFACE_WATER_PRESSURE = NULL,
   FCT_TYPE = NULL,
-  GEO_TYPE = character(NULL),
+  GEO_TYPE = NULL,
   MSH_TYPE = NULL,
   NEGLECT_SURFACE_WATER_PRESSURE = NULL,
   NODE_AVERAGING = NULL,
-  PCS_TYPE = character(NULL),
-  PRIMARY_VARIABLE = character(NULL),
+  PCS_TYPE = NULL,
+  PRIMARY_VARIABLE = NULL,
   TIME_INTERPOLATION = NULL,
   TIM_TYPE = NULL
 )
@@ -38,7 +38,9 @@ Updated \emph{ogs5} object.
 \description{
 Adds a sub-bloc to \strong{st} bloc of \emph{ogs5} for defining a source
 term. For additional documentatoin of the input parameters see
-the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/st.html}{ogs5 keyword docs}.
+the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/st.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
 ogs5_obj <- input_add_st_bloc(ogs5_obj, st_name = "SOURCE_TERM1",

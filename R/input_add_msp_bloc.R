@@ -4,6 +4,10 @@
 #'   properties. For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msp.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
+#'   Note the syntax with line breaks "\\n" for ELASTICITY and THERMAL.
 #' @param x Simulation object of class *ogs5*.
 #' @param BIOT_CONSTANT
 #' @param CREEP
@@ -38,13 +42,13 @@ input_add_msp_bloc <-
     x = list(),
     BIOT_CONSTANT = NULL,
     CREEP = NULL,
-    DENSITY = character(NULL),
+    DENSITY = NULL,
     ELASTICITY = NULL,
     EXCAVATION = NULL,
     E_Function = NULL,
     GRAVITY_CONSTANT = NULL,
     MICRO_STRUCTURE_PLAS = NULL,
-    NAME = character(NULL),
+    NAME = NULL,
     NON_REACTIVE_FRACTION = NULL,
     PLASTICITY = NULL,
     REACTIVE_SYSTEM = NULL,

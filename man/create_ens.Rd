@@ -14,12 +14,12 @@ create_ens(
 \arguments{
 \item{base_sim}{Instance of class \emph{ogs5} to be used as basis. \emph{ogs5}}
 
-\item{parameter_tbl}{Table defining the parameters and values for ensemble
-runs. \emph{tibble()}, \emph{tbl()}, \emph{data.frame()}}
+\item{parameter_tbl}{\emph{tibble()}, \emph{tbl()} or \emph{data.frame()} defining the parameters and values for ensemble
+runs.}
 
-\item{name}{Name for the ensemble.}
+\item{name}{\emph{character} Name for the ensemble.}
 
-\item{path}{Path where to place all individual ensemble runs.}
+\item{path}{\emph{character} Path where to place all individual ensemble runs.}
 }
 \value{
 Instance of class \emph{ens}
@@ -35,6 +35,6 @@ para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 10),
               tracer_input_concentration = seq(0.1, 1, length.out = 5)) \%>\%
               tibble::as_tibble()
 
-ens1 = create_ens(base_sim = ex1, parameter_tbl = para_df,
+ens1 <- create_ens(base_sim = ex1, parameter_tbl = para_df,
                   name = "tracersim", path = "path/to/my/ens")
 }

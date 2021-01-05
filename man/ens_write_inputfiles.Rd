@@ -7,7 +7,7 @@
 ens_write_inputfiles(x, type = "all")
 }
 \arguments{
-\item{type}{Type of input files to write, see \code{\link[=ogs5_write_inputfiles]{ogs5_write_inputfiles()}}.}
+\item{type}{\emph{character} Type of input files to write, see \code{\link[=ogs5_write_inputfiles]{ogs5_write_inputfiles()}}.}
 
 \item{Instanc}{of class \emph{ens} containing the simulation objects.}
 }

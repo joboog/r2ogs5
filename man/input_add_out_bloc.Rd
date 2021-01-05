@@ -6,12 +6,12 @@
 \usage{
 input_add_out_bloc(
   x = list(),
-  out_name = character(NULL),
+  out_name = NULL,
   AMPLIFIER = NULL,
-  DAT_TYPE = character(NULL),
+  DAT_TYPE = NULL,
   DIS_TYPE = NULL,
   ELE_VALUES = NULL,
-  GEO_TYPE = character(NULL),
+  GEO_TYPE = NULL,
   MFP_VALUES = NULL,
   MMP_VALUES = NULL,
   MSH_TYPE = NULL,
@@ -20,7 +20,7 @@ input_add_out_bloc(
   PCS_TYPE = NULL,
   RWPT_VALUES = NULL,
   TECPLOT_ZONE_SHARE = FALSE,
-  TIM_TYPE = character(NULL),
+  TIM_TYPE = NULL,
   VARIABLESHARING = FALSE
 )
 }
@@ -29,7 +29,9 @@ input_add_out_bloc(
 
 \item{out_name}{Name of the \strong{out} sub-bloc. \emph{character}}
 
-\item{VARIABLESHARING}{}
+\item{TECPLOT_ZONE_SHARE}{\emph{logical}}
+
+\item{VARIABLESHARING}{\emph{logical}}
 }
 \value{
 Updated \emph{ogs5} object.
@@ -37,7 +39,9 @@ Updated \emph{ogs5} object.
 \description{
 Adds a sub-bloc to \strong{out} bloc of \emph{ogs5} for defining
 simulation output conditions. For additional documentatoin of the input
-parameters see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/out.html}{ogs5 keyword docs}.
+parameters see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/out.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+Most arguments have to be of class \emph{character}.
 }
 \examples{
 ogs5_obj <- input_add_out_bloc(ogs5_obj, out_name = "OUTPUT1",

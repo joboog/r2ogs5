@@ -27,4 +27,6 @@ Adds a sub-bloc to \strong{cct} bloc of \emph{ogs5} for defining a
 communication table to execute parallel runs with PETS library. For
 additional documentation of the input parameters see
 the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/cct.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} have to be of class \emph{character}.
 }

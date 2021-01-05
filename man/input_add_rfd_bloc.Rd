@@ -6,8 +6,8 @@
 \usage{
 input_add_rfd_bloc(
   x = list(),
-  rfd_name = character(NULL),
-  mkey = character(NULL),
+  rfd_name = NULL,
+  mkey = NULL,
   data = tibble::tibble(NULL),
   INTERPOLATION = NULL,
   MSH_TYPE = NULL
@@ -16,9 +16,9 @@ input_add_rfd_bloc(
 \arguments{
 \item{x}{Simulation object of class \emph{ogs5}.}
 
-\item{rfd_name}{Name of the \strong{rfd} sub-bloc.}
+\item{rfd_name}{\emph{character} Name of the \strong{rfd} sub-bloc.}
 
-\item{mkey}{ogs5 #-keyword: c("CURVE", "CURVES"). \emph{character}}
+\item{mkey}{\emph{character} ogs5 #-keyword: c("CURVE", "CURVES").}
 
 \item{data}{\emph{Tibble} with two \emph{numeric} columns. One colum has to be named
 "time".}
@@ -31,5 +31,6 @@ Updated \emph{ogs5} object.
 \description{
 Adds a sub-bloc to \strong{rfd} bloc of \emph{ogs5} for defining time
 dependent functions. For additional documentation of the input parameters
-see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/rfd.html}{ogs5 keyword docs}.
+see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/rfd.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
 }

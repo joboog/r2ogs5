@@ -8,13 +8,13 @@ input_add_msp_bloc(
   x = list(),
   BIOT_CONSTANT = NULL,
   CREEP = NULL,
-  DENSITY = character(NULL),
+  DENSITY = NULL,
   ELASTICITY = NULL,
   EXCAVATION = NULL,
   E_Function = NULL,
   GRAVITY_CONSTANT = NULL,
   MICRO_STRUCTURE_PLAS = NULL,
-  NAME = character(NULL),
+  NAME = NULL,
   NON_REACTIVE_FRACTION = NULL,
   PLASTICITY = NULL,
   REACTIVE_SYSTEM = NULL,
@@ -42,6 +42,9 @@ input_add_msp_bloc(
 Adds a sub-bloc to \strong{msp} bloc of \emph{ogs5} for defining solid
 properties. For additional documentatoin of the input parameters see
 the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msp.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} have to be of class \emph{character}.
+Note the syntax with line breaks "\\n" for ELASTICITY and THERMAL.
 }
 \examples{
 ogs5_obj <- input_add_msp_bloc(ogs5_obj, NAME = "SOLID_PROPERTIES1",

@@ -5,6 +5,9 @@
 #'   additional documentation of the input parameters see
 #'   the [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/cct.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object. *ogs*
 #' @param cct_name Name of the **cct** bloc.
 #' @param MYRANK

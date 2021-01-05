@@ -11,7 +11,7 @@ input_add_fct_bloc(
   DIMENSION = NULL,
   DIS_TYPE = NULL,
   GEO_TYPE = NULL,
-  TYPE = character(NULL)
+  TYPE = NULL
 )
 }
 \arguments{
@@ -34,6 +34,9 @@ Updated \emph{ogs5} object.
 Adds a sub-bloc to \strong{fct} bloc of \emph{ogs5} for defining
 functional relationships. For additional documentatiin of the input
 parameters see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/fct.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} and \strong{data_values} have to be of class
+\emph{character}.
 }
 \examples{
 

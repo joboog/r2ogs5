@@ -3,7 +3,7 @@
 #' ens_add_ogs5
 #' @description Adds an *ogs5* instance to an existing *ens* instance.
 #' @param x Instanc of class *ens*.
-#' @param ogs5_obj Instanc of class *ogs5* to be added to *x*.
+#' @param ogs5_obj Instance of class *ogs5* to be added to *x*.
 #'
 #' @return Extended instance *x*.
 #' @export
@@ -37,7 +37,7 @@ ens_add_ogs5 <- function(x, ogs5_obj){
 #' @description Wrapper function to write input files for all *ogs5* simulation
 #'   objects belonging to an *ens* instance.
 #' @param Instanc of class *ens* containing the simulation objects.
-#' @param type Type of input files to write, see [ogs5_write_inputfiles()].
+#' @param type *character* Type of input files to write, see [ogs5_write_inputfiles()].
 #' @export
 ens_write_inputfiles <- function(x, type = "all"){
 
@@ -52,11 +52,11 @@ ens_write_inputfiles <- function(x, type = "all"){
 #' @description Wrapper to execute [ogs5_run()] for all included *ogs5* objects
 #'   included.
 #' @param x  Instanc of class *ens* containing the simulation objects.
-#' @param ogs_exe Path to ogs5 executable. *character*
-#' @param log_output Write log output? *logical*
-#' @param wait If *TRUE* R starts the individual simulations runs sequentially,
+#' @param ogs_exe *character* Path to ogs5 executable.
+#' @param log_output *logical* Write log output?
+#' @param wait *logical* If *TRUE* R starts the individual simulations runs sequentially,
 #'   to say, it waits until a run finishes before starting the next. If *FALSE*
-#'   all runs will be started the same time. *logical*
+#'   all runs will be started the same time.
 #' @return
 #' @export
 #'
@@ -86,12 +86,13 @@ ens_run <- function(x, ogs_exe, log_output = TRUE , wait = FALSE){
 
 #' ens_get_output
 #' @description Wrapper to retrieve output for all included *ogs5* simulation
-#'   objects.
+#'   objects. It calls on the functions [ogs5_get_output_all()] and
+#'   [ogs5_get_output_specific()] of the **r2ogs** package.
 #' @param x  Instanc of class *ens* containing the simulation objects.
-#' @param type If 'all' retrieve all produced output, if 'specific'
+#' @param type *character* If 'all' retrieve all produced output, if 'specific'
 #'   retrieve output stated in a certain *OUT* bloc of the *ogs5* simulation
 #'   objects.
-#' @param If *type* = 'specific', state names (*list(character)*) of the *OUT*
+#' @param ... *list(character)* If *type* = 'specific', state names  of the *OUT*
 #'   blocs you wish to retrieve output for.
 #'
 #' @return Extended *x* with added output.
@@ -107,8 +108,8 @@ ens_get_output <- function(x, type = "all", ...){
 
         x[[i]] <-
             switch(type,
-                   all = ogs5_get_output_all(x[[i]]),
-                   specific = ogs5_get_output_specific(x[[i]],
+                   "all" = ogs5_get_output_all(x[[i]]),
+                   "specific" = ogs5_get_output_specific(x[[i]],
                                                        outbloc_names,
                                                        out_filepath))
     }

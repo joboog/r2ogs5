@@ -4,6 +4,9 @@
 #'   properties. For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mfp.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param COMPONENTS
 #' @param COMPRESSIBILITY
@@ -43,12 +46,12 @@ input_add_mfp_bloc <-
       COMPRESSIBILITY = NULL,
       DAT_TYPE = NULL,
       DECAY = NULL,
-      DENSITY = character(NULL),
+      DENSITY = NULL,
       DIFFUSION = NULL,
       DRHO_DT_UNSATURATED = NULL,
       EOS_TYPE = NULL,
-      FLUID_NAME = character(NULL),
-      FLUID_TYPE = character(NULL),
+      FLUID_NAME = NULL,
+      FLUID_TYPE = NULL,
       GRAVITY = NULL,
       HEAT_CONDUCTIVITY = NULL,
       ISOTHERM = NULL,
@@ -58,7 +61,7 @@ input_add_mfp_bloc <-
       SPECIFIC_HEAT_CAPACITY = NULL,
       SPECIFIC_HEAT_SOURCE = NULL,
       TEMPERATURE = NULL,
-      VISCOSITY = character(NULL)
+      VISCOSITY = NULL
 
    ){
 

@@ -11,4 +11,5 @@ ogs5_get_keywordlist()
 }
 \description{
 Get all \strong{OpenGeoSys-v5} keywords as \emph{list}.
+Function takes no arguments.
 }

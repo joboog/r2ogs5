@@ -6,7 +6,7 @@
 \usage{
 input_add_pcs_bloc(
   x = list(),
-  pcs_name = character(NULL),
+  pcs_name = NULL,
   APP_TYPE = NULL,
   BOUNDARY_CONDITION_OUTPUT = FALSE,
   COUNT = NULL,
@@ -22,7 +22,7 @@ input_add_pcs_bloc(
   NEGLECT_H_INI_EFFECT = NULL,
   NUM_TYPE = NULL,
   OutputMassOfGasInModel = FALSE,
-  PCS_TYPE = character(NULL),
+  PCS_TYPE = NULL,
   PHASE_TRANSITION = NULL,
   PRIMARY_VARIABLE = NULL,
   PROCESSED_BC = NULL,
@@ -54,7 +54,9 @@ Updated \emph{ogs5} object.
 \description{
 Adds a sub-bloc to \strong{pcs} bloc of \emph{ogs5} for defining processes
 For additional documentatoin of the input parameters see
-the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pcs.html}{ogs5 keyword docs}.
+the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pcs.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+Most arguments have to be of class \emph{character}.
 }
 \examples{
 ogs5_obj <- input_add_pcs_bloc(ogs5_obj, pcs_name = "PROCESS1",

@@ -10,12 +10,12 @@ input_add_mfp_bloc(
   COMPRESSIBILITY = NULL,
   DAT_TYPE = NULL,
   DECAY = NULL,
-  DENSITY = character(NULL),
+  DENSITY = NULL,
   DIFFUSION = NULL,
   DRHO_DT_UNSATURATED = NULL,
   EOS_TYPE = NULL,
-  FLUID_NAME = character(NULL),
-  FLUID_TYPE = character(NULL),
+  FLUID_NAME = NULL,
+  FLUID_TYPE = NULL,
   GRAVITY = NULL,
   HEAT_CONDUCTIVITY = NULL,
   ISOTHERM = NULL,
@@ -25,7 +25,7 @@ input_add_mfp_bloc(
   SPECIFIC_HEAT_CAPACITY = NULL,
   SPECIFIC_HEAT_SOURCE = NULL,
   TEMPERATURE = NULL,
-  VISCOSITY = character(NULL)
+  VISCOSITY = NULL
 )
 }
 \arguments{
@@ -40,6 +40,8 @@ input_add_mfp_bloc(
 Adds a sub-bloc to \strong{mfp} bloc of \emph{ogs5} for defining fluid
 properties. For additional documentatoin of the input parameters see
 the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mfp.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
 ogs5_obj <- input_add_mfp_bloc(ogs5_obj, FLUID_NAME = "FLUID_PROPERTIES1",

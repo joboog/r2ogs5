@@ -7,6 +7,9 @@
 #'  properties. For additional documentatoin of the input parameters
 #'  see the [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mcp.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
 #' @param x *ogs5* simulation object.
 #' @param ACENTRIC_FACTOR
 #' @param A_ZERO
@@ -26,7 +29,7 @@
 #' @param MOLAR_VOLUME
 #' @param MOLAR_WEIGHT
 #' @param MOL_MASS
-#' @param NAME Component name. *character*
+#' @param NAME Component name.
 #' @param OutputMassOfComponentInModel
 #' @param TRANSPORT_PHASE
 #' @param VALENCE
@@ -57,12 +60,12 @@ input_add_mcp_bloc <-
       ISOTHERM = NULL,
       MAXIMUM_AQUEOUS_SOLUBILITY = NULL,
       MINERAL_DENSITY = NULL,
-      MOBILE = character(NULL),
+      MOBILE = NULL,
       MOLAR_DENSITY = NULL,
       MOLAR_VOLUME = NULL,
       MOLAR_WEIGHT = NULL,
       MOL_MASS = NULL,
-      NAME = character(NULL),
+      NAME = NULL,
       OutputMassOfComponentInModel = NULL,
       TRANSPORT_PHASE = NULL,
       VALENCE = NULL,

@@ -6,7 +6,7 @@
 \usage{
 input_add_num_bloc(
   x = list(),
-  num_name = character(NULL),
+  num_name = NULL,
   COUPLED_PROCESS = NULL,
   COUPLING_CONTROL = NULL,
   COUPLING_ITERATIONS = NULL,
@@ -18,13 +18,13 @@ input_add_num_bloc(
   EXTERNAL_SOLVER_OPTION = NULL,
   FEM_FCT = NULL,
   GRAVITY_PROFILE = NULL,
-  LINEAR_SOLVER = character(NULL),
+  LINEAR_SOLVER = NULL,
   LOCAL_PICARD1 = NULL,
   NON_LINEAR_ITERATION = NULL,
   NON_LINEAR_SOLVER = NULL,
   NON_LINEAR_UPDATE_VELOCITY = NULL,
   OVERALL_COUPLING = NULL,
-  PCS_TYPE = NUcharacter(NULL),
+  PCS_TYPE = NUNULL,
   PLASTICITY_TOLERANCE = NULL,
   RENUMBER = NULL,
   TIME_STEPS = NULL
@@ -43,7 +43,9 @@ Updated \emph{ogs5} object.
 \description{
 Adds a sub-bloc to \strong{num} bloc of \emph{ogs5} for defining numerical
 solver properties. For additional documentatoin of the input parameters see
-the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/num.html}{ogs5 keyword docs}.
+the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/num.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
 ogs5_obj <- input_add_num_bloc(ogs5_obj, num_name = "NUMERICS1",

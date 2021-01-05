@@ -3,7 +3,10 @@
 #' @description Adds a sub-bloc to **out** bloc of *ogs5* for defining
 #'  simulation output conditions. For additional documentatoin of the input
 #'  parameters see the [ogs5 keyword docs](
-#'  https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/out.html).
+#'  https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/out.html)
+#'  or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'  https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'  Most arguments have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param out_name Name of the **out** sub-bloc. *character*
 #' @param AMPLIFIER
@@ -18,9 +21,9 @@
 #' @param PCON_VALUES
 #' @param PCS_TYPE
 #' @param RWPT_VALUES
-#' @param TECPLOT_ZONE_SHARE
+#' @param TECPLOT_ZONE_SHARE *logical*
 #' @param TIM_TYPE
-#' @param VARIABLESHARING
+#' @param VARIABLESHARING *logical*
 #'
 #' @return Updated *ogs5* object.
 #' @export
@@ -33,13 +36,13 @@ input_add_out_bloc <-
 
   function(
     x = list(),
-    out_name = character(NULL),
+    out_name = NULL,
 
     AMPLIFIER = NULL,
-    DAT_TYPE = character(NULL),
+    DAT_TYPE = NULL,
     DIS_TYPE = NULL,
     ELE_VALUES = NULL,
-    GEO_TYPE = character(NULL),
+    GEO_TYPE = NULL,
     MFP_VALUES = NULL,
     MMP_VALUES = NULL,
     MSH_TYPE = NULL,
@@ -48,7 +51,7 @@ input_add_out_bloc <-
     PCS_TYPE = NULL,
     RWPT_VALUES = NULL,
     TECPLOT_ZONE_SHARE = FALSE,
-    TIM_TYPE = character(NULL),
+    TIM_TYPE = NULL,
     VARIABLESHARING = FALSE
 
   ){

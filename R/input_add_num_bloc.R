@@ -3,7 +3,10 @@
 #' @description Adds a sub-bloc to **num** bloc of *ogs5* for defining numerical
 #'   solver properties. For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
-#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/num.html).
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/num.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param num_name Name of the sub-bloc.
 #' @param COUPLED_PROCESS
@@ -39,7 +42,7 @@ input_add_num_bloc <-
 
    function(
       x = list(),
-      num_name = character(NULL),
+      num_name = NULL,
       COUPLED_PROCESS = NULL,
       COUPLING_CONTROL = NULL,
       COUPLING_ITERATIONS = NULL,
@@ -51,13 +54,13 @@ input_add_num_bloc <-
       EXTERNAL_SOLVER_OPTION = NULL,
       FEM_FCT = NULL,
       GRAVITY_PROFILE = NULL,
-      LINEAR_SOLVER = character(NULL),
+      LINEAR_SOLVER = NULL,
       LOCAL_PICARD1 = NULL,
       NON_LINEAR_ITERATION = NULL,
       NON_LINEAR_SOLVER = NULL,
       NON_LINEAR_UPDATE_VELOCITY = NULL,
       OVERALL_COUPLING = NULL,
-      PCS_TYPE = NUcharacter(NULL),
+      PCS_TYPE = NULL,
       PLASTICITY_TOLERANCE = NULL,
       RENUMBER = NULL,
       TIME_STEPS  = NULL

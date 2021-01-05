@@ -3,7 +3,10 @@
 #' @description Adds a sub-bloc to **st** bloc of *ogs5* for defining a source
 #'   term. For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
-#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/st.html).
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/st.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param st_name Name of the source term.
 #' @param AIR_BREAKING
@@ -35,22 +38,22 @@ input_add_st_bloc <-
 
    function(
       x = list(),
-      st_name = character(NULL),
+      st_name = NULL,
 
       AIR_BREAKING = NULL,
       CHANNEL = NULL,
       COMP_NAME = NULL,
       CONSTRAINED = NULL,
       DISTRIBUTE_VOLUME_FLUX = NULL,
-      DIS_TYPE = character(NULL),
+      DIS_TYPE = NULL,
       EXPLICIT_SURFACE_WATER_PRESSURE = NULL,
       FCT_TYPE = NULL,
-      GEO_TYPE = character(NULL),
+      GEO_TYPE = NULL,
       MSH_TYPE = NULL,
       NEGLECT_SURFACE_WATER_PRESSURE = NULL,
       NODE_AVERAGING = NULL,
-      PCS_TYPE = character(NULL),
-      PRIMARY_VARIABLE = character(NULL),
+      PCS_TYPE = NULL,
+      PRIMARY_VARIABLE = NULL,
       TIME_INTERPOLATION = NULL,
       TIM_TYPE = NULL
 

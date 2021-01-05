@@ -31,7 +31,19 @@ input_add_gem_bloc(
 
 \item{bloc_name}{Name of the \strong{gem} sub bloc.}
 
-\item{TRANSPORT_B}{}
+\item{CALCULATE_BOUNDARY_NODES}{\emph{character vector}}
+
+\item{DISABLE_GEMS}{\emph{logical}}
+
+\item{FLAG_COUPLING_HYDROLOGY}{\emph{character vector}}
+
+\item{FLAG_POROSITY_CHANGE}{\emph{character vector}}
+
+\item{GEM_THREADS}{\emph{integer}}
+
+\item{ITERATIVE_SCHEME}{\emph{logical}}
+
+\item{TRANSPORT_B}{\emph{logical}}
 }
 \value{
 Updated \emph{ogs5} simulation object.
@@ -40,4 +52,6 @@ Updated \emph{ogs5} simulation object.
 Adds a sub-bloc to \strong{gem} bloc of \emph{ogs5} for defining the
 interface to GEMS selector code. For additional documentatoin of the input
 parameters see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gem.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+Most arguments have to be of class \emph{character}.
 }

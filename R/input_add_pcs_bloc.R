@@ -3,7 +3,10 @@
 #' @description Adds a sub-bloc to **pcs** bloc of *ogs5* for defining processes
 #'   For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
-#' https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pcs.html).
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pcs.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   Most arguments have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param pcs_name Name of the **pcs** sub-bloc.
 #' @param APP_TYPE
@@ -51,7 +54,7 @@ input_add_pcs_bloc <-
 
          function(
             x = list(),
-            pcs_name = character(NULL),
+            pcs_name = NULL,
 
             APP_TYPE = NULL,
             BOUNDARY_CONDITION_OUTPUT = FALSE,
@@ -68,7 +71,7 @@ input_add_pcs_bloc <-
             NEGLECT_H_INI_EFFECT = NULL,
             NUM_TYPE = NULL,
             OutputMassOfGasInModel = FALSE,
-            PCS_TYPE = character(NULL),
+            PCS_TYPE = NULL,
             PHASE_TRANSITION = NULL,
             PRIMARY_VARIABLE = NULL,
             PROCESSED_BC = NULL,

@@ -17,8 +17,8 @@ input_add_mmp_bloc(
   ELEMENT_VOLUME_MULTIPLYER = NULL,
   EVAPORATION = NULL,
   FLOWLINEARITY = NULL,
-  GEOMETRY_AREA = character(NULL),
-  GEOMETRY_DIMENSION = character(NULL),
+  GEOMETRY_AREA = NULL,
+  GEOMETRY_DIMENSION = NULL,
   GEOMETRY_INCLINATION = NULL,
   GEO_TYPE = NULL,
   HEAT_DISPERSION = NULL,
@@ -27,7 +27,7 @@ input_add_mmp_bloc(
   MASS_DISPERSION = NULL,
   MMP_TYPE = NULL,
   MSH_TYPE = NULL,
-  NAME = character(NULL),
+  NAME = NULL,
   ORGANIC_CARBON = NULL,
   PARTICLE_DIAMETER = NULL,
   PCS_TYPE = NULL,
@@ -68,6 +68,8 @@ input_add_mmp_bloc(
 Adds a sub-bloc to \strong{mmp} bloc of \emph{ogs5} for defining material
 properties. For additional documentatoin of the input parameters see
 the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mmp.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
 ogs5_obj <- input_add_mmp_bloc(ogs5_obj, NAME = "MEDIUM_PROPERTIES1",

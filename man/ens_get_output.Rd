@@ -9,11 +9,11 @@ ens_get_output(x, type = "all", ...)
 \arguments{
 \item{x}{Instanc of class \emph{ens} containing the simulation objects.}
 
-\item{type}{If 'all' retrieve all produced output, if 'specific'
+\item{type}{\emph{character} If 'all' retrieve all produced output, if 'specific'
 retrieve output stated in a certain \emph{OUT} bloc of the \emph{ogs5} simulation
 objects.}
 
-\item{If}{\emph{type} = 'specific', state names (\emph{list(character)}) of the \emph{OUT}
+\item{...}{\emph{list(character)} If \emph{type} = 'specific', state names  of the \emph{OUT}
 blocs you wish to retrieve output for.}
 }
 \value{
@@ -21,7 +21,8 @@ Extended \emph{x} with added output.
 }
 \description{
 Wrapper to retrieve output for all included \emph{ogs5} simulation
-objects.
+objects. It calls on the functions \code{\link[=ogs5_get_output_all]{ogs5_get_output_all()}} and
+\code{\link[=ogs5_get_output_specific]{ogs5_get_output_specific()}} of the \strong{r2ogs} package.
 }
 \examples{
 ens1 <- ens_get_output(ens1, type = "all")

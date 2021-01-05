@@ -4,17 +4,20 @@
 #'   interface to GEMS selector code. For additional documentatoin of the input
 #'   parameters see the [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gem.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   Most arguments have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param bloc_name Name of the **gem** sub bloc.
-#' @param CALCULATE_BOUNDARY_NODES
-#' @param DISABLE_GEMS
-#' @param FLAG_COUPLING_HYDROLOGY
+#' @param CALCULATE_BOUNDARY_NODES *character vector*
+#' @param DISABLE_GEMS *logical*
+#' @param FLAG_COUPLING_HYDROLOGY *character vector*
 #' @param FLAG_DISABLE_GEM
-#' @param FLAG_POROSITY_CHANGE
+#' @param FLAG_POROSITY_CHANGE *character vector*
 #' @param GEM_CALCULATE_BOUNDARY_NODES
 #' @param GEM_INIT_FILE
-#' @param GEM_THREADS
-#' @param ITERATIVE_SCHEME
+#' @param GEM_THREADS *integer*
+#' @param ITERATIVE_SCHEME *logical*
 #' @param KINETIC_GEM
 #' @param MAX_FAILED_NODES
 #' @param MAX_POROSITY
@@ -22,7 +25,7 @@
 #' @param MY_SMART_GEMS
 #' @param PRESSURE_GEM
 #' @param TEMPERATURE_GEM
-#' @param TRANSPORT_B
+#' @param TRANSPORT_B *logical*
 #'
 #' @return Updated *ogs5* simulation object.
 #' @export

@@ -9,13 +9,13 @@ ens_run(x, ogs_exe, log_output = TRUE, wait = FALSE)
 \arguments{
 \item{x}{Instanc of class \emph{ens} containing the simulation objects.}
 
-\item{ogs_exe}{Path to ogs5 executable. \emph{character}}
+\item{ogs_exe}{\emph{character} Path to ogs5 executable.}
 
-\item{log_output}{Write log output? \emph{logical}}
+\item{log_output}{\emph{logical} Write log output?}
 
-\item{wait}{If \emph{TRUE} R starts the individual simulations runs sequentially,
+\item{wait}{\emph{logical} If \emph{TRUE} R starts the individual simulations runs sequentially,
 to say, it waits until a run finishes before starting the next. If \emph{FALSE}
-all runs will be started the same time. \emph{logical}}
+all runs will be started the same time.}
 }
 \value{
 

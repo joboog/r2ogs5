@@ -6,12 +6,12 @@
 \usage{
 input_add_ic_bloc(
   x = list(),
-  ic_name = character(NULL),
+  ic_name = NULL,
   COMP_NAME = NULL,
-  DIS_TYPE = character(NULL),
-  GEO_TYPE = character(NULL),
-  PCS_TYPE = character(NULL),
-  PRIMARY_VARIABLE = character(NULL)
+  DIS_TYPE = NULL,
+  GEO_TYPE = NULL,
+  PCS_TYPE = NULL,
+  PRIMARY_VARIABLE = NULL
 )
 }
 \arguments{
@@ -35,7 +35,9 @@ Updated \emph{ogs5} object.
 \description{
 Adds a sub-bloc to \strong{ic} bloc of \emph{ogs5} for defining an initial
 condition (IC). For additional documentatoin of the input parameters see
-the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/ic.html}{ogs5 keyword docs}.
+the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/ic.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
 ogs5_obj <- input_add_ic_bloc(ogs5_obj, ic_name = "INITIAL_CONDITION1",

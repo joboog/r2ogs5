@@ -9,7 +9,7 @@ ens_add_ogs5(x, ogs5_obj)
 \arguments{
 \item{x}{Instanc of class \emph{ens}.}
 
-\item{ogs5_obj}{Instanc of class \emph{ogs5} to be added to \emph{x}.}
+\item{ogs5_obj}{Instance of class \emph{ogs5} to be added to \emph{x}.}
 }
 \value{
 Extended instance \emph{x}.

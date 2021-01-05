@@ -19,12 +19,12 @@ input_add_mcp_bloc(
   ISOTHERM = NULL,
   MAXIMUM_AQUEOUS_SOLUBILITY = NULL,
   MINERAL_DENSITY = NULL,
-  MOBILE = character(NULL),
+  MOBILE = NULL,
   MOLAR_DENSITY = NULL,
   MOLAR_VOLUME = NULL,
   MOLAR_WEIGHT = NULL,
   MOL_MASS = NULL,
-  NAME = character(NULL),
+  NAME = NULL,
   OutputMassOfComponentInModel = NULL,
   TRANSPORT_PHASE = NULL,
   VALENCE = NULL,
@@ -34,7 +34,7 @@ input_add_mcp_bloc(
 \arguments{
 \item{x}{\emph{ogs5} simulation object.}
 
-\item{NAME}{Component name. \emph{character}}
+\item{NAME}{Component name.}
 
 \item{VOLUME_DIFFUSION}{}
 }
@@ -45,6 +45,8 @@ Updated \emph{ogs5} object.
 Adds a sub-bloc to \strong{mcp} bloc of \emph{ogs5} for defining component
 properties. For additional documentatoin of the input parameters
 see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mcp.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
 ogs5_obj <- input_add_mcp_bloc(ogs5_obj, NAME = "C(4)",

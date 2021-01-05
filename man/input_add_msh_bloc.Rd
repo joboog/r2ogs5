@@ -35,8 +35,11 @@ input_add_msh_bloc(
 }
 \description{
 Adds a sub-bloc to \strong{msh} bloc of \emph{ogs5} for defining meshes.
+Only simple geometric meshes such as lines,
+rectangles and cubes can be created here. For more complicated geometries
+please refer to third party software such as \strong{gmsh}.
 For additional documentatoin of the input parameters see
-the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html}{ogs5 keyword docs}
+the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html}{ogs5 keyword docs}.
 }
 \examples{
 mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)

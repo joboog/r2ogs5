@@ -1,9 +1,12 @@
 
 #' input_add_msh_bloc
 #' @description Adds a sub-bloc to **msh** bloc of *ogs5* for defining meshes.
+#'   Only simple geometric meshes such as lines,
+#'   rectangles and cubes can be created here. For more complicated geometries
+#'   please refer to third party software such as **gmsh**.
 #'   For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
-#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html)
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html).
 #' @param x Simulation object of class *ogs5*.
 #' @param msh_name Name of the mesh. *character*
 #' @param AREA
@@ -37,7 +40,7 @@ input_add_msh_bloc <-
     GEO_NAME = NULL,
     GEO_TYPE = NULL,
     LAYER = NULL,
-    NODES =tibble::tibble(), # x y z
+    NODES = tibble::tibble(), # x y z
     PCS_TYPE = "NO_PCS"
   ){
 

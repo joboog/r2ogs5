@@ -6,8 +6,8 @@
 \usage{
 input_add_krc_bloc(
   x = list(),
-  krc_name = character(NULL),
-  mkey = character(NULL),
+  krc_name = NULL,
+  mkey = NULL,
   ACTIVITY_MODEL = NULL,
   ALLOW_REACTIONS = NULL,
   BACTERIACAPACITY = NULL,
@@ -81,10 +81,10 @@ input_add_krc_bloc(
 \arguments{
 \item{x}{\emph{ogs5} simulation object.}
 
-\item{krc_name}{Name of the \strong{krc} sub bloc. \emph{character}}
+\item{krc_name}{Name of the \strong{krc} sub bloc.}
 
 \item{mkey}{Main keyword of the \emph{ogs5_krc_bloc}: c("BLOB_PROPERTIES",
-"KINREACTIONDATA", "MICROBE_PROPERTIES", "REACTION"). \emph{character}}
+"KINREACTIONDATA", "MICROBE_PROPERTIES", "REACTION").}
 
 \item{drmc_PARAMETERS}{}
 }
@@ -94,5 +94,7 @@ Updated \emph{ogs5} object.
 \description{
 Adds a sub-bloc to \strong{krc} bloc of \emph{ogs5} for defining kinetic
 reactions. For additional documentatoin of the input parameters see
-the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/krc.html}{ogs5 keyword docs}.
+the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/krc.html}{ogs5 keyword docs}
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
+Most arguments have to be of class \emph{character}.
 }

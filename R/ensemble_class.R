@@ -8,10 +8,10 @@
 #'   simulations. Class *ens* provides wrapper functions to define, execute and
 #'   process multiple simulations.
 #' @param base_sim Instance of class *ogs5* to be used as basis. *ogs5*
-#' @param parameter_tbl Table defining the parameters and values for ensemble
-#'   runs. *tibble()*, *tbl()*, *data.frame()*
-#' @param name Name for the ensemble.
-#' @param path Path where to place all individual ensemble runs.
+#' @param parameter_tbl *tibble()*, *tbl()* or *data.frame()* defining the parameters and values for ensemble
+#'   runs.
+#' @param name *character* Name for the ensemble.
+#' @param path *character* Path where to place all individual ensemble runs.
 #'
 #' @return Instance of class *ens*
 #' @export
@@ -21,7 +21,7 @@
 #'               tracer_input_concentration = seq(0.1, 1, length.out = 5)) %>%
 #'               tibble::as_tibble()
 #'
-#' ens1 = create_ens(base_sim = ex1, parameter_tbl = para_df,
+#' ens1 <- create_ens(base_sim = ex1, parameter_tbl = para_df,
 #'                   name = "tracersim", path = "path/to/my/ens")
 create_ens <- function(
     base_sim = list(),

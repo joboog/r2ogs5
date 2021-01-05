@@ -9,7 +9,7 @@ input_add_file_as_additional_bloc(x = list(), filepath = character(NULL))
 \arguments{
 \item{x}{Simulation object of class \emph{ogs5}.}
 
-\item{filepath}{Path to file to be added. \emph{character}}
+\item{filepath}{\emph{character} Path to file to be added.}
 }
 \value{
 Updated \emph{ogs5} object.

@@ -10,11 +10,14 @@
 #' @description Adds a sub-bloc to **krc** bloc of *ogs5* for defining kinetic
 #'   reactions. For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
-#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/krc.html).
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/krc.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   Most arguments have to be of class *character*.
 #' @param x *ogs5* simulation object.
-#' @param krc_name Name of the **krc** sub bloc. *character*
+#' @param krc_name Name of the **krc** sub bloc.
 #' @param mkey Main keyword of the *ogs5_krc_bloc*: c("BLOB_PROPERTIES",
-#' "KINREACTIONDATA", "MICROBE_PROPERTIES", "REACTION"). *character*
+#' "KINREACTIONDATA", "MICROBE_PROPERTIES", "REACTION").
 #' @param ACTIVITY_MODEL
 #' @param ALLOW_REACTIONS
 #' @param BACTERIACAPACITY
@@ -90,8 +93,8 @@ input_add_krc_bloc <-
 
   function(
     x = list(),
-    krc_name = character(NULL),
-    mkey = character(NULL),
+    krc_name = NULL,
+    mkey = NULL,
     #mkey:
       #BLOB_PROPERTIES
       #KINREACTIONDATA

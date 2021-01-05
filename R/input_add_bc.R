@@ -4,9 +4,13 @@
 
 #' input_add_bc_bloc
 #' @description Adds a sub-bloc to **bc** bloc of *ogs5* for defining boundary
-#'   conditions. For additional documentatoin of the input parameters see
+#'   conditions.
+#'   For additional documentatoin of the input parameters see
 #'   the [ogs5 keyword docs](
-#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/bc.html).
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/bc.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param bc_name Name of the boundary condition.
 #' @param COMP_NAME Component name.
@@ -39,22 +43,22 @@ input_add_bc_bloc <-
 
    function(
       x = list(),
-      bc_name = character(NULL),
+      bc_name = NULL,
 
       COMP_NAME = NULL,
       CONSTRAINED = NULL,
       COPY_VALUE = NULL,
-      DIS_TYPE = character(NULL),
+      DIS_TYPE = NULL,
       DIS_TYPE_CONDITION = NULL,
       EPSILON = NULL,
       EXCAVATION = NULL,
       FCT_TYPE = NULL,
-      GEO_TYPE = character(NULL),
+      GEO_TYPE = NULL,
       MSH_TYPE = NULL,
       NO_DIPS_INCREMENT = NULL,
-      PCS_TYPE = character(NULL),
+      PCS_TYPE = NULL,
       PRESSURE_AS_HEAD = NULL,
-      PRIMARY_VARIABLE = character(NULL),
+      PRIMARY_VARIABLE = NULL,
       TIME_CONTROLLED_ACTIVE = NULL,
       TIM_TYPE = NULL
 

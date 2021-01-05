@@ -18,6 +18,7 @@ Updated \emph{ogs5} object.
 Adds a sub-bloc to \strong{gli} bloc of \emph{ogs5} for defining point
 geometries. For additional documentatoin of the input parameters see
 the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gli/h_points}{ogs5 keyword docs}.
+or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
 }
 \examples{
 ex1 <- input_add_gli_points(x = ex1,
