@@ -1,6 +1,3 @@
-# functions to add gli geometric entities
-# input: ogs5-obj
-# output: updated ogs5-obj
 
 input_add_gli_points <-
 

@@ -1,13 +1,3 @@
-# support functions to create ens object ----------------------------------
-
-
-# ens_create_from_base_sim <- function(x, ...){
-#
-# create new model derived from attributes(x)$base_sim
-# update parameter (...) values
-#
-# }
-
 ens_add_ogs5 <- function(x, ogs5_obj){
 
     # this function adds an ogs5 object to an existing ensemble obj
@@ -42,10 +32,11 @@ ens_add_ogs5 <- function(x, ogs5_obj){
     return(x)
 }
 
+
 ens_write_inputfiles <- function(x, type = "all"){
 
     # wrapper for ogs5_write_inputfiles(ogs5_obj)
-    # x: ...ogs5 ensemble
+    # x: ...
     # type: ... type of inputfile
 
 
@@ -84,8 +75,8 @@ ens_get_output <- function(x, type = "all", ...){
 
         x[[i]] <-
             switch(type,
-                   all = ogs5_get_output_all(x[[i]]),
-                   specific = ogs5_get_output_specific(x[[i]],
+                   "all" = ogs5_get_output_all(x[[i]]),
+                   "specific" = ogs5_get_output_specific(x[[i]],
                                                        outbloc_names,
                                                        out_filepath))
     }

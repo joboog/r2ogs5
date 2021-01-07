@@ -581,19 +581,46 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 }
 
 
-input_add_blocs_from_file <- function(ogs5_obj,
+#' Add ogs5 blocs directly from existing inputfile
+#'
+#' @description Function to add input files directly from ogs5 input files
+#' to an instance of class  *ogs5*.
+#' @param ogs5_obj Instance of class *ogs5*. If set to **NULL**, a new ogs5
+#' instance is created with filename and file_dir as simulation name and path
+#' respectively.
+#' @param sim_basename (*character*) The simulation name, usually the filename of
+#' the input files without extension.
+#' @param filename (*character*) Can be the name of the file (with extension) to be
+#' read in, a list of file names or "all".
+#' @param file_dir (*character*) A path to the directory where the inputfiles are.
+#' @param overwrite (*logical*) If set to TRUE, existing blocs of the same type
+#' (input file extension) will be overwritten. In order to add several blocs of
+#' the same type, the option needs to be set to FALSE.
+#'
+#' @details If [filename] is set to "all", the whole folder specified in
+#'  [file_dir] will be searched for possible input files excluding [*.tec],
+#'  [*.vtu] [*.vtk] and [*.pvd] files. However, the presence of files that are
+#'  not ogs5 input files such as for example [*.log]-files might have the
+#'  function crashing. For [filenames] that are different from [sim_basename], blocs of
+#'  the class [ogs5_additional] are added.
+#'
+#' @return returns an instance of *ogs5* with the new input blocs added
+#' as instances of their respective class.
+#'
+#' @export
+#'
+#' @examples
+#' ex1 <- input_add_blocs_from_file(ogs5_obj = NULL,
+#'                        sim_basename = "decal",
+#'                        filename = "decal.mfp",
+#'                        file_dir = "examples/benchmarks/ConcreteCrack",
+#'                        overwrite = FALSE)
+input_add_blocs_from_file <- function(ogs5_obj = NULL,
                                       sim_basename,
                                       filename,
                                       file_dir = "",
                                       overwrite = FALSE) {
 
-    # function that calls upon ogs5_assign_classes_to_ogslist which in turn
-    # calls ogs5_read_inputfile_tolist to convert inputfiles into ogs5 objects.
-    # filename can be a list of filenames (name.extension), a single filename or
-    # 'all'
-
-    # ! if existing ogs5 object is handed in,
-    # the specified input bloc will be overwritten !
 
     if (!dir.exists(file_dir)) {
         stop(paste0("Cannot find directory \"", file_dir, "\""))

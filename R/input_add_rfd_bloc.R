@@ -1,6 +1,3 @@
-# function to add rfd-bloc to ogs5-obj
-# input: ogs5-obj
-# output: updated ogs5-obj
 
 input_add_rfd_bloc <-
 

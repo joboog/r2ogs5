@@ -1,7 +1,3 @@
-# this file contains code to execute simulation runs on different OS
-
-
-# run simulation ----------------------------------------------------------
 
 ogs5_run <- function(ogs5_obj = list(),
                      ogs_exe = NULL, run_path = NULL,
@@ -57,9 +53,6 @@ ogs5_run <- function(ogs5_obj = list(),
 
 
   }
-
-
-
 
 
   # run ogs5 sim
