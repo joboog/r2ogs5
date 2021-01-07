@@ -25,7 +25,6 @@ ogs5_write_inputfiles <-
       dir.create(folderpath, recursive = TRUE)
     }
 
-
     if (type == "all") {
 
       # loop through ogs5-obj and print all sublists
@@ -114,6 +113,35 @@ ogs5_list_output <- function(ogs5_sublist, ...) {
 #     }
 #     cat("#STOP", "\n")
 #   }
+
+
+# method for ogs5_ddc sublist ---------------------------------------------
+ogs5_list_output.ogs5_ddc <-
+
+  function(ogs5_sublist) {
+    stopifnot(class(ogs5_sublist) == "ogs5_ddc")
+
+    for (i in seq_len(ogs5_sublist %>% length())){
+
+      mkey <- names(ogs5_sublist)[i] %>% stringr::str_remove(" \\d")
+      mkey_nr <- names(ogs5_sublist)[i] %>% stringr::str_extract("\\d+")
+
+      skey_str <- sapply(
+        names(ogs5_sublist[[i]]),
+        function(skey_name) {
+            skey <- skey_name %>% stringr::str_remove(" \\d+")
+            skey_nr <- skey_name %>% stringr::str_extract("\\d+")
+
+            paste0("\n", "$", skey, " ", skey_nr, "\n ",
+                   paste(ogs5_sublist[[i]][[skey_name]], collapse="\n")
+            )
+        }
+      )
+      cat(paste0("#", mkey, " ", mkey_nr), skey_str, "\n\n")
+    }
+
+    cat("#STOP\n")
+    }
 
 
 ## method for ogs5_pcs sublist ------------------------------------------
@@ -486,8 +514,6 @@ ogs5_print_msh_mkey_bloc <-
     for (geometry in names(mkey_bloc$ELEMENTS)) {
 
       df <- mkey_bloc$ELEMENTS[[paste0(geometry)]] %>%
-        #tibble::rownames_to_column() %>%
-        #dplyr::mutate(rowname = as.numeric(rowname) - 1) %>%
         tidyr::replace_na(list(node3 = "", node4 = "", node5 = "",
                                node6 = "", node7 = "", node8 = "")) %>%
         as.data.frame()

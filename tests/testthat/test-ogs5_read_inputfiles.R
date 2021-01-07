@@ -15,6 +15,11 @@ test_that("respective classes are assigned", {
     expect_silent(valid_ogs5_cct(cct_read$input$cct))
     expect_silent(valid_ogs5_cct_bloc(
         cct_read$input$cct$COMMUNICATION_TABLE1
+	))
+    # ddc classes
+    expect_silent(valid_ogs5_ddc(ddc_read$input$ddc))
+    expect_silent(valid_ogs5_ddc_bloc(
+        ddc_read$input$ddc$`DOMAIN 0`
     ))
     # fct classes
     expect_silent(valid_ogs5_fct(fct_read$input$fct))
@@ -142,3 +147,8 @@ read_write_test(fct_read, bm_dir = fct_dir, bm_name = "trans_bd_homo")
 context("Read ConcreteCrack benchmark input files")
 read_write_test(cct_read, bm_dir = cct_dir, bm_name = "decal")
 
+
+# McWorther read input tests ----------------------------------------------
+
+context("Read McWhorter benchmark input files")
+read_write_test(ddc_read, bm_dir = ddc_dir, bm_name = "mcwt")
