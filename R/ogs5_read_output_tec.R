@@ -1,14 +1,16 @@
+# Functions to read and process outputted *.tec files
 
+#' ogs5_read_tecplot
+#' @description Wrapper to read ***.tec** file. Calls
+#' [ogs5_read_tecplot_domain()], [ogs5_read_tecplot_polyline()],
+#' [ogs5_read_tecplot_point()].
+#' @param filename *character* Path to ***.tec** file.
+#' @param geo_object *character* Associated geometry type: c("domain", "POINT", "POLYLINE",
+#'   "SURFACE").
+#' @return Dataframe.
+#' @export
 ogs5_read_tecplot <- function(filename = character(),
                               geo_object = character()){
-
-  # content:
-  # function to read *.tec files by calling functoin to read *.tec depending
-  # on the corresponding geometry
-  # filename: path+name of file
-  # geo_object: associated geometric domain
-  #
-  # returns:
 
   if (geo_object=="domain"){
     df=ogs5_read_tecplot_domain(filename)
@@ -28,16 +30,11 @@ ogs5_read_tecplot <- function(filename = character(),
   return(df)
 }
 
-# Read *.tec file for whole domain ----------------------------------------
-
 
 #' ogs5_read_tecplot_domain
-#'
-#' @param filepath path to filename
-#'
-#' @return
-#'
-#' @examples
+#' @description Read data from ***.tec** file of entire model domain.
+#' @param filename *character* Path to ***.tec** file.
+#' @return Dataframe.
 ogs5_read_tecplot_domain<-function(filepath){
 
   # content:
@@ -116,15 +113,10 @@ ogs5_read_tecplot_domain<-function(filepath){
 }
 
 
-# Read *.tec file for POLYLINE ----------------------------------------------
-
 #' ogs5_read_tecplot_polyline
-#'
-#' @param filepath path to the filename
-#'
-#' @return
-#'
-#' @examples
+#' @description Read data from ***.tec** file of a polyline.
+#' @param filename *character* Path to ***.tec** file.
+#' @return Dataframe.
 ogs5_read_tecplot_polyline <- function(filepath) {
 
   # content:
@@ -196,13 +188,11 @@ ogs5_read_tecplot_polyline <- function(filepath) {
   return(df)
 }
 
+
 #' ogs5_read_tecplot_point
-#'
-#' @param filepath path to the filename
-#'
-#' @return
-#'
-#' @examples
+#' @description Read data from ***.tec** file of a point.
+#' @param filename *character* Path to ***.tec** file.
+#' @return Dataframe.
 ogs5_read_tecplot_point <- function(filepath){
 
   # content:
@@ -251,33 +241,20 @@ ogs5_read_tecplot_point <- function(filepath){
   return(df)
 }
 
+
 #' ogs5_read_many_tecplots
-#'
-#' Function to read in any [*.tec]-files inside a directory. Calls on the
-#' functions \code{ogs5_read_tecplot_point}, \code{ogs5_read_tecplot_polyline},
-#' \code{ogs5_read_tecplot_domain} depending on the specified *geo_object* type.
-#'
-#' @param filepath (*character*) path to [*.tec]-files.
-#' @param geo_object (*character*) Name for the type of geometric ogs object
-#' the tec file is associated with. Can be any of "POINT", "POLYLINE", "
-#' SURFACE", "domain".
-#'
-#' @return *Data.frame* with timeseries of the simulation reasults.
+#' @description Reads many *.tec files from one filepath. Wrapper for
+#' [ogs5_read_tecplot()].
+#' @param filepath *character* Path to ***.tec** files.
+#' @param geo_object *character* Associated geometry type: c("domain", "POINT", "POLYLINE",
+#'   "SURFACE").
+#' @return Dataframe.
 #' @export
-#'
 #' @examples
+#' tec_df <- ogs5_read_many_tecplots(filepath = "examples/tmp/ex1",
+#'                                   geo_object = "domain")
 ogs5_read_many_tecplots <- function(filepath = character(),
                                     geo_object = character()){
-
-  # content:
-  # reads many *.tec files from one filepath
-  # you hae to specify the file path and the type of tec file
-  # types are: POINT, POLYLINE, SURFACE, DOMAIN
-  # returns: dataframe with contents of *.tec files
-
-  # filepath ... path of tec files
-  # geo_object... type of geometric ogs object the tec file is associated with
-  #               POINT, POLYLINE, SURFACE, domain
 
   # check filepath
   if (!(dir.exists(filepath))){
@@ -314,4 +291,3 @@ ogs5_read_many_tecplots <- function(filepath = character(),
   )
   return(df)
 }
-

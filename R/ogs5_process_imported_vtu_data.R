@@ -1,23 +1,21 @@
-# function to process and extract data at specific locations
-# from list that have been imported from *.vtu files
 
-
-# extract data from lists -------------------------------------------------
-
+#' ogs5_read_data_at_nodes
+#' @description Extract data from *lists* read from ***.vtu** files
+#'  at given node locations.
+#' @param ogs5 *ogs5* simulation object.
+#' @param outbloc_name *character* Name of the corresponding *ogs5* **out** sub-bloc where
+#' the output was defined.
+#' @param node_coords *Tibble* of coordinates (x,y,z) of nodes where data has
+#'   to be extracted.
+#' @return *Tibble*
+#' @export
+#' @examples
+#' foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
+#'            node_coords = tibble::tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
 ogs5_read_data_at_nodes <-
 
   function(ogs5 = list(), outbloc_name = character(),
            node_coords = NULL){
-
-    # content
-    # extracts data from list read from *.vtu files
-    # data is extracted at given node locations
-    #
-    # ogs5: ogs5-object
-    # outbloc_name: name of bloc at ogs5$output$out that contains the lists
-    # node_coords: coordinates of nodes where data is to be extracted
-    #
-    # returns a tibble
 
     # validate
     valid_ogs5(ogs5)

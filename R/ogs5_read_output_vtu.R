@@ -9,6 +9,14 @@ dsa <- reticulate::import("vtk.numpy_interface.dataset_adapter")
 
 # read multiple vtu files -------------------------------------------------
 
+#' ogs_read_vtu_files_point_data
+#' @description Read specific point data arrays from a series of ***.vtu** files
+#'    in a specific directory. The series is specified by the **PCS_TYPE**
+#'    given in the corresponding **out** sub bloc (ogs5_obj$input$out$...).
+#' @param filepath *character* Path to directory of ***.vtu* files.
+#' @param pcs_type *character* Name of the process defined in the **out** sub bloc.
+#' @param variable_name *character* Name of the array in the ***.vtu** files, optional.
+#' @return *list*
 ogs_read_vtu_files_point_data <- function(filepath,
                                           pcs_type,
                                           variable_name = NULL){
@@ -69,7 +77,13 @@ ogs_read_vtu_files_point_data <- function(filepath,
 
 # read arrays from single *.vtu file --------------------------------------
 
-# read specific array from single file
+#' ogs_read_vtu_file_point_data_array
+#' @description Read specific point data array from single ***.vtu** file.
+#' @param filename *character* Path to ***.vtu** file.
+#' @param array_name *charcter* Name of the array in the ***.vtu** file to be read.
+#'
+#'
+#' @return *numeric* vector.
 ogs_read_vtu_file_point_data_array <-
     function(filename = character(),
              array_name = character()){
@@ -96,7 +110,11 @@ ogs_read_vtu_file_point_data_array <-
     return(src_data_ll)
 }
 
-# read all arrays from single file
+
+#' ogs_read_vtu_file_point_data_all
+#' @description Read all point data array from a ***.vtu** output file.
+#' @param filename *charcter* Path to ***.vtu** file.
+#' @return *list*
 ogs_read_vtu_file_point_data_all <-
     function(filename){
 
@@ -123,7 +141,8 @@ ogs_read_vtu_file_point_data_all <-
 
         timestep_time <- ogs5_extract_time_from_vtu(filename)
 
-        src_data_list <- append(src_data_list,c(timestep_time[1], timestep_time[2]))
+        src_data_list <- append(src_data_list,c(timestep_time[1],
+                                                timestep_time[2]))
         names(src_data_list) <- c(src_data_keys, "time_step", "time")
         #src_data_tbl <- tibble::as_tibble(src_data_list)
         return(src_data_list)
@@ -160,15 +179,11 @@ ogs_read_vtu_geometry <- function(filename = character()){
 
 # read time from *.vtu ----------------------------------------------------
 
+#' ogs5_extract_time_from_vtu
+#' @description Extract timesteps and time from ***.vtu** file.
+#' @param filename *charcter* Path to file.
+#' @return *numeric* vector.
 ogs5_extract_time_from_vtu <- function(filename){
-
-  # content:
-  # extracts timestep and time from *.vtu file
-  #
-  # filename: name of *.vtu file
-  #
-  # returns numeric vector (timestep, time)
-  #
 
   # check filepath
   if (!(file.exists(filename))){

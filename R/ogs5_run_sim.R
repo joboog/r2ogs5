@@ -1,4 +1,22 @@
+# this file contains code to execute simulation runs on different OS
 
+#' ogs5_run
+#' @description Run **ogs5** simulation via call to OS.
+#' @param ogs5_obj *ogs5* simulation object.
+#' @param ogs_exe *character* Path to **ogs5** executable.
+#' @param run_path *character* Path to directory where the simulation should be executed.
+#'   Default: use 'attributes(ogs5_obj)$sim_path'
+#' @param log_output *logical* Should a log file be written?
+#' @param log_path *character* Path of directory to write log file.
+#' @param use_mpi *logical* Execute parallelized simulation using MPI.
+#' @param number_of_cores *integer* Use number of computing cores if 'use_mpi=TRUE'.
+#' @param wait *logical* if 'TRUE', Freeze R-session until simulation is finished.
+#' @export
+#' @examples
+#'  ogs5_run(ogs5_obj = sim1, ogs_exe = "inst/ogs/ogs_5.76",
+#'           run_path = NULL,
+#'           log_output = TRUE,
+#'           log_path = "examples/tmp/ex1/log")
 ogs5_run <- function(ogs5_obj = list(),
                      ogs_exe = NULL, run_path = NULL,
                      log_output = TRUE,
@@ -34,7 +52,6 @@ ogs5_run <- function(ogs5_obj = list(),
     logfile <- paste0(" > ", log_path, "/", attributes(ogs5_obj)$sim_name,".log")
   } else logfile <- ""
 
-
   # check mpi settings
   if (!is.logical(use_mpi)) {
     stop("use_mpi must be logical")
@@ -49,11 +66,7 @@ ogs5_run <- function(ogs5_obj = list(),
       ogs_exe <- paste0("mpirun --oversubscribe -np ",
                         number_of_cores, " ", ogs_exe)
     }
-
-
-
   }
-
 
   # run ogs5 sim
   command_to_os <- paste0(ogs_exe, " ",

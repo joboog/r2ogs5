@@ -4,14 +4,14 @@
 \alias{ogs5_read_tecplot_domain}
 \title{ogs5_read_tecplot_domain}
 \usage{
-ogs5_read_tecplot_domain(filepath)
+ogs5_read_tecplot_domain(filename)
 }
 \arguments{
-\item{filepath}{path to filename}
+\item{filename}{Path to *\strong{.tec} file. \emph{character}}
 }
 \value{
-
+Dataframe.
 }
 \description{
-ogs5_read_tecplot_domain
+Read data from *\strong{.tec} file of entire model domain.
 }

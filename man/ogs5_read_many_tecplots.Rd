@@ -20,4 +20,19 @@ SURFACE", "domain".}
 Function to read in any \link{*.tec}-files inside a directory. Calls on the
 functions \code{ogs5_read_tecplot_point}, \code{ogs5_read_tecplot_polyline},
 \code{ogs5_read_tecplot_domain} depending on the specified \emph{geo_object} type.
+\item{filepath}{Path to *\strong{.tec} files. \emph{character}}
+
+\item{geo_object}{Associated geometry type: c("domain", "POINT", "POLYLINE",
+"SURFACE").}
+}
+\value{
+Dataframe.
+}
+\description{
+Reads many *.tec files from one filepath. Wrapper for
+\code{\link[=ogs5_read_tecplot]{ogs5_read_tecplot()}}.
+}
+\examples{
+tec_df <- ogs5_read_many_tecplots(filepath = "examples/tmp/ex1",
+                                  geo_object = "domain")
 }

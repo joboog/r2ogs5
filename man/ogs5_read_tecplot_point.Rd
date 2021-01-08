@@ -4,14 +4,14 @@
 \alias{ogs5_read_tecplot_point}
 \title{ogs5_read_tecplot_point}
 \usage{
-ogs5_read_tecplot_point(filepath)
+ogs5_read_tecplot_point(filename = character())
 }
 \arguments{
-\item{filepath}{path to the filename}
+\item{filename}{Path to *\strong{.tec} file. \emph{character}}
 }
 \value{
-
+Dataframe.
 }
 \description{
-ogs5_read_tecplot_point
+Read data from *\strong{.tec} file of a point.
 }

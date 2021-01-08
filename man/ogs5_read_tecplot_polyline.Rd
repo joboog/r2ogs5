@@ -4,14 +4,14 @@
 \alias{ogs5_read_tecplot_polyline}
 \title{ogs5_read_tecplot_polyline}
 \usage{
-ogs5_read_tecplot_polyline(filepath)
+ogs5_read_tecplot_polyline(filename)
 }
 \arguments{
-\item{filepath}{path to the filename}
+\item{filename}{Path to *\strong{.tec} file. \emph{character}}
 }
 \value{
-
+Dataframe.
 }
 \description{
-ogs5_read_tecplot_polyline
+Read data from *\strong{.tec} file of a polyline.
 }
