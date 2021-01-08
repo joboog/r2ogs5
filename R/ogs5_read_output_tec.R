@@ -4,19 +4,19 @@
 #' @description Wrapper to read ***.tec** file. Calls
 #' [ogs5_read_tecplot_domain()], [ogs5_read_tecplot_polyline()],
 #' [ogs5_read_tecplot_point()].
-#' @param filename *character* Path to ***.tec** file.
+#' @param filepath *character* Path to ***.tec** file.
 #' @param geo_object *character* Associated geometry type: c("domain", "POINT", "POLYLINE",
 #'   "SURFACE").
 #' @return Dataframe.
 #' @export
-ogs5_read_tecplot <- function(filename = character(),
+ogs5_read_tecplot <- function(filepath = character(),
                               geo_object = character()){
 
   if (geo_object=="domain"){
-    df=ogs5_read_tecplot_domain(filename)
+    df=ogs5_read_tecplot_domain(filepath)
   }
   if (geo_object=="POINT"){
-    df=ogs5_read_tecplot_point(filename)
+    df=ogs5_read_tecplot_point(filepath)
   }
   if (geo_object=="POLYLINE"){
     stop("Function to read output on POLYLINE not implemented yet.",
@@ -33,20 +33,20 @@ ogs5_read_tecplot <- function(filename = character(),
 
 #' ogs5_read_tecplot_domain
 #' @description Read data from ***.tec** file of entire model domain.
-#' @param filename *character* Path to ***.tec** file.
+#' @param filepath *character* Path to ***.tec** file.
 #' @return Dataframe.
 ogs5_read_tecplot_domain<-function(filepath){
 
   # content:
   # this function reads an individual tecplot file (*.tec)
   # of $GEOMETRY_TYPE DOMAINfrom ogs5 simulations and returns a dataframe
-  # filename: path + name of the *.tec file
+  # filepath: path + name of the *.tec file
   # or url of raw file on github/gitlab repository
 
     # check filepath
   if (file.exists(filepath) | (RCurl::url.exists(filepath))){
   } else if (!(file.exists(filepath)) & (!(RCurl::url.exists(filepath)))){
-    stop("'filename' does not exist.", call = FALSE)
+    stop("'filepath' does not exist.", call = FALSE)
   }
   if (stringr::str_detect(filepath, "domain")==FALSE){
     return(NULL)
@@ -115,18 +115,18 @@ ogs5_read_tecplot_domain<-function(filepath){
 
 #' ogs5_read_tecplot_polyline
 #' @description Read data from ***.tec** file of a polyline.
-#' @param filename *character* Path to ***.tec** file.
+#' @param filepath *character* Path to ***.tec** file.
 #' @return Dataframe.
 ogs5_read_tecplot_polyline <- function(filepath) {
 
   # content:
   # this function reads an individual tecplot file (*.tec)
   # of $GEOMETRY_TYPE POLYLINE from ogs5 simulations and returns a dataframe
-  # filename: path + name of the *.tec file
+  # filepath: path + name of the *.tec file
 
   # check filepath
   if (!(file.exists(filepath))) {
-    stop("'filename' does not exist.", call = FALSE)
+    stop("'filepath' does not exist.", call = FALSE)
   }
   if (stringr::str_detect(filepath, "polyline|ply|LINE") == FALSE) {
     return(NULL)
@@ -191,18 +191,18 @@ ogs5_read_tecplot_polyline <- function(filepath) {
 
 #' ogs5_read_tecplot_point
 #' @description Read data from ***.tec** file of a point.
-#' @param filename *character* Path to ***.tec** file.
+#' @param filepath *character* Path to ***.tec** file.
 #' @return Dataframe.
 ogs5_read_tecplot_point <- function(filepath){
 
   # content:
   # reads tecplot file from point source with any kind of components
-  # filename: path+name of *.tec file
+  # filepath: path+name of *.tec file
   # or url of raw file on github/gitlab repository
 
   if (file.exists(filepath) | (RCurl::url.exists(filepath))){
   } else if (!(file.exists(filepath)) & (!(RCurl::url.exists(filepath)))){
-    stop("'filename' does not exist.", call = FALSE)
+    stop("'filepath' does not exist.", call = FALSE)
   }
   if (!stringr::str_detect(filepath, "POINT|point")){
     return(NULL)
@@ -281,11 +281,11 @@ ogs5_read_many_tecplots <- function(filepath = character(),
         pattern=paste0(tolower(geo_object), "|", geo_object)
       )
       ],
-    function(filename) {
+    function(filepath) {
 
-      df <- ogs5_read_tecplot(filename = filename,
+      df <- ogs5_read_tecplot(filepath = filepath,
                               geo_object = geo_object)
-      df$filename=filename
+      df$filepath=filepath
       return(df)
     }
   )
