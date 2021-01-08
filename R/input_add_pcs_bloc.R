@@ -1,9 +1,60 @@
 
+#' input_add_pcs_bloc
+#' @description Adds a sub-bloc to **pcs** bloc of *ogs5* for defining processes
+#'   For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pcs.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   Most arguments have to be of class *character*.
+#' @param x Simulation object of class *ogs5*.
+#' @param pcs_name Name of the **pcs** sub-bloc.
+#' @param APP_TYPE
+#' @param BOUNDARY_CONDITION_OUTPUT
+#' @param COUNT
+#' @param CPL_TYPE
+#' @param DEACTIVATED_SUBDOMAIN
+#' @param DISSOLVED_CO2_INGAS_PCS_NAME
+#' @param DISSOLVED_CO2_PCS_NAME
+#' @param ELEMENT_MATRIX_OUTPUT
+#' @param GEO_TYPE
+#' @param MEDIUM_TYPE
+#' @param MEMORY_TYPE
+#' @param MSH_TYPE
+#' @param NEGLECT_H_INI_EFFECT
+#' @param NUM_TYPE
+#' @param OutputMassOfGasInModel
+#' @param PCS_TYPE
+#' @param PHASE_TRANSITION
+#' @param PRIMARY_VARIABLE
+#' @param PROCESSED_BC
+#' @param RELOAD
+#' @param SATURATION_SWITCH
+#' @param SAVE_ECLIPSE_DATA_FILES
+#' @param SIMULATOR
+#' @param SIMULATOR_MODEL_PATH
+#' @param SIMULATOR_PATH
+#' @param SIMULATOR_WELL_PATH
+#' @param ST_RHS
+#' @param TIME_CONTROLLED_EXCAVATION
+#' @param TIM_TYPE
+#' @param UPDATE_INI_STATE
+#' @param USE_PRECALCULATED_FILES
+#' @param USE_VELOCITIES_FOR_TRANSPORT
+#'
+#' @return Updated *ogs5* object.
+#' @export
+#'
+#' @examples
+#' ogs5_obj <- input_add_pcs_bloc(ogs5_obj, pcs_name = "PROCESS1",
+#'                                PCS_TYPE = "GROUNDWATER_FLOW",
+#'                                NUM_TYPE = "NEW",
+#'                                ELEMENT_MATRIX_OUTPUT = "0")
 input_add_pcs_bloc <-
 
          function(
             x = list(),
-            pcs_name = character(NULL),
+            pcs_name = NULL,
 
             APP_TYPE = NULL,
             BOUNDARY_CONDITION_OUTPUT = FALSE,
@@ -20,7 +71,7 @@ input_add_pcs_bloc <-
             NEGLECT_H_INI_EFFECT = NULL,
             NUM_TYPE = NULL,
             OutputMassOfGasInModel = FALSE,
-            PCS_TYPE = character(NULL),
+            PCS_TYPE = NULL,
             PHASE_TRANSITION = NULL,
             PRIMARY_VARIABLE = NULL,
             PROCESSED_BC = NULL,

@@ -1,4 +1,33 @@
 
+#' input_add_msh_bloc
+#' @description Adds a sub-bloc to **msh** bloc of *ogs5* for defining meshes.
+#'   Only simple geometric meshes such as lines,
+#'   rectangles and cubes can be created here. For more complicated geometries
+#'   please refer to third party software such as **gmsh**.
+#'   For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html).
+#' @param x Simulation object of class *ogs5*.
+#' @param msh_name Name of the mesh. *character*
+#' @param AREA
+#' @param AXISYMMETRY
+#' @param CROSS_SECTION
+#' @param ELEMENTS A *tibble* with columns material_id ele_type node1 node2
+#'                 (node3, node4)
+#' @param GEO_NAME
+#' @param GEO_TYPE
+#' @param LAYER
+#' @param NODES A *tibble* with columns x, y, z.
+#' @param PCS_TYPE
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
+#' ogs5_obj <- input_add_msh_bloc(x = ogs5_obj, msh_name = "base_mesh",
+#'                                NODES = mesh_lst[[1]],
+#'                                ELEMENTS = mesh_lst[[2]])
 input_add_msh_bloc <-
 
   function(
@@ -7,11 +36,11 @@ input_add_msh_bloc <-
     AREA = NULL,
     AXISYMMETRY = NULL,
     CROSS_SECTION = NULL,
-    ELEMENTS = tibble::tibble(), # material_id ele_type node1 node2 (node3, node4)
+    ELEMENTS =tibble::tibble(), # material_id ele_type node1 node2 (node3, node4
     GEO_NAME = NULL,
     GEO_TYPE = NULL,
     LAYER = NULL,
-    NODES =tibble::tibble(), # x y z
+    NODES = tibble::tibble(), # x y z
     PCS_TYPE = "NO_PCS"
   ){
 
@@ -29,7 +58,8 @@ input_add_msh_bloc <-
         stop("msh_name does already exist", call. = FALSE)
       }
 
-      # check if basemesh (mesh without PCS definitoin exist, there is only one basemesh allowed)
+      # check if basemesh (mesh without PCS definitoin exist, there is only one
+      # basemesh allowed)
       exist_base_mesh = FALSE
       for (mesh in x$input$msh) {
         if (mesh$PCS_TYPE == "NO_PCS") exist_base_mesh = TRUE

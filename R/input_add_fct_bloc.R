@@ -1,4 +1,29 @@
+# function to add fct-bloc to ogs5-obj
+# input: ogs5-obj
+# output: updated ogs5-obj
 
+#' input_add_fct_bloc
+#' @description Adds a sub-bloc to **fct** bloc of *ogs5* for defining
+#'   functional relationships. For additional documentatiin of the input
+#'   parameters see the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/fct.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** and **data_values** have to be of class
+#'   *character*.
+#' @param x Simulation object of class *ogs5*.
+#' @param data_type 'DATA' or 'MATRIX'. *character*
+#' @param data_values A *tibble* with data values
+#' @param DIMENSION Dimension if *data_type* is 'Matrix'.
+#' @param DIS_TYPE
+#' @param GEO_TYPE Name of a geometry defined in **gml** to relate the function.
+#' @param TYPE
+#'
+#' @return Updated *ogs5* object.
+#' @export
+#'
+#' @examples
+#'
 input_add_fct_bloc <-
 
   function(
@@ -10,7 +35,7 @@ input_add_fct_bloc <-
     DIMENSION = NULL,
     DIS_TYPE = NULL,
     GEO_TYPE = NULL,
-    TYPE = character(NULL)
+    TYPE = NULL
 
   ){
 

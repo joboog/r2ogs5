@@ -1,14 +1,39 @@
 
+#' input_add_ic_bloc
+#' @description Adds a sub-bloc to **ic** bloc of *ogs5* for defining an initial
+#'   condition (IC). For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/ic.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
+#' @param x Simulation object of class *ogs5*.
+#' @param ic_name Name of the initial condition.
+#' @param COMP_NAME Name of the component.
+#' @param DIS_TYPE Distribution type of intial condition.
+#' @param GEO_TYPE Name of a geometry defined in **gml** to be apply the IC on.
+#' @param PCS_TYPE Apply IC for the process defined in **pcs**.
+#' @param PRIMARY_VARIABLE Apply IC for the primary variable defined in **pcs**.
+#'
+#' @return Updated *ogs5* object.
+#' @export
+#'
+#' @examples
+#' ogs5_obj <- input_add_ic_bloc(ogs5_obj, ic_name = "INITIAL_CONDITION1",
+#'  PCS_TYPE = "GROUNDWATER_FLOW",
+#' PRIMARY_VARIABLE = "HEAD",
+#' GEO_TYPE = "DOMAIN",
+#' DIS_TYPE = "CONSTANT 1.0")
 input_add_ic_bloc <-
 
    function(
       x = list(),
-      ic_name = character(NULL),
+      ic_name = NULL,
       COMP_NAME = NULL,
-      DIS_TYPE = character(NULL),
-      GEO_TYPE = character(NULL),
-      PCS_TYPE = character(NULL),
-      PRIMARY_VARIABLE = character(NULL)
+      DIS_TYPE = NULL,
+      GEO_TYPE = NULL,
+      PCS_TYPE = NULL,
+      PRIMARY_VARIABLE = NULL
 
    ){
 

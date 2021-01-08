@@ -1,4 +1,43 @@
 
+#' input_add_mfp_bloc
+#' @description Adds a sub-bloc to **mfp** bloc of *ogs5* for defining fluid
+#'   properties. For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/mfp.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   All arguments except **x** have to be of class *character*.
+#' @param x Simulation object of class *ogs5*.
+#' @param COMPONENTS
+#' @param COMPRESSIBILITY
+#' @param DAT_TYPE
+#' @param DECAY
+#' @param DENSITY
+#' @param DIFFUSION
+#' @param DRHO_DT_UNSATURATED
+#' @param EOS_TYPE
+#' @param FLUID_NAME
+#' @param FLUID_TYPE
+#' @param GRAVITY
+#' @param HEAT_CONDUCTIVITY
+#' @param ISOTHERM
+#' @param JTC
+#' @param NON_GRAVITY
+#' @param PHASE_DIFFUSION
+#' @param SPECIFIC_HEAT_CAPACITY
+#' @param SPECIFIC_HEAT_SOURCE
+#' @param TEMPERATURE
+#' @param VISCOSITY
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' ogs5_obj <- input_add_mfp_bloc(ogs5_obj, FLUID_NAME = "FLUID_PROPERTIES1",
+#'                                FLUID_TYPE = "LIQUID",
+#'                                DENSITY = "1 1000.0",
+#'                                VISCOSITY = "1 1.0e-3",
+#'                                HEAT_CONDUCTIVITY = "1 0.0")
 input_add_mfp_bloc <-
 
    function(
@@ -7,12 +46,12 @@ input_add_mfp_bloc <-
       COMPRESSIBILITY = NULL,
       DAT_TYPE = NULL,
       DECAY = NULL,
-      DENSITY = character(NULL),
+      DENSITY = NULL,
       DIFFUSION = NULL,
       DRHO_DT_UNSATURATED = NULL,
       EOS_TYPE = NULL,
-      FLUID_NAME = character(NULL),
-      FLUID_TYPE = character(NULL),
+      FLUID_NAME = NULL,
+      FLUID_TYPE = NULL,
       GRAVITY = NULL,
       HEAT_CONDUCTIVITY = NULL,
       ISOTHERM = NULL,
@@ -22,7 +61,7 @@ input_add_mfp_bloc <-
       SPECIFIC_HEAT_CAPACITY = NULL,
       SPECIFIC_HEAT_SOURCE = NULL,
       TEMPERATURE = NULL,
-      VISCOSITY = character(NULL)
+      VISCOSITY = NULL
 
    ){
 

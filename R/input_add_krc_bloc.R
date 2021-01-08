@@ -1,10 +1,100 @@
+# add krc-bloc to ogs5-obj
 
+# steps:
+# look if sub-list names krc exists in input list
+# if not, define a sub-list in input names krc
+# add krc-blocs as additional list
+
+
+#' input_add_krc_bloc
+#' @description Adds a sub-bloc to **krc** bloc of *ogs5* for defining kinetic
+#'   reactions. For additional documentatoin of the input parameters see
+#'   the [ogs5 keyword docs](
+#'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/krc.html)
+#'   or have a look at the input scripts from the [r2ogs5-benchmarks repository](
+#'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
+#'   Most arguments have to be of class *character*.
+#' @param x *ogs5* simulation object.
+#' @param krc_name Name of the **krc** sub bloc.
+#' @param mkey Main keyword of the *ogs5_krc_bloc*: c("BLOB_PROPERTIES",
+#' "KINREACTIONDATA", "MICROBE_PROPERTIES", "REACTION").
+#' @param ACTIVITY_MODEL
+#' @param ALLOW_REACTIONS
+#' @param BACTERIACAPACITY
+#' @param BACTERIAL_YIELD
+#' @param BACTERIANAME
+#' @param BACTERIA_SPECIFIC_CAPACITY
+#' @param BASETERM
+#' @param CALC_SHERWOOD
+#' @param CALC_SHERWOOD_MODIFIED
+#' @param CHEMAPPNAME
+#' @param COPY_CONCENTRATIONS
+#' @param D50
+#' @param DEBUG_OUTPUT
+#' @param DM
+#' @param DS
+#' @param EQUATION
+#' @param EQUILIBRIUM_CONSTANT
+#' @param EXCHANGE_PARAMETERS
+#' @param GAS_DISSOLUTION
+#' @param GEOMETRY
+#' @param GRAIN_SPHERE_RATIO
+#' @param GROWTH
+#' @param INHIBITIONTERMS
+#' @param INITIAL_TIMESTEP
+#' @param INTERFACIAL_AREA
+#' @param ISOTOPE_FRACTIONATION
+#' @param LAGNEAU_BENCHMARK
+#' @param LENGTH
+#' @param MECHANISMTERM
+#' @param MICROBENAME
+#' @param MINERALNAME
+#' @param MIN_BACTERIACONC
+#' @param MIN_CONCENTRATION_REPLACE
+#' @param MIN_TIMESTEP
+#' @param MONODTERMS
+#' @param MONOD_REACTION_NAME
+#' @param NAME
+#' @param NAPL_CONTENT_INI
+#' @param NAPL_CONTENT_RES
+#' @param NAPL_PROPERTIES
+#' @param NO_REACTIONS
+#' @param OMEGA_THRESHOLD
+#' @param PRECIPITATION_BY_BASETERM_ONLY
+#' @param PRECIPITATION_EXPONENT
+#' @param PRECIPITATION_FACTOR
+#' @param PRODUCTIONSTOCH
+#' @param PRODUCTIONTERMS
+#' @param RATECONSTANT
+#' @param RATE_EXPONENTS
+#' @param REACTION_DEACTIVATION
+#' @param REACTION_ORDER
+#' @param REACTIVE_SURFACE_AREA
+#' @param RELATIVE_ERROR
+#' @param SCALE_DCDT
+#' @param SHERWOOD_MODEL
+#' @param SOLVER_TYPE
+#' @param SORPTION_TYPE
+#' @param SORT_NODES
+#' @param STANDARD_GIBBS_ENERGY
+#' @param SURFACES
+#' @param SWITCH_OFF_GEOMETRY
+#' @param TEMPERATURE_DEPENDENCE
+#' @param THRESHHOLDTERMS
+#' @param TORTUOSITY
+#' @param TYPE
+#' @param UI
+#' @param drmc
+#' @param drmc_PARAMETERS
+#'
+#' @return Updated *ogs5* object.
+#' @export
 input_add_krc_bloc <-
 
   function(
     x = list(),
-    krc_name = character(NULL),
-    mkey = character(NULL),
+    krc_name = NULL,
+    mkey = NULL,
     #mkey:
       #BLOB_PROPERTIES
       #KINREACTIONDATA
