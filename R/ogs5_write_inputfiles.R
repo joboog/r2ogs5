@@ -564,7 +564,8 @@ ogs5_list_output.ogs5_msp <-
 
     for (i in seq_len(ogs5_sublist %>% length())){
       ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
-                           mkey = ogs5_mkey)
+                           mkey = ogs5_mkey,
+                           stack = TRUE)
       cat("\n")
     }
     cat("#STOP", "\n")
