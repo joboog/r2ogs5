@@ -51,22 +51,17 @@ input_add_ic_bloc <-
             stop("ic_name does already exist", call. = FALSE)
          }
 
-         if (PCS_TYPE!="MASS_TRANSPORT" &&
-             PCS_TYPE %in% sapply(x$input$ic, "[[", 1)
-         ) {
-            stop("PCS_TYPE does already exist", call. = FALSE)
-         }
       }
 
       # create and add sublist to ic-list
 
       x$input$ic[[paste(ic_name)]] <- list(
 
-         "COMP_NAME" = COMP_NAME,
-         "DIS_TYPE" = DIS_TYPE,
-         "GEO_TYPE" = GEO_TYPE,
          "PCS_TYPE" = PCS_TYPE,
-         "PRIMARY_VARIABLE" =  PRIMARY_VARIABLE
+         "PRIMARY_VARIABLE" =  PRIMARY_VARIABLE,
+         "COMP_NAME" = COMP_NAME,
+         "GEO_TYPE" = GEO_TYPE,
+         "DIS_TYPE" = DIS_TYPE
 
       ) %>%
          purrr::discard(is.null) %>%
