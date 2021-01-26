@@ -185,12 +185,17 @@ input_add_krc_bloc <-
       if (krc_name %in% names(x$input$krc)) {
         stop("krc_name does already exist", call. = FALSE)
       }
+
+      if (is.null(mkey)) {
+        stop("an 'mkey' has to be specified", call. = FALSE)
+      }
     }
 
     # create and add sublist to krc-list
 
     x$input$krc[[paste(krc_name)]] <- list(
 
+      "mkey" = mkey,
       "ACTIVITY_MODEL" = ACTIVITY_MODEL,
       "ALLOW_REACTIONS" = ALLOW_REACTIONS,
       "BACTERIACAPACITY" = BACTERIACAPACITY,
