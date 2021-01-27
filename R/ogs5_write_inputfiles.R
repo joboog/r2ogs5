@@ -281,7 +281,7 @@ ogs5_list_output.ogs5_fct <-
 #' @param mkey Respective **ogs5** main keyword. *character*
 ogs5_print_fct_bloc <- function(mkey_bloc, mkey) {
 
-  other_skeys <- which(names(mkey_bloc) != "DATA")
+  other_skeys <- which(!(names(mkey_bloc) %in% c("DATA", "MATRIX")))
   skey_str <- sapply(
     names(mkey_bloc)[other_skeys],
     function(x) {
@@ -293,8 +293,16 @@ ogs5_print_fct_bloc <- function(mkey_bloc, mkey) {
   cat(paste0("#", mkey), skey_str, "\n")
 
   # paste DATA
-  cat(" $DATA\n")
-  cat(apply(mkey_bloc[["DATA"]], 1, paste0, collapse=" "), sep = "\n")
+  if (!(is.null(mkey_bloc[["DATA"]]))){
+    cat(" $DATA\n")
+    cat(apply(mkey_bloc[["DATA"]], 1, paste0, collapse=" "), sep = "\n")
+  }
+  # paste MATRIX
+  if (!(is.null(mkey_bloc[["MATRIX"]]))){
+    cat(" $MATRIX\n")
+    cat(apply(mkey_bloc[["MATRIX"]], 1, paste0, collapse=" "), sep = "\n")
+  }
+
 
 }
 

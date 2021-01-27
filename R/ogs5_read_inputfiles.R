@@ -240,6 +240,33 @@ add_standard_blocs <- function(filepath,
             return(blocs)
 }
 
+add_fct_bloc <- function(bloc){
+
+
+    if (!(is.null(bloc[["DATA"]]))){
+        bloc[["DATA"]] <- bloc[["DATA"]] %>%
+            lapply(stringr::str_split, " ") %>%
+            unlist %>%
+            as.double %>%
+            matrix(nrow = length(bloc[["DATA"]]),
+                   byrow = TRUE) %>%
+            'colnames<-' (c("x", "y")) %>%
+            tibble::as_tibble()
+    }
+    if (!(is.null(bloc[["MATRIX"]]))){
+        bloc[["MATRIX"]] <- bloc[["MATRIX"]] %>%
+            lapply(stringr::str_split, " ") %>%
+            unlist %>%
+            as.double %>%
+            matrix(nrow = length(bloc[["MATRIX"]]),
+                   byrow = TRUE) %>%
+            tibble::as_tibble()
+    }
+    other_skeys <- which(!names(bloc) %in% c("DATA", "MATRIX"))
+    bloc[other_skeys] <- bloc[other_skeys] %>%
+        lapply(unlist)
+    bloc <- structure(bloc, class = "ogs5_fct_bloc")
+}
 
 
 ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
@@ -299,22 +326,10 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
 # .fct input file ---------------------------------------------------------
                 "fct" = ogs5_read_inputfile_tolist(filepath) %>%
-                    lapply(function(bloc) {
-                        bloc[["DATA"]] <- bloc[["DATA"]] %>%
-                            lapply(stringr::str_split, " ") %>%
-                            unlist %>%
-                            as.double %>%
-                            matrix(nrow = length(bloc[["DATA"]]),
-                                   byrow = TRUE) %>%
-                            'colnames<-' (c("x", "y")) %>%
-                            tibble::as_tibble()
-
-                        other_skeys <- which(names(bloc) != "DATA")
-                        bloc[other_skeys] <- bloc[other_skeys] %>%
-                            lapply(unlist)
-                        bloc <- structure(bloc, class = "ogs5_fct_bloc")
-
-                    }) %>% structure(class = "ogs5_fct"),
+                            lapply(function(bloc) {
+                                add_fct_bloc(bloc)
+                            }) %>%
+                            structure(class = "ogs5_fct"),
 
 # .gem file ---------------------------------------------------------------
                 "gem" = add_standard_blocs(filepath),
