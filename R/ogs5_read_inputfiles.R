@@ -442,22 +442,23 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 start <- 1
                 end <- 0
                 for (g in geometries) {
+
                     n <- sum(stringr::str_detect(emts, g))
-                    end <- end + n
-                    mat <-  emts[start:end] %>%
+                    g_ind <- stringr::str_which(emts, g)
+                    mat <-  emts[g_ind] %>%
                         lapply(stringr::str_split, " ") %>%
                         unlist %>%
                         matrix(nrow = n, byrow = TRUE)
+
                     colnames(mat) <- c("nr",
                                        "material_id",
                                        "ele_type",
                                        paste0("node", 1:(ncol(mat) - 3)))
+
                     bloc[["ELEMENTS"]][[paste0(g)]] <- mat %>%
                         tibble::as_tibble() %>%
-                        #dplyr::select(-n) %>%
                         dplyr::mutate_at(dplyr::vars(-ele_type),
                                          list(as.double))
-                    start <- n + start
                 }
 
                 # unlist all other blocs
