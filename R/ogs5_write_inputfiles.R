@@ -359,9 +359,12 @@ ogs5_list_output.ogs5_gli <-
               tibble::rownames_to_column() %>%
               dplyr::mutate(rowname = as.numeric(rowname)) %>%
               as.data.frame()
-        noname <- which(df$name == "")
-        df$name <- stringr::str_c("$NAME ", df$name)
-        df$name[noname] <- ""
+
+        if (any(colnames(df) == "name")) {
+          noname <- which(df$name == "")
+          df$name <- stringr::str_c("$NAME ", df$name)
+          df$name[noname] <- ""
+        }
 
         if (any(colnames(df) == "md")) {
           df$md <-stringr::str_c("$MD ", df$md)
