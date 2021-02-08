@@ -17,28 +17,28 @@ ogs5_write_inputfiles <-
     # validate input
     valid_ogs5(ogs5_obj)
 
-    if (!(type %in% c(names(ogs5_get_keywordlist()), "additional") |
-          type == "all")) {
+    if (!(any(type %in% c(names(ogs5_get_keywordlist()), "additional")) |
+          any(type == "all"))) {
       stop("wrong type entered", call. = FALSE)
     }
-    if (type == "dat") {
+    if (any(type == "dat")) {
       warning("This method is only tested for phreeqc.dat files")
     }
 
-    if (is.null(folderpath)){
-      folderpath <- paste0(attributes(ogs5_obj)$sim_path, "/")
+    if (is.null(folderpath)) {
+      folderpath <- attributes(ogs5_obj)$sim_path
     }
 
-    if (!(dir.exists(folderpath))){
+    if (!(dir.exists(folderpath))) {
       dir.create(folderpath, recursive = TRUE)
     }
 
-    if (type == "all") {
+    if (any(length(type) == 1 & type == "all")) {
 
       # loop through ogs5-obj and print all sublists
-      for (i in names(ogs5_obj$input)){
+      for (i in names(ogs5_obj$input)) {
 
-       if (i == "additional"){
+       if (i == "additional") {
          # loop over ogs5$input$additional and print sub blocs as files
 
          ogs5_list <- ogs5_obj$input[[paste(i)]]
@@ -56,19 +56,22 @@ ogs5_write_inputfiles <-
 
     } else { # if type != "all"
 
-      if (i == "additional"){
+      for (i in type) {
+
+      if (i == "additional") {
         # loop over ogs5$input$additional and print sub blocs as files
 
         ogs5_list <- ogs5_obj$input[[paste(i)]]
         ogs5_write_ogs5_additional(folderpath, ogs5_list)
 
       } else {
+        filename <- paste0(folderpath, "/", attributes(ogs5_obj)$sim_name,
+                           ".", i)
 
-        filename <- paste0(folderpath, attributes(ogs5_obj)$sim_name, ".", type)
-
-        ogs5_list <- ogs5_obj$input[[paste(type)]]
+        ogs5_list <- ogs5_obj$input[[paste(i)]]
         ogs5_write_tofile(filename, ogs5_list_output(ogs5_list))
       }
+        }
     }
 }
 
