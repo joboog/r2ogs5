@@ -48,66 +48,81 @@ ogs5_read_tecplot_domain<-function(filepath){
   } else if (!(file.exists(filepath)) & (!(RCurl::url.exists(filepath)))){
     stop("'filepath' does not exist.", call = FALSE)
   }
-  if (stringr::str_detect(filepath, "domain")==FALSE){
-    return(NULL)
-  }
 
   #=== get header =====================================================
 
-  # read first line
-  header <- readLines(con=filepath,n=1L)
+  # read first two lines
+  header <- readLines(con=filepath,n=2L)
+  header <- header[stringr::str_which(header, "VARIABLES")]
   # remove pattern
-  header <- gsub("VARIABLES  =","",header)
   header<- gsub("\"", "", header)
+  header <- stringr::str_remove(header, "VARIABLES ")
+  header <- stringr::str_remove(header, "=")
 
-  # split by ","
-  header<-stringr::str_split(header, ",")
-  header<-as.vector(header[[1]])
-  # remove whitespace
-  header<-stringr::str_trim(header)
-
-
+  # split by " " or ","
+  if (stringr::str_detect(header, ",")) {
+    sep <- ","
+  } else {
+    sep <- " "
+  }
+  header <- stringr::str_split(header, sep) %>%
+    unlist %>%
+    stringr::str_subset("[:alpha:]+") # make sure only words are kept
+  header <- stringr::str_trim(header) # remove whitespace
 
   #=== get data =======================================================
 
+  data <- readLines(con = filepath, n = -1L, ok = TRUE)
+
   #=== get time
-  ts<-readLines(con=filepath, n = -1L, ok = TRUE)
-  ts<-ts %>%
-    stringr::str_extract("ZONE T=\"\\d+\\.\\d+e\\+\\d+") %>%
-    na.omit() %>%
-    gsub(pattern="ZONE T=\"", replacement="") %>%
-    as.numeric()
+
+  t_ind <- stringr::str_which(data, "ZONE T=")
+  v_ind <- stringr::str_which(data, "VARIABLES")
+  ts <- data[t_ind]
+  ts <- ts %>%
+    stringr::str_extract("\\d+\\.\\d+e\\+\\d+|\\d+\\.\\d+e\\-\\d+") %>%
+    as.numeric
 
   #=== get point data
-  suppressWarnings(
-    suppressMessages(
-      df <- readr::read_delim(filepath,
-                              " ", escape_double = FALSE, col_names = FALSE,
-                              trim_ws = TRUE, skip = 3)))
 
-  # extract all lines with elements in first column that do not match pattern
-  df<-df %>%
-    dplyr::filter(
-      !is.na(stringr::str_extract(X1,"\\d+\\.\\d+e\\+\\d+"))|!is.na(stringr::str_extract(X1,"\\d+\\.\\d+e\\-\\d+"))
-    )
+  # For now, only way to prevent readr from converting columns to "double"
+  suppressMessages(
+    suppressWarnings(
+      eval(
+        parse(
+          text =
+    paste0("df <- readr::read_delim(filepath, \" \", col_types = readr::cols(",
+        paste0("X", 1:length(header), " = readr::col_character()", collapse = ","),
+        "), escape_double = FALSE, col_names = FALSE, trim_ws = TRUE, skip = 3)")
+    ))
+  ))
+
+
+  # split data where non numbers are encountered
+
+  data_ind <- df$X1 %>%   # indicator for data
+    stringr::str_which("\\d+\\.\\d+e\\+\\d+|\\d+\\.\\d+e\\-\\d+")
+
+  splt <- which(diff(data_ind) > 1) # last numbers of each time step
+
+  strt <- data_ind[1]
+  # expand time vector
+  tv <- NULL
+  for (i in 1:(length(ts) - 1)) {
+    tv <- c(tv, rep(ts[i], (data_ind[splt[i]] - strt) + 1))
+    strt <- data_ind[splt[i] + 1]
+  }
+  tv <- c(tv, rep(ts[i + 1],  (tail(data_ind, 1) - strt) + 1))
+  df <- df[data_ind, ]
+
   # remove empty columns
-  df<- df[, sapply(df, function(i) !all(is.na(i)))] %>%
-    apply(2,as.numeric) %>%
-    tibble::as_tibble()
+  df <- df %>% dplyr::select_if(is.character)
+  df <- df %>% mutate_all(as.numeric)
 
   #=== combine all
   colnames(df)<-header
 
-  # create df with point coordinates and time
-  # then add as TIME column
-  df<- df %>%
-    dplyr::bind_cols(
-      expand.grid(X=unique(df$X), Y=unique(df$Y), Z=unique(df$Z), TIME=ts) %>%
-        dplyr::select(TIME)
-    ) %>%
-    dplyr::select(
-      X,Y,Z,TIME, dplyr::everything()
-    )
+  df <- dplyr::bind_cols(TIME = tv, df)
 
   return(df)
 }
@@ -203,9 +218,6 @@ ogs5_read_tecplot_point <- function(filepath){
   if (file.exists(filepath) | (RCurl::url.exists(filepath))){
   } else if (!(file.exists(filepath)) & (!(RCurl::url.exists(filepath)))){
     stop("'filepath' does not exist.", call = FALSE)
-  }
-  if (!stringr::str_detect(filepath, "POINT|point")){
-    return(NULL)
   }
 
   # get header first
