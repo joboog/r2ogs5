@@ -117,7 +117,7 @@ ogs5_read_tecplot_domain<-function(filepath){
 
   # remove empty columns
   df <- df %>% dplyr::select_if(is.character)
-  df <- df %>% mutate_all(as.numeric)
+  df <- df %>% dplyr::mutate_all(as.numeric)
 
   #=== combine all
   colnames(df)<-header
