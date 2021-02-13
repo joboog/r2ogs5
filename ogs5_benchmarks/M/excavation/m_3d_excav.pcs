@@ -1,7 +1,0 @@
-#PROCESS
-  $PCS_TYPE
-    DEFORMATION
-  $RELOAD
-  2
-
-#STOP

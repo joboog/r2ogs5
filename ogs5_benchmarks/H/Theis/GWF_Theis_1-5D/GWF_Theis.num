@@ -1,8 +1,0 @@
-#NUMERICS
- $PCS_TYPE
- GROUNDWATER_FLOW
- $LINEAR_SOLVER
-  2      5 1.e-014       1000           1.0   100     4
- $RENUMBER
-  2 -1
-#STOP

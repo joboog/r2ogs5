@@ -1,6 +1,0 @@
-#PROCESS
- $PCS_TYPE
- PS_GLOBAL
- $NUM_TYPE
-   dPcdSwGradSnw
-#STOP
