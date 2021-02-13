@@ -266,6 +266,15 @@ cal_bayesOpt <- function(par_init,
             # Update data
             errs <- c(errs, err)
 
+                                        target_function = target_function,
+                                        ensemble_path = ensemble_path,
+                                        ensemble_cores = ensemble_cores,
+                                        ensemble_name = ensemble_name)
+            # add to previous errors
+            errs <- c(errs, err)
+
+            #=== fit meta model and select next parameters ====
+
             # transform values into 0, 1 interval and transpose
             X <- rbind(X,
                        data.frame(t(
