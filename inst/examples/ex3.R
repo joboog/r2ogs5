@@ -1,13 +1,10 @@
-# Example 1: Single ogs5 simulation ---------------------------------------
-
-# In this example, a single serial ogs5 simulation will be defined and
-# executed. Then the output will be retrieved.
+## Model Definition
 
 # define ogs5 obj ---------------------------------------------------------
-ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L, sim_path = "examples/tmp/ex1")
+ex1 <- create_ogs5(sim_name = "ex1",
+                   sim_id = 1L,
+                   sim_path = "inst/examples/tmp/ex1")
 
-
-## add input file blocs ----------------------------------------------------
 ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
                           PRIMARY_VARIABLE = "PRESSURE1")
 
@@ -75,49 +72,100 @@ ex1 <- input_add_tim_bloc(x = ex1,  tim_name = "tracer",
                           PCS_TYPE = "MASS_TRANSPORT", TIME_START = "0",
                           TIME_END = "36000000", TIME_STEPS = "229 3600")
 
-# add rfd
 ex1 <- input_add_rfd_bloc(x = ex1, rfd_name = "tracer", mkey = "CURVES",
-                    data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),
-                                          conc=c(1,1,0,0,0)))
-
-# add gli
+                          data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),
+                                                conc=c(1,1,0,0,0)))
 ex1 <- input_add_gli_points(x = ex1,
-                        ogs5_points = tibble::tibble(x = c(0, 4.7), y = c(0,0),
-                                                 z = c(0,0),
-                                                 name = c("point0", "point1")))
+                            ogs5_points = tibble::tibble(x = c(0, 4.7), y = c(0,0),
+                                                         z = c(0,0),
+                                                         name = c("point0", "point1")))
 
-# ad msh bloc
 mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
                           NODES = mesh_lst[[1]],
                           ELEMENTS = mesh_lst[[2]])
 
 
-# write input files -------------------------------------------------------
+## Get Experimenal Data
+load("inst/extdata/tracer_exp.rda")
 
-ogs5_write_inputfiles(ex1, "all")
-
-
-# run ogs5 simulation -----------------------------------------------------
-
- ogs5_run(ogs5_obj = ex1, ogs_exe = "inst/ogs/ogs_5.76",
-          run_path = NULL,
-          log_output = TRUE,
-          log_path = "examples/tmp/ex1/log")
+gg_exp <- tracer_exp %>%
+            ggplot2::ggplot(ggplot2::aes(x = time, y = tracer_exp))+
+            ggplot2::geom_point(color = "orange")
 
 
-# read output -------------------------------------------------------------
+## Preprocessing
 
-# read tecplot
-tec_df <- ogs5_read_many_tecplots(filepath = "examples/tmp/ex1",
-                                  geo_object = "domain")
+sim <- ex1
+attributes(sim)$sim_name <- "ex3"
+attributes(sim)$sim_path <- "inst/examples/tmp/ex3"
+#sim$input$out$waterflow <- NULL
+#sim$input$out$tracer <- NULL
+#sim$input$out$tracer_tec <- NULL
 
-# read all output
-ex1 <- ogs5_get_output_all(ex1)
+# Function to change parameter, write input file, run model
 
-# read specific output
-ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
+ogs5_compute_ssqe <- function(ll, par, return_ogs5 = FALSE){
+  # x <- sim
+  # par <- 1
+  # update parameter
+  ll$input$mmp$gravel$MASS_DISPERSION <-
+      paste("1 ", round(par, 2))
 
-# read vtu output via calling python
-foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
-                node_coords = tibble::tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
+  # write inoput files
+  ogs5_write_inputfiles(ll, "all")
+
+  # run
+  ogs5_run(ll,
+            ogs_exe = "inst/ogs/ogs_5.76",
+            run_path = NULL,
+            log_output = TRUE,
+            wait = TRUE)
+
+  # get output
+  #ogs5_obj$output <- list(NULL)
+  ll <- ogs5_get_output_all(ll)
+
+  # compare with exp data
+  mod_df <- ll$output$tracer_tec[[1]] %>%
+              dplyr::filter(X == 4.7) %>%
+              dplyr::select("Tracer_hat"="Tracer", "TIME") %>%
+              dplyr::mutate(TIME = TIME/(24*3600))
+
+  f <- approxfun(x = mod_df$TIME, y = mod_df$Tracer_hat)
+  y_hat <- f(tracer_exp$time) %>% na.omit
+  y <- tracer_exp$tracer_exp
+  ssqe <- sum((y_hat-y)^2)
+
+  # clear folder
+  system(command = "rm -r inst/examples/tmp/ex3")
+  #rm(y)
+
+  ifelse(return_ogs5 == TRUE, res <- list(ssqe, ll, mod_df), res <- ssqe)
+
+  return(res)
+}
+
+
+## Optimize
+
+result <- optim(par = 0.5, fn = ogs5_compute_ssqe, ll = sim)
+
+
+## Execute Run with optimized Parameter
+
+sim_optimized <- ogs5_compute_ssqe(ll = sim, par = result$par,
+                                   return_ogs5 = TRUE)
+
+
+## Visualize
+
+gg_exp +
+  ggplot2::geom_line(data = sim_optimized[[3]],
+                     ggplot2::aes(x = TIME, y = Tracer_hat),
+                     color = "blue")+
+
+  ggplot2::theme_classic()+
+  ggplot2::labs(x = expression(Time~(days)),
+         y = expression(c[Tracer]~(mg~L^{-1}))
+  )

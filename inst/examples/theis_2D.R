@@ -3,7 +3,7 @@
 
 # define ogs5 obj ---------------------------------------------------------
 theis_2D <- create_ogs5(sim_name = "theis_2D", sim_id = 1L,
-                        sim_path = "examples/tmp/theis_2D")
+                        sim_path = "inst/examples/tmp/theis_2D")
 
 
 # add input file blocs ----------------------------------------------------
@@ -131,7 +131,7 @@ ogs5_write_inputfiles(theis_2D, "all")
 ogs5_run(ogs5_obj = theis_2D, ogs_exe = "inst/ogs/ogs_5.8",
          run_path = NULL,
          log_output = TRUE,
-         log_path = "examples/tmp/theis_2D/log")
+         log_path = "inst/examples/tmp/theis_2D/log")
 
 
 # read output -------------------------------------------------------------
@@ -140,7 +140,7 @@ tec_ref <- ogs5_read_tecplot(filename = "https://raw.githubusercontent.com/ufz/o
                                  geo_object = 'POINT')
 
 # output
-tec_r2ogs <- ogs5_read_tecplot(filename = "examples/tmp/theis_2D/theis_2D_time_POINT5_GROUNDWATER_FLOW.tec",
+tec_r2ogs <- ogs5_read_tecplot(filename = "inst/examples/tmp/theis_2D/theis_2D_time_POINT5_GROUNDWATER_FLOW.tec",
                                geo_object = 'POINT')
 
 
