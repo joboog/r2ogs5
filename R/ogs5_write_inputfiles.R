@@ -46,7 +46,7 @@ ogs5_write_inputfiles <-
 
        } else {
          # write file for specific ogs5_$input class
-         filename <- paste0(folderpath,
+         filename <- paste0(folderpath, "/",
                                attributes(ogs5_obj)$sim_name, ".", i)
 
          ogs5_list <- ogs5_obj$input[[paste(i)]]
