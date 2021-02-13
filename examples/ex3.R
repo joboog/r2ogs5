@@ -85,7 +85,7 @@ ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
 
 
 ## Get Experimenal Data
-load("data/tracer_exp.rda")
+load("inst/extdata/tracer_exp.rda")
 
 gg_exp <- tracer_exp %>%
             ggplot2::ggplot(ggplot2::aes(x = time, y = tracer_exp))+

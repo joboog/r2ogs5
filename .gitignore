@@ -8,7 +8,7 @@
 *.vtk
 *.pvd
 *.tec
-!data/**/*.tec
+!inst/extdata/**/*.tec
 *.asc
 *.html
 *.pdf
