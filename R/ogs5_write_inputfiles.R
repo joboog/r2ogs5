@@ -779,7 +779,7 @@ ogs5_write_ogs5_additional <-
     for (i in seq_len(ogs5_list %>% length())){
 
       ogs5_sublist <- ogs5_list[[i]]
-      filename = paste0(folderpath, names(ogs5_list)[i])
+      filename = paste0(folderpath, "/", names(ogs5_list)[i])
 
       if (class(ogs5_sublist) == "character") {
         ogs5_write_tofile(filename,
