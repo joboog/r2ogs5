@@ -655,7 +655,10 @@ input_add_blocs_from_file <- function(ogs5_obj = NULL,
     if (filename[[1]] == "all") { # browse whole repository for input files
 
         # get all filenames and extensions in filepath
+        all_dirs <- list.dirs(file_dir, full.names = FALSE)
         all_filenames <- list.files(file_dir)
+        all_filenames <- all_filenames[!(all_filenames %in% all_dirs[-1])]
+
         all_basefilenames <- all_filenames %>% stringr::str_remove("\\..*")
         all_file_ext <- all_filenames %>% stringr::str_remove(".*\\.")
 
