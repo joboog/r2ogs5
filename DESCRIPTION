@@ -29,6 +29,11 @@ Imports:
     tibble,
     withr,
     config
+    lhs,
+    foreach,
+    parallel,
+    doParallel,
+    GPfit
 Depends: 
     R (>= 2.10)
 Suggests: 
