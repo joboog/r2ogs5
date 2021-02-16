@@ -1,5 +1,5 @@
 Package: r2ogs
-Title: An API to the OpenGeoSys Multiphysics Simulator. 
+Title: An API to the OpenGeoSys Multiphysics Simulator
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Johannes",
@@ -21,7 +21,9 @@ Imports:
     plyr,
     dplyr,
     purrr,
+    RCurl,
     readr,
+    rlang,
     stringr,
     tidyr,
     tibble

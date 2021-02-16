@@ -112,7 +112,7 @@ ogs5_read_tecplot_domain<-function(filepath){
     tv <- c(tv, rep(ts[i], (data_ind[splt[i]] - strt) + 1))
     strt <- data_ind[splt[i] + 1]
   }
-  tv <- c(tv, rep(ts[i + 1],  (tail(data_ind, 1) - strt) + 1))
+  tv <- c(tv, rep(ts[i + 1],  (utils::tail(data_ind, 1) - strt) + 1))
   df <- df[data_ind, ]
 
   # remove empty columns
@@ -169,7 +169,7 @@ ogs5_read_tecplot_polyline <- function(filepath) {
 
   ts <- ts %>%
         stringr::str_extract("ZONE T=\"TIME=\\d+\\.\\d+e\\+\\d+") %>%
-        na.omit() %>%
+        stats::na.omit() %>%
         gsub(pattern="ZONE T=\"TIME=", replacement="") %>%
         as.numeric()
 
@@ -183,8 +183,8 @@ ogs5_read_tecplot_polyline <- function(filepath) {
   # extract all lines with elements in first column that do not match pattern
   df <- df %>%
     dplyr::filter(
-      !is.na(stringr::str_extract(X1,"\\d+\\.\\d+e\\+\\d+")) |
-        !is.na(stringr::str_extract(X1,"\\d+\\.\\d+e\\-\\d+"))
+      !is.na(stringr::str_extract(.data$X1,"\\d+\\.\\d+e\\+\\d+")) |
+        !is.na(stringr::str_extract(.data$X1,"\\d+\\.\\d+e\\-\\d+"))
     )
   # remove empty columns
   df <- df[, sapply(df, function(i) !all(is.na(i)))] %>%
@@ -198,7 +198,7 @@ ogs5_read_tecplot_polyline <- function(filepath) {
   # then add as TIME column
   df <- df %>%
     dplyr::bind_cols(TIME = rep(ts, rep(nrow(df)/length(ts), length(ts)))) %>%
-    dplyr::select(TIME, dplyr::everything())
+    dplyr::select(.data$TIME, dplyr::everything())
 
   return(df)
 }
@@ -231,7 +231,7 @@ ogs5_read_tecplot_point <- function(filepath){
     c(., recursive=TRUE) %>%
     unname
 
-  header <- na.omit(header)
+  header <- stats::na.omit(header)
   header <- header[-(1:2)]
   rm(df)
 

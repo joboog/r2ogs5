@@ -371,7 +371,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                               lapply(function(sub) {
                                   sub[dollars] %>%
                                       stringr::str_remove("\\$") %>%
-                                      na.omit}) %>%
+                                      stats::na.omit()}) %>%
                               unlist %>%
                               tolower %>%
                               unique
@@ -403,7 +403,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                                       .funs = as.double) %>%
                      tibble::as_tibble() %>%
                      tibble::column_to_rownames("...1") %>%
-                     dplyr::select(x, y, z, names)
+                     dplyr::select(.data$x, .data$y, .data$z, {{names}})
                             ))
 
                     } else {
@@ -477,7 +477,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 
                     bloc[["ELEMENTS"]][[paste0(g)]] <- mat %>%
                         tibble::as_tibble() %>%
-                        dplyr::mutate_at(dplyr::vars(-ele_type),
+                        dplyr::mutate_at(dplyr::vars(-.data$ele_type),
                                          list(as.double))
                 }
 

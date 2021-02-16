@@ -27,11 +27,9 @@ input_add_msh_bloc(
 (node3, node4)}
 
 \item{NODES}{A \emph{tibble} with columns x, y, z.}
-
-\item{PCS_TYPE}{}
 }
 \value{
-
+Updated \emph{ogs5} object.
 }
 \description{
 Adds a sub-bloc to \strong{msh} bloc of \emph{ogs5} for defining meshes.

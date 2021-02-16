@@ -32,11 +32,9 @@ input_add_msp_bloc(
 \item{x}{Simulation object of class \emph{ogs5}.}
 
 \item{NAME}{Name of the solid. \emph{character}}
-
-\item{TIME_DEPENDENT_YOUNGS_POISSON}{}
 }
 \value{
-
+Updated \emph{ogs5} object.
 }
 \description{
 Adds a sub-bloc to \strong{msp} bloc of \emph{ogs5} for defining solid

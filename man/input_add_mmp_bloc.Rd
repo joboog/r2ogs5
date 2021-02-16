@@ -58,11 +58,9 @@ input_add_mmp_bloc(
 }
 \arguments{
 \item{x}{Simulation object of class \emph{ogs5}.}
-
-\item{WIDTH}{}
 }
 \value{
-
+Updated \emph{ogs5} object.
 }
 \description{
 Adds a sub-bloc to \strong{mmp} bloc of \emph{ogs5} for defining material

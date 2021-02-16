@@ -57,9 +57,7 @@ ens_write_inputfiles <- function(x, type = "all"){
 #' @param wait *logical* If *TRUE* R starts the individual simulations runs sequentially,
 #'   to say, it waits until a run finishes before starting the next. If *FALSE*
 #'   all runs will be started the same time.
-#' @return
 #' @export
-#'
 #' @examples
 #' ens_run(ens1,
 #'         ogs_exe = "../inst/ogs/ogs_5.76",
@@ -67,7 +65,7 @@ ens_write_inputfiles <- function(x, type = "all"){
 #'         wait = FALSE)
 ens_run <- function(x, ogs_exe, log_output = TRUE , wait = FALSE){
 
-    
+
     valid_ens(x)
 
     for (i in 1:length(x)){
@@ -88,12 +86,16 @@ ens_run <- function(x, ogs_exe, log_output = TRUE , wait = FALSE){
 #'   retrieve output stated in a certain *OUT* bloc of the *ogs5* simulation
 #'   objects.
 #' @param ... *list(character)* If *type* = 'specific', state names  of the *OUT*
-#'   blocs you wish to retrieve output for.
+#'   blocs you wish to retrieve output for. Arguments will be passed to
+#'   ' ogs5_get_output_specific()'.
 #'
 #' @return Extended *x* with added output.
 #' @export
 #' @examples
 #' ens1 <- ens_get_output(ens1, type = "all")
+#' #' ens1 <- ens_get_output(ens1,
+#'                           type = "specific",
+#'                           outbloc_names = c("OUTPUT1", "OUTPUT2))
 ens_get_output <- function(x, type = "all", ...){
 
     valid_ens(x)
@@ -104,9 +106,7 @@ ens_get_output <- function(x, type = "all", ...){
         x[[i]] <-
             switch(type,
                    "all" = ogs5_get_output_all(x[[i]]),
-                   "specific" = ogs5_get_output_specific(x[[i]],
-                                                       outbloc_names,
-                                                       out_filepath))
+                   "specific" = ogs5_get_output_specific(x[[i]], ...))
     }
     return(x)
 }

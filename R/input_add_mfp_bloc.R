@@ -28,10 +28,8 @@
 #' @param SPECIFIC_HEAT_SOURCE
 #' @param TEMPERATURE
 #' @param VISCOSITY
-#'
-#' @return
+#' @return Updated *ogs5* object.
 #' @export
-#'
 #' @examples
 #' ogs5_obj <- input_add_mfp_bloc(ogs5_obj, FLUID_NAME = "FLUID_PROPERTIES1",
 #'                                FLUID_TYPE = "LIQUID",

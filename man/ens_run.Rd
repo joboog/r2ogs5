@@ -17,9 +17,6 @@ ens_run(x, ogs_exe, log_output = TRUE, wait = FALSE)
 to say, it waits until a run finishes before starting the next. If \emph{FALSE}
 all runs will be started the same time.}
 }
-\value{
-
-}
 \description{
 Wrapper to execute \code{\link[=ogs5_run]{ogs5_run()}} for all included \emph{ogs5} objects
 included.

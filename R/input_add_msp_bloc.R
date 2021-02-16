@@ -29,10 +29,8 @@
 #' @param THERMAL
 #' @param THRESHOLD_DEV_STR
 #' @param TIME_DEPENDENT_YOUNGS_POISSON
-#'
-#' @return
+#' @return Updated *ogs5* object.
 #' @export
-#'
 #' @examples
 #' ogs5_obj <- input_add_msp_bloc(ogs5_obj, NAME = "SOLID_PROPERTIES1",
 #'                                DENSITY = "1 1.80000e+003")

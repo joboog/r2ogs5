@@ -14,6 +14,7 @@
 #' @param path *character* Path where to place all individual ensemble runs.
 #'
 #' @return Instance of class *ens*
+#' @importFrom plyr .
 #' @export
 #'
 #' @examples
@@ -25,7 +26,7 @@
 #'                   name = "tracersim", path = "path/to/my/ens")
 create_ens <- function(
     base_sim = list(),
-    parameter_tbl = tbl(),
+    parameter_tbl = dplyr::tbl(),
     name = character(NULL),
     path = character(NULL)
 ) {

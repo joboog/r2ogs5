@@ -24,8 +24,6 @@ input_add_fct_bloc(
 \item{DIMENSION}{Dimension if \emph{data_type} is 'Matrix'.}
 
 \item{GEO_TYPE}{Name of a geometry defined in \strong{gml} to relate the function.}
-
-\item{TYPE}{}
 }
 \value{
 Updated \emph{ogs5} object.
@@ -37,7 +35,4 @@ parameters see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-a
 or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
 All arguments except \strong{x} and \strong{data_values} have to be of class
 \emph{character}.
-}
-\examples{
-
 }

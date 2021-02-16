@@ -30,11 +30,9 @@ input_add_mfp_bloc(
 }
 \arguments{
 \item{x}{Simulation object of class \emph{ogs5}.}
-
-\item{VISCOSITY}{}
 }
 \value{
-
+Updated \emph{ogs5} object.
 }
 \description{
 Adds a sub-bloc to \strong{mfp} bloc of \emph{ogs5} for defining fluid

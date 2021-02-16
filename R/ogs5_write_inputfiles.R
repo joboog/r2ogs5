@@ -315,7 +315,7 @@ ogs5_fct_bloc_output <-
   function(ogs5_fct_bloc){
 
     # check ogs5_sublist
-    stopifnot(class(ogs5_sublist) == "ogs5_fct_bloc")
+    stopifnot(class(ogs5_fct_bloc) == "ogs5_fct_bloc")
 
     nn <- names(ogs5_fct_bloc)
 
@@ -369,7 +369,7 @@ ogs5_list_output.ogs5_gli <-
 
         df <- ogs5_sublist[[i]] %>%
               tibble::rownames_to_column() %>%
-              dplyr::mutate(rowname = as.numeric(rowname)) %>%
+              dplyr::mutate(rowname = as.numeric(.data$rowname)) %>%
               as.data.frame()
 
         if (any(colnames(df) == "name")) {
@@ -542,7 +542,7 @@ ogs5_print_msh_mkey_bloc <-
     # print NODES
     df <- mkey_bloc$NODES %>%
           tibble::rownames_to_column() %>%
-          dplyr::mutate(rowname = as.numeric(rowname) - 1) %>%
+          dplyr::mutate(rowname = as.numeric(.data$rowname) - 1) %>%
           as.data.frame()
     rownames(df) <- rownames(df) %>% as.numeric() %>% -1
     names(df) <- NULL

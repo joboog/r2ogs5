@@ -19,10 +19,8 @@
 #' @param LAYER
 #' @param NODES A *tibble* with columns x, y, z.
 #' @param PCS_TYPE
-#'
-#' @return
+#' @return Updated *ogs5* object.
 #' @export
-#'
 #' @examples
 #' mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 #' ogs5_obj <- input_add_msh_bloc(x = ogs5_obj, msh_name = "base_mesh",

@@ -6,7 +6,7 @@
 \usage{
 create_ens(
   base_sim = list(),
-  parameter_tbl = tbl(),
+  parameter_tbl = dplyr::tbl(),
   name = character(NULL),
   path = character(NULL)
 )

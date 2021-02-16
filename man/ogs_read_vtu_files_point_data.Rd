@@ -7,14 +7,14 @@
 ogs_read_vtu_files_point_data(filepath, pcs_type, variable_name = NULL)
 }
 \arguments{
-\item{filepath}{Path to directory of **\emph{.vtu} files. \emph{character}}
+\item{filepath}{\emph{character} Path to directory of **\emph{.vtu} files.}
 
-\item{pcs_type}{Name of the process defined in the \strong{out} sub bloc.}
+\item{pcs_type}{\emph{character} Name of the process defined in the \strong{out} sub bloc.}
 
-\item{variable_name}{Name of the array in the *\strong{.vtu} files, optional.}
+\item{variable_name}{\emph{character} Name of the array in the *\strong{.vtu} files, optional.}
 }
 \value{
-List of
+\emph{list}
 }
 \description{
 Read specific point data arrays from a series of *\strong{.vtu} files

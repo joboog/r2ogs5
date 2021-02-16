@@ -7,22 +7,9 @@
 ogs5_read_many_tecplots(filepath = character(), geo_object = character())
 }
 \arguments{
-\item{filepath}{(\emph{character}) path to \link{*.tec}-files.}
+\item{filepath}{\emph{character} Path to *\strong{.tec} files.}
 
-\item{geo_object}{(\emph{character}) Name for the type of geometric ogs object
-the tec file is associated with. Can be any of "POINT", "POLYLINE", "
-SURFACE", "domain".}
-}
-\value{
-\emph{Data.frame} with timeseries of the simulation reasults.
-}
-\description{
-Function to read in any \link{*.tec}-files inside a directory. Calls on the
-functions \code{ogs5_read_tecplot_point}, \code{ogs5_read_tecplot_polyline},
-\code{ogs5_read_tecplot_domain} depending on the specified \emph{geo_object} type.
-\item{filepath}{Path to *\strong{.tec} files. \emph{character}}
-
-\item{geo_object}{Associated geometry type: c("domain", "POINT", "POLYLINE",
+\item{geo_object}{\emph{character} Associated geometry type: c("domain", "POINT", "POLYLINE",
 "SURFACE").}
 }
 \value{

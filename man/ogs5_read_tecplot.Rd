@@ -4,12 +4,12 @@
 \alias{ogs5_read_tecplot}
 \title{ogs5_read_tecplot}
 \usage{
-ogs5_read_tecplot(filename = character(), geo_object = character())
+ogs5_read_tecplot(filepath = character(), geo_object = character())
 }
 \arguments{
-\item{filename}{Path to *\strong{.tec} file. \emph{character}}
+\item{filepath}{\emph{character} Path to *\strong{.tec} file.}
 
-\item{geo_object}{Associated geometry type: c("domain", "POINT", "POLYLINE",
+\item{geo_object}{\emph{character} Associated geometry type: c("domain", "POINT", "POLYLINE",
 "SURFACE").}
 }
 \value{

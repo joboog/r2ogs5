@@ -9,11 +9,11 @@ ogs5_write_inputfiles(ogs5_obj = list(), type = "all", folderpath = NULL)
 \arguments{
 \item{ogs5_obj}{\emph{ogs5} simulation object}
 
-\item{type}{Type of the \emph{ogs5} main bloc to be written. c("all", "bc", "cct",
+\item{type}{\emph{character} Type of the \emph{ogs5} main bloc to be written. c("all", "bc", "cct",
 "fct", "gem", "gli", "ic", "krc", "mcp", "mfp", "mmp", "msh", "msp", num",
 "out", "pcs", "pqc", "rei", "st", "tim", "rfd", "additional")}
 
-\item{folderpath}{Path to write the outpufile(s) to.}
+\item{folderpath}{\emph{character} Path to write the outpufile(s) to.}
 }
 \description{
 Export \emph{ogs5} object and write ogs5 input files.

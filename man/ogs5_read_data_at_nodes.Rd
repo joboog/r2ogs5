@@ -13,7 +13,7 @@ ogs5_read_data_at_nodes(
 \arguments{
 \item{ogs5}{\emph{ogs5} simulation object.}
 
-\item{outbloc_name}{Name of the corresponding \emph{ogs5} \strong{out} sub-bloc where
+\item{outbloc_name}{\emph{character} Name of the corresponding \emph{ogs5} \strong{out} sub-bloc where
 the output was defined.}
 
 \item{node_coords}{\emph{Tibble} of coordinates (x,y,z) of nodes where data has

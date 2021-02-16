@@ -54,13 +54,16 @@ input_add_gli_points <-
          stop("ogs5_points$name is not of type 'character' ", call. = FALSE)
       }
 
-      if (ogs5_points %>%dplyr::select(x,y,z) %>% is.na() %>%  any()){
+      if (ogs5_points %>%
+            dplyr::select(.data$x, .data$y, .data$z) %>%
+            is.na() %>%
+            any()){
          stop("ogs5_points coordinates contain NA ", call. = FALSE)
       }
 
       # create and add sublist to gli-list
       df <- ogs5_points %>%
-              dplyr::select(x, y, z, name) %>%
+              dplyr::select(.data$x, .data$y, .data$z, .data$name) %>%
               tibble::as_tibble()
       rownames(df) <- df %>% rownames() %>% as.numeric() %>% -1
 

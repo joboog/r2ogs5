@@ -56,10 +56,8 @@
 #' @param VOL_BIO
 #' @param VOL_MAT
 #' @param WIDTH
-#'
-#' @return
+#' @return Updated *ogs5* object.
 #' @export
-#'
 #' @examples
 #' ogs5_obj <- input_add_mmp_bloc(ogs5_obj, NAME = "MEDIUM_PROPERTIES1",
 #'                                GEOMETRY_DIMENSION = "1",

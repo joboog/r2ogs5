@@ -18,12 +18,8 @@
 #' @param DIS_TYPE
 #' @param GEO_TYPE Name of a geometry defined in **gml** to relate the function.
 #' @param TYPE
-#'
 #' @return Updated *ogs5* object.
 #' @export
-#'
-#' @examples
-#'
 input_add_fct_bloc <-
 
   function(

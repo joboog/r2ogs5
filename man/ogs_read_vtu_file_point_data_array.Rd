@@ -10,10 +10,9 @@ ogs_read_vtu_file_point_data_array(
 )
 }
 \arguments{
-\item{filename}{Path to *\strong{.vtu} file. \emph{character}}
+\item{filename}{\emph{character} Path to *\strong{.vtu} file.}
 
-\item{array_name}{Name of the array in the *\strong{.vtu} file to be read.
-\emph{charcter}}
+\item{array_name}{\emph{charcter} Name of the array in the *\strong{.vtu} file to be read.}
 }
 \value{
 \emph{numeric} vector.

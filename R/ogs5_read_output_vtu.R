@@ -194,11 +194,11 @@ ogs5_extract_time_from_vtu <- function(filename){
 
   timestep <- line_str %>%
                 stringr::str_extract(pattern = "(?<=step: )\\d+") %>%
-                na.omit() %>% as.numeric()
+                stats::na.omit() %>% as.numeric()
 
   time <- line_str %>%
             stringr::str_extract(pattern = "(?<=Time: )\\d+\\.\\d+e\\+\\d+") %>%
-            na.omit() %>% as.numeric()
+            stats::na.omit() %>% as.numeric()
 
   timestep_time <- c("timestep"=timestep, "time_in_sec" = time)
 

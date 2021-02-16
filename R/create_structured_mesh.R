@@ -61,7 +61,7 @@ generateRegHexEle <- function(x_vector = numeric(), y_vector = numeric(),
       offset_y1 <- j * n_nodes_x
       offset_y2 <- (j+1) * n_nodes_x
       for (k in 0:(n_ele_x-1)){
-        ele_df <- add_row(.data = ele_df,
+        ele_df <- tibble::add_row(.data = ele_df,
                           material_id = 0,
                           ele_type = "hex",
                           node1 = offset_z1 + offset_y1 + k,
@@ -96,7 +96,7 @@ generateRegQuadEle <- function(vector1 = numeric(), vector2 = numeric()){
     offset_v2_2 <- (j+1) * n_nodes1
     for (k in 0:(n_ele1-1)){
       ele_df <- tibble::add_row(.data = ele_df,
-                        material_id = 0,
+                       material_id = 0,
                        ele_type = "quad",
                        node1 = offset_v1_1 + k,
                        node2 = offset_v1_1 + k + 1,
@@ -177,7 +177,7 @@ create_structured_mesh_nodes_ele <-
     ele_df <-tibble::tibble(material_id = vector("numeric", length(nodes_df[[1]])-1),
                      ele_type = rep(ele_type, times = length(nodes_df[[1]])-1),
                      node1 = seq(0, length(nodes_df[[1]])-2,1),
-                     node2 = node1 + 1)
+                     node2 = .data$node1 + 1)
   }
 
   # 2d
@@ -196,7 +196,7 @@ create_structured_mesh_nodes_ele <-
 
   ele_df <- ele_df %>%
     dplyr::mutate(nr = 1:length(ele_type) - 1) %>%
-    dplyr::select(nr, dplyr::everything())
+    dplyr::select(.data$nr, dplyr::everything())
 
   return(list(NODES = nodes_df, ELEMENTS = ele_df))
 }
