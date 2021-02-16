@@ -2,6 +2,11 @@
 
 export("%>%")
 export(.data)
+export(cal_bayesOpt)
+export(cal_change_parameters)
+export(cal_create_calibration_set)
+export(cal_sample_parameters)
+export(cal_simulation_error)
 export(create_ens)
 export(create_ogs5)
 export(create_structured_mesh_nodes_ele)

@@ -1,12 +1,41 @@
 
-cal_simulation_error <- function(df,
+#' Simulation error for calibration purposes
+#'
+#' @description Helper function for [cal_bayesOpt()] that evaluates one or
+#' several parameters values by modifying the *ogs5* input slot, writing input
+#' files and running simulations. The output is retrieved via
+#' \code{\link{ogs5_get_output_specific}} and fed into the user-specified
+#' `target_function` to calculate the simulation error.
+#'
+#' @param par_df *tibble* with parameters such as described in \code{\link{cal_bayesOpt}}
+#' @param exp_data experimental data
+#' @param ogs5_obj *ogs5*
+#' @param outbloc_names *character vector* names of the blocs specified in the
+#'  **.out* file that should be used for calibration. The argument will be passed
+#'  to the function \code{\link{ogs5_get_output_specific}}.
+#' @param ogs_exe *character* path to the ogs executable
+#' @param log_output *logical* Should a log file be written?
+#' @param log_path *character* path of directory to write log file, default is `run_path`.
+#' @param run_path *character* path where the simulation should be run, default is
+#' *sim_path* from the `ogs5_obj`.
+#' @param target_function *function* specified by the user that should exist in
+#' the global environment and be of the form ```f <- function(ogs_obj, exp_data) { ... return(sim_error) }```.
+#' @param ensemble_path *character* path where ensemble for initial parameters
+#' should be written and run.
+#'
+#' @return An *ogs5* or *ens* class object depending if one set of parameters or
+#' several were run.
+#' @export
+#'
+#' @examples r2ogs/examples/bayesOpt_example.R
+cal_simulation_error <- function(par_df,
                                   exp_data,
                                   ogs5_obj,
                                   outbloc_names,
                                   ogs_exe,
                                   log_output = TRUE,
+                                  log_path = NULL,
                                   run_path = attributes(ogs5_obj)$sim_path,
-                                  fetch_output_fun,
                                   target_function,
                                   ensemble_path = NULL) {
 
@@ -21,14 +50,14 @@ cal_simulation_error <- function(df,
 
     # === change input parameters ===
 
-    n_samples <- ncol(df) - 6
+    n_samples <- ncol(par_df) - 6
     # check if ensemble
     is_ens <- n_samples > 1
 
     if (is_ens) {
-        ens1 <- cal_change_parameters(ogs5_obj, par_df = df, ensemble_path)
+        ens1 <- cal_change_parameters(ogs5_obj, par_df = par_df, ensemble_path)
     } else {
-        ogs5_obj <- cal_change_parameters(ogs5_obj, par_df = df, ensemble_path)
+        ogs5_obj <- cal_change_parameters(ogs5_obj, par_df = par_df, ensemble_path)
     }
 
 
@@ -75,7 +104,7 @@ cal_simulation_error <- function(df,
     } else {
         ### === sequential run ###
         ogs5_write_inputfiles(ogs5_obj = ogs5_obj,
-                              type = unique(df["file_ext"]),
+                              type = unique(par_df["file_ext"]),
                               folderpath = attributes(ogs5_obj)$sim_path)
 
         # === run ogs ===
@@ -107,6 +136,17 @@ cal_simulation_error <- function(df,
     return(error)
 }
 
+#' change input parameters of an *ogs5* object
+#'
+#' @param ogs5_obj *ogs5*
+#' @param par_df *tibble* with parameters such as described in \code{\link{cal_bayesOpt}}
+#' @param ensemble_path *character* path where ensemble for several parameters
+#' should be written and run.
+#'
+#' @return An *ogs5* or *ens* object with changed input parameters.
+#' @export
+#'
+#' @examples
 cal_change_parameters <- function(ogs5_obj, par_df, ensemble_path) {
 
     # TODO; sanity check for par_df check if in ogs5 object
@@ -147,6 +187,26 @@ cal_change_parameters <- function(ogs5_obj, par_df, ensemble_path) {
     }
 }
 
+#' Helper function to create a calibration set for ogs5 input parameters
+#'
+#' @param range_list *list* of vectors containing parameter locations in
+#' an *ogs5*-object and its range.
+#'
+#' @return *data.frame* that can be handed over to [cal_sample_parameters()]
+#' @export
+#'
+#' @examples \dontrun{
+#' # define range list
+#' range_list <- list(
+#'     c("mmp$MEDIUM_PROPERTIES1$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-4, 1.0e-2),
+#'     c("mmp$MEDIUM_PROPERTIES2$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-9, 1.0e-4),
+#'     c("mmp$MEDIUM_PROPERTIES3$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3),
+#'     c("mmp$MEDIUM_PROPERTIES4$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3)
+#' )
+#' # convert into a calibration set
+#' calibration_set <- cal_create_calibration_set(range_list)
+#' calibration_set
+#' }
 cal_create_calibration_set <- function(range_list) {
 
     # creates a dataframe out of a list of vectors provided by the user.
@@ -168,6 +228,46 @@ cal_create_calibration_set <- function(range_list) {
     return(set)
 }
 
+#' sample parameters with the Latin Hypercube method
+#'
+#' @description LHD samples are drawn from a uniform (0, 1) distribution via
+#' \code{\link[lhs]{randomLHS}} and then transformed (if desired) to the
+#' respective range via \code{\link[stats]{qunif}} and the minimum- and maximum
+#' values specified in `calibration_set`.
+#'
+#' @param calibration_set *tibble* with columns *file_ext*, *mkey, skey, spec*,
+#'  *min*, and *max*. Best created via [cal_create_calibration_set()].
+#' @param n_samples *integer* for the number of samples for each parameter
+#' @param interval_01 *logical* should the sample be from the (0,1) interval?
+#' @param scale_which *character* that identifies the parameters in
+#' `calibration_set` that should be scaled. Default is *NULL*, then all parameters
+#' will be scaled according to *scale_fun*.
+#' @param scale_fun *function* that allows sampling from a scaled distribution, e.g.
+#' if the values are on a *log* scale. Default is `I()` i.e. no transformation.
+#' @param unscale_fun *function* inverse of the previous function to transform
+#' parameters back after sampling. Default is `I()` as well.
+#'
+#' @return
+#' @export
+#'
+#' @examples \dontrun{# define range list
+#' range_list <- list(
+#'     c("mmp$MEDIUM_PROPERTIES1$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-4, 1.0e-2),
+#'     c("mmp$MEDIUM_PROPERTIES2$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-9, 1.0e-4),
+#'     c("mmp$MEDIUM_PROPERTIES3$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3),
+#'     c("mmp$MEDIUM_PROPERTIES4$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3)
+#' )
+#' # convert into a calibration set
+#' calibration_set <- cal_create_calibration_set(range_list)
+#' calibration_set
+#'
+#' # sample starting parameters from calibration set
+#' init <- cal_sample_parameters(calibration_set,
+#'                               n_samples = 4,
+#'                               interval_01 = FALSE,
+#'                               scale_fun = log10,
+#'                               unscale_fun = function(x) 10**x,
+#' )}
 cal_sample_parameters <- function(calibration_set,
                                    n_samples = d * 3,
                                    interval_01 = FALSE,
@@ -202,7 +302,6 @@ optim_ogs <- function(param,
                       ogs_exe,
                       log_output = TRUE,
                       run_path = attributes(ogs5_obj)$sim_path,
-                      fetch_output_fun,
                       ensemble_path) {
 
     # parameters need to be in the same order as listed in the calibration_set
@@ -214,7 +313,6 @@ optim_ogs <- function(param,
                                    ogs_exe,
                                    log_output,
                                    run_path,
-                                   fetch_output_fun,
                                    ensemble_path)
     return(error)
 }
