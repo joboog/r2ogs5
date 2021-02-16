@@ -131,6 +131,9 @@ ogs5_get_output_specific <- function(ogs5 = list(), outbloc_names = character(),
            valid_ogs5_out_bloc(ogs5$input$out[[paste(x)]])
          })
 
+  # empty output section for overwriting (!)
+  ogs5$output <- list()
+
   # check filepath
   if (is.null(out_filepath)){
     out_filepath <- attributes(ogs5)$sim_path
@@ -140,20 +143,20 @@ ogs5_get_output_specific <- function(ogs5 = list(), outbloc_names = character(),
     }
   }
 
-  # check if output was already imported
-  outbloc_names <- outbloc_names[which(!(
-    outbloc_names %in% names(ogs5$output)))]
-  if (length(outbloc_names) == 0) {
-    stop("The output was already imported", call. = FALSE)
-  }
-
   # read output files
   for (i in outbloc_names){
 
     # check output type
     out_dat_type <- ogs5$input$out[[paste(i)]]$DAT_TYPE
-    out_geo_object <- ogs5$input$out[[paste(i)]]$GEO_TYPE
+    out_geo_object <- ogs5$input$out[[paste(i)]]$GEO_TYPE %>%
+      stringr::str_split(" ") %>%
+      unlist
     out_pcs_type <- ogs5$input$out[[paste(i)]]$PCS_TYPE
+
+    if (length(out_geo_object) == 2) {
+      out_name <- out_geo_object[2]
+      out_geo_object <- out_geo_object[1]
+    }
 
     out_data_list <- NULL
 
@@ -166,11 +169,14 @@ ogs5_get_output_specific <- function(ogs5 = list(), outbloc_names = character(),
 
     if (out_dat_type == "TECPLOT") {
 
-      if (out_geo_object == "DOMAIN") out_geo_object <- "domain"
+      if (out_geo_object == "DOMAIN") {
+          out_geo_object <- "domain"
+          out_name <- "domain"
+      }
 
       # get filenames
-      out_filenamepattern <- paste0(attributes(ogs5)$sim_name, "_",
-                                    out_geo_object,"_", out_pcs_type)
+
+      out_filenamepattern <- paste0(out_name, "_", out_pcs_type)
       # list *.tec files
       out_files <- list.files(path=out_filepath, pattern=".tec",
                               full.names=TRUE)[
@@ -178,15 +184,15 @@ ogs5_get_output_specific <- function(ogs5 = list(), outbloc_names = character(),
                                   stringr::str_detect(string=list.files(
                                     path=out_filepath, pattern=".tec",
                                     full.names=TRUE),
-                                    pattern=out_filenamepattern)==TRUE
-                                )]
+                                    pattern=out_filenamepattern)
+                                  )]
 
       out_data_list <- lapply(out_files,
-                          FUN = function(x){
-                            l <- ogs5_read_tecplot(filepath = x,
-                                                   geo_object = out_geo_object)
-                            return(l)
-                          })
+                              FUN = function(x){
+                                l <- ogs5_read_tecplot(filepath = x,
+                                                       geo_object = out_geo_object)
+                                return(l)
+                              })
     }
 
     # attach output data as list to ogs5$output$i
