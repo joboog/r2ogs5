@@ -31,6 +31,11 @@ ogs5_generate_script <- function(benchmark_dir,
         stop(paste0("directory ", benchmark_dir, " seems to be empty"))
     }
 
+    script_dir <- script_path %>% stringr::str_remove("/\\w+\\.\\w+")
+    if(!dir.exists(script_dir)) {
+        dir.create(script_dir, recursive = TRUE)
+    }
+
 
     all_file_ext <- all_filenames %>%
         lapply(FUN = dplyr::last)
@@ -57,7 +62,7 @@ ogs5_generate_script <- function(benchmark_dir,
     cat(paste0(ogs5_obj_name, " <- create_ogs5(sim_name = \"",
                                                     ogs5_obj_name, "\",\n",
                                     ident5, "sim_path = \"",
-                                                    benchmark_dir, "\",\n",
+                                                    script_dir,  "/tmp\",\n",
                                     ident5, "sim_id = 1L",
                                         ")\n\n"))
     sink()
@@ -79,16 +84,19 @@ ogs5_generate_script <- function(benchmark_dir,
         if (file_ext %in% blocs_with_name | file_ext %in% blocs_no_name) {
             print(paste0("generating functions for ", file_ext))
         } else
-            if (file_ext == "msh" | file_ext == "gli") {
+            if (file_ext == "msh" | file_ext == "gli"|file_ext == "fct") {
 
                 # enter function call to create ogs5 from file
                 sink(script_path, append = TRUE)
                 cat(
                     paste0(ogs5_obj_name," <- input_add_blocs_from_file(",
-                       ogs5_obj_name, ",\n", ident5, "filename = \"", files[[i]],
+                       ogs5_obj_name, ",\n",
+                       ident5, "sim_basename = \"",
+                       basename(script_dir), "\",\n",
+                       ident5, "filename = \"", files[[i]],
                        "\",\n", ident5, "file_dir = \"", benchmark_dir,
                        "\")\n\n"))
-                sink() # si nk here and skip the rest!
+                sink() # sink here and skip the rest!
             next
 
         } else {
@@ -164,6 +172,21 @@ ogs5_generate_script <- function(benchmark_dir,
 
         }
     }
+    sink(script_path, append = TRUE)
+    cat(paste0("# write input files "))
+    cat(paste0(rep("-", 70), collapse = ""))
+    cat(paste0("\n"))
+    cat(paste0("ogs5_write_inputfiles(", ogs5_obj_name, ",\"all\")\n"))
+    cat(paste0("# execute ogs "))
+    cat(paste0(rep("-", 70), collapse = ""))
+    cat(paste0("\n"))
+    cat(paste0("ogs5_run(",
+               ogs5_obj_name, ", ogs_exe = \"../r2ogs/inst/ogs/ogs_5.76\",\n",
+               ident5, "run_path = NULL,\n",
+               ident5, "log_output = TRUE,\n",
+               ident5, "log_path = \"", paste0(script_dir, "/log"), "\")\n"))
+    sink()
+
 }
 
 
