@@ -323,10 +323,11 @@ ogs5_fct_bloc_output <-
 
       if (nn == "data_type") cat(ogs5_fct_bloc[[i]], "\n")
 
-      if (nn == "data_values")
-      ogs5_print_fct_bloc(fct_bloc = ogs5_sublist[[i]],
-                          mkey = "FUNCTION")
-      cat("\n")
+      if (nn == "data_values") {
+        ogs5_print_fct_bloc(mkey_bloc = ogs5_fct_bloc[[i]],
+                            mkey = "FUNCTION")
+        cat("\n")
+      }
     }
     cat("#STOP", "\n")
   }
