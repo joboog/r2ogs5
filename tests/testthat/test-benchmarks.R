@@ -32,11 +32,11 @@ if (1 %in% bm) {
 
    # read in reference tec files
    eg1_tec_ref <- ogs5_read_tecplot_polyline(
-        filename = "../../data/benchmarks_ref/eg1_ref_polyline.tec") %>%
+        filename = "../../inst/extdata/ogs5_benchmarks_ref/eg1_ref_polyline.tec") %>%
         dplyr::select(!pe) # exclude pe
 
    eg2_tec_ref <- ogs5_read_tecplot_polyline(
-        filename = "../../data/benchmarks_ref/eg2_ref_polyline.tec")
+        filename = "../../inst/extdata/ogs5_benchmarks_ref/eg2_ref_polyline.tec")
 
     # read in tec files from simulation
     eg1_tec_test <- ogs5_read_tecplot_polyline(

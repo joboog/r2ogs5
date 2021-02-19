@@ -1,5 +1,5 @@
-d1_path <- "../../data/benchmarks_ref/mcwt_domain_quad_0.tec"
-d2_path <- "../../data/benchmarks_ref/trans_bd_homo_domain_GROUNDWATER_FLOW_quad.tec"
+d1_path <- "../../inst/extdata/ogs5_benchmarks_ref/mcwt_domain_quad_0.tec"
+d2_path <- "../../inst/extdata/ogs5_benchmarks_ref/trans_bd_homo_domain_GROUNDWATER_FLOW_quad.tec"
 
 context("read_tecplot")
 test_that("geotype domain read correctly from tec files",

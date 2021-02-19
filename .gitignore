@@ -8,7 +8,7 @@
 *.vtk
 *.pvd
 *.tec
-!data/**/*.tec
+!inst/extdata/**/*.tec
 *.asc
 *.html
 *.pdf
@@ -22,4 +22,4 @@ packrat/lib/*
 packrat/lib*/
 packrat/src/
 
-inst/ogs/*
+inst/ogs/
