@@ -41,16 +41,13 @@ respective range via \code{\link[stats]{qunif}} and the minimum- and maximum
 values specified in \code{calibration_set}.
 }
 \examples{
-\dontrun{# define range list
-range_list <- list(
+\dontrun{
+calibration_set <- cal_create_calibration_set(
     c("mmp$MEDIUM_PROPERTIES1$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-4, 1.0e-2),
     c("mmp$MEDIUM_PROPERTIES2$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-9, 1.0e-4),
     c("mmp$MEDIUM_PROPERTIES3$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3),
     c("mmp$MEDIUM_PROPERTIES4$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3)
 )
-# convert into a calibration set
-calibration_set <- cal_create_calibration_set(range_list)
-calibration_set
 
 # sample starting parameters from calibration set
 init <- cal_sample_parameters(calibration_set,

@@ -37,16 +37,14 @@ cal_simulation_error <- function(par_df,
                                   log_path = NULL,
                                   run_path = attributes(ogs5_obj)$sim_path,
                                   target_function,
-                                  ensemble_path = NULL) {
+                                  ensemble_path = NULL,
+                                  ensemble_cores) {
 
     # general purpose function to sequentially call ogs5 runs
     # takes value(s) to evaluate by ogs, runs a simulation and calls
     # f(), that has to be user defined and with simulation results
 
     # the data frame theta should contain the columns file_ext, mkey, skey.
-
-    # TODO: Sanity check for mkey, skey, file_ext
-
 
     # === change input parameters ===
 
@@ -67,7 +65,7 @@ cal_simulation_error <- function(par_df,
 
         # prepare parallel run
         '%dopar%' <- foreach::'%dopar%'
-        cl <- parallel::makeForkCluster(2)
+        cl <- parallel::makeForkCluster(ensemble_cores)
         doParallel::registerDoParallel(cl)
 
         foreach::foreach(i = seq_along(ens1)) %dopar% {
@@ -149,8 +147,6 @@ cal_simulation_error <- function(par_df,
 #' @examples
 cal_change_parameters <- function(ogs5_obj, par_df, ensemble_path) {
 
-    # TODO; sanity check for par_df check if in ogs5 object
-
     n_samples <- ncol(par_df) - 6
     # check if ensemble
     is_ens <- n_samples > 1
@@ -164,16 +160,48 @@ cal_change_parameters <- function(ogs5_obj, par_df, ensemble_path) {
         message(paste("Preparing ensemble run of", ncol(par_df) - 6))
     }
 
+    dupl <- par_df[c("file_ext", "mkey", "skey")] %>% duplicated()
+
     for (v in seq_len(n_samples)) { # every sample
 
         for (k in seq_len(nrow(par_df))) { # every parameter
 
+            if (is.null(ogs5_obj$input[[
+                paste0(par_df[k, "file_ext"])]][[
+                        paste0(par_df[k, "mkey"])]][[
+                            paste0(par_df[k, "skey"])]])) {
+                stop(paste0("Specified keys in row ", k, " of par_df do not",
+                    " exist in ogs5_obj"))
+            }
             # for sequential runs, v is only 1.
             # For the initial, sample, it will be as long as the sample size
 
-            ogs5_obj$input[[par_df[k, "file_ext"]]][[par_df[k, "mkey"]]][[par_df[k, "skey"]]] <-
+            if (dupl[k]) {
+                # for double - valued parameters
+                # overwrite the entry that is duplicate with both the current
+                # and the previous value
+                ogs5_obj$input[[
+                   paste0(par_df[[k, "file_ext"]])
+                   ]][[
+                        paste0(par_df[[k, "mkey"]])
+                        ]][[
+                            paste0(par_df[[k, "skey"]])]] <-
 
-                paste0(par_df[k, "spec"], " ", par_df[k, v + 6])
+                    paste0(par_df[[k, "spec"]], " ",
+                           par_df[[k - 1, v + 6]], " ",
+                           par_df[[k, v + 6]])
+            } else {
+                # only single valued parameter
+                ogs5_obj$input[[
+                   paste0(par_df[[k, "file_ext"]])
+                   ]][[
+                        paste0(par_df[[k, "mkey"]])
+                        ]][[
+                            paste0(par_df[[k, "skey"]])]] <-
+
+                    paste0(par_df[[k, "spec"]], " ", par_df[[k, v + 6]])
+
+            }
 
         }
         if (is_ens) {
@@ -189,43 +217,63 @@ cal_change_parameters <- function(ogs5_obj, par_df, ensemble_path) {
 
 #' Helper function to create a calibration set for ogs5 input parameters
 #'
-#' @param range_list *list* of vectors containing parameter locations in
-#' an *ogs5*-object and its range.
+#' @param ... *vectors* or *lists* of 4 containing parameter locations in
+#' an *ogs5*-object, specifications and its range.
+#'
+#' @details The 4 elements of each parameter should have the following order:
+#' \enumerate{
+#'     \item The location in the *ogs5* object used for calibration as a character
+#'     string of the form:
+#'     **<file extension>$<main-keyword><sub-keyword>**
+#'     \item An additional character string to be pasted before the value in the
+#'     ogs5 input file. Can be set to "".
+#'     \item The minimum value of the parameter
+#'     \item The maximum value of the parameter
+#'     }
+#' If a parameter has two values, that should be calibrated simply two identical
+#' parameter specifications should be provided in adjacent rows.
 #'
 #' @return *data.frame* that can be handed over to [cal_sample_parameters()]
 #' @export
 #'
 #' @examples \dontrun{
-#' # define range list
-#' range_list <- list(
+#' calibration_set <- cal_create_calibration_set(
 #'     c("mmp$MEDIUM_PROPERTIES1$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-4, 1.0e-2),
 #'     c("mmp$MEDIUM_PROPERTIES2$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-9, 1.0e-4),
 #'     c("mmp$MEDIUM_PROPERTIES3$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3),
 #'     c("mmp$MEDIUM_PROPERTIES4$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3)
 #' )
-#' # convert into a calibration set
-#' calibration_set <- cal_create_calibration_set(range_list)
-#' calibration_set
 #' }
-cal_create_calibration_set <- function(range_list) {
+cal_create_calibration_set <- function(...) {
 
     # creates a dataframe out of a list of vectors provided by the user.
     # It makes sure, that the right values are changed in the ogs object.
+    # initialize tibble
+    tb <- tibble::tibble(file_ext = "",
+                         mkey = "",
+                         skey = "",
+                         spec = "",
+                         min = 0,
+                         max = 0)
 
-    set <- data.frame(matrix(nrow = length(range_list),
-                             ncol = 6)) %>%
-        'colnames<-' (c("file_ext", "mkey", "skey", "spec", "min", "max"))
+    for (i in 1:...length()) {
+        l <- ...elt(i)
 
-    for (k in 1:nrow(set)) {
-        set[k, 1:3] <- range_list[[k]][1] %>%
+        if (!(is.vector(l) & length(l) == 4)) {
+            stop(paste0("Argument", i, "should be a a vector of length 4"))
+        }
+
+        keys <- l[[1]] %>%
             stringr::str_split("\\$") %>%
             unlist
-        set[k, "spec"] <- range_list[[k]][2]
-        set[k, c("min", "max")] <- range_list[[k]][3:4]
-        set$min <- as.numeric(as.character(set$min))
-        set$max <- as.numeric(as.character(set$max))
+        tb[i, c("file_ext", "mkey", "skey")] <- t(keys)
+        tb[i, "spec"] <- l[2]
+        tb[i, "min"] <- as.numeric(l[3])
+        tb[i, "max"] <- as.numeric(l[4])
+
     }
-    return(set)
+
+    return(tb)
 }
 
 #' sample parameters with the Latin Hypercube method
@@ -250,16 +298,13 @@ cal_create_calibration_set <- function(range_list) {
 #' @return
 #' @export
 #'
-#' @examples \dontrun{# define range list
-#' range_list <- list(
+#' @examples \dontrun{
+#' calibration_set <- cal_create_calibration_set(
 #'     c("mmp$MEDIUM_PROPERTIES1$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-4, 1.0e-2),
 #'     c("mmp$MEDIUM_PROPERTIES2$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-9, 1.0e-4),
 #'     c("mmp$MEDIUM_PROPERTIES3$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3),
 #'     c("mmp$MEDIUM_PROPERTIES4$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3)
 #' )
-#' # convert into a calibration set
-#' calibration_set <- cal_create_calibration_set(range_list)
-#' calibration_set
 #'
 #' # sample starting parameters from calibration set
 #' init <- cal_sample_parameters(calibration_set,
@@ -274,10 +319,13 @@ cal_sample_parameters <- function(calibration_set,
                                    scale_which = NULL,
                                    scale_fun = I,
                                    unscale_fun = I) {
+
     d <- nrow(calibration_set)
 
-    smpl <- t(lhs::randomLHS(n = n_samples, d))
-    smpl <- as.data.frame(cbind(calibration_set, smpl))
+    smpl <- t(lhs::randomLHS(n = n_samples, d)) %>%
+        'colnames<-' (paste0("sample_", 1:n_samples))
+
+    smpl <- tibble::as_tibble(cbind(calibration_set, smpl))
 
     if (interval_01) {
         return(smpl)
@@ -294,25 +342,60 @@ cal_sample_parameters <- function(calibration_set,
 
 # optim on ogst5_run_seq --------------------------------------------------
 
-# functionto be called by optim
-optim_ogs <- function(param,
-                      calibration_set,
-                      exp_data,
-                      ogs5_obj,
-                      ogs_exe,
-                      log_output = TRUE,
-                      run_path = attributes(ogs5_obj)$sim_path,
-                      ensemble_path) {
+#' Helper function to calibrate with optim
+#'
+#' @description A very simple function that takes a vector of parameter values and
+#' other argumets to [cal_simulation_error()] and returns the simulation error.
+#' The idea is use this function inside optim as demostrated in the examples.
+#'
+#' @param param *numeric* vector of starting parameter values (without other parameter specifications)
+#' @param exp_data *data.frame* experimental data compatible with the
+#' user defined `target_function`
+#' @param ogs5_obj *ogs5* object of the simulation to calibrate
+#' @param ogs_exe *character* path to the ogs5 executable
+#' @param calibration_set *tibble* with parameter keys, min and max values such as specified
+#'  in [cal_bayes_opt()]
+#' @param outbloc_names *character* vector with names of the blocs specified in the
+#'  **.out* file that should be used for calibration. The argument will be passed
+#'  to the function \code{\link{ogs5_get_output_specific}}.
+#' @param target_function
+#'
+#' @return *numeric* simulation error as specified in the user-defined `target_function`,
+#'  for the parameters specified in `param`
+#' @export
+#'
+#' @examples \dontrun{
+#' op <- optim(par = init$sample_1, # single vector of parameters
+#'     fn = cal_optim_ogs, # this function
+#'
+#'      # all the following are arguments for cal_simulation_error()
+#'     method = "L-BFGS-B",
+#'     lower = init$min, upper = init$max,
+#'     calibration_set = calibration_set,
+#'     exp_data = groundwater,
+#'     ogs5_obj = gwf3,
+#'     ogs_exe =  "path/to/ogs",
+#'     outbloc_names = out_names,
+#'     target_function = f)
+#' }
+cal_optim_ogs <- function(param,
+                          exp_data,
+                          ogs5_obj,
+                          ogs_exe,
+                          calibration_set,
+                          outbloc_names,
+                          target_function
+                      ) {
 
     # parameters need to be in the same order as listed in the calibration_set
-    df  <- cbind(calibration_set, v = param)
+    df  <- from01(cbind(calibration_set, v = param))
 
-    error <- ogs5_simulation_error(df,
-                                   exp_data,
-                                   ogs5_obj,
-                                   ogs_exe,
-                                   log_output,
-                                   run_path,
-                                   ensemble_path)
+    error <- cal_simulation_error(par_df = df,
+                                   exp_data = exp_data,
+                                   ogs5_obj = ogs5_obj,
+                                   ogs_exe = ogs_exe,
+                                   outbloc_names = outbloc_names,
+                                   target_function = target_function
+                                  )
     return(error)
 }

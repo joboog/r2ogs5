@@ -40,12 +40,19 @@
 #' of prediction errors from the surrogate model (relative regret variance) is
 #' small enough or the specified maximum number of iteration (`max_it`) is reached.
 #'
-#' The `par_init` data frame should look more or less like this:
+#' The `par_init` data frame should look like this:
 #'
 #' |file_ext | mkey | skey | spec | min | max | 1 | 2 | ... |
 #' |---------|------|------|------|-----|-----|---|---|-----|
 #' | mmp     | MEDIUM_PROPERTIES1 | POROSITY | 1 | 0.25 | 0.45 | 0.4 | 0.3 | ...|
 #' | mmp     | Medium_PROPERTIES2 | ... |
+#'
+#' If a parameter has two values that should be calibrated, simply two identical
+#' parameter specifications (with different min/max values) should be provided
+#' in adjacent rows.
+#'
+#' The initial parameter set can be created with the functions
+#' [cal_create_calibration_set()] and [cal_sample_parameters()].
 #'
 #' Analogous to the `calibration_set`, every row is a parameter with its location
 #' in the `ogs5` object specified in the first few columns.
@@ -79,14 +86,16 @@
 #' @examples r2ogs/examples/bayesOpt_example.R
 #'
 cal_bayesOpt <- function(par_init,
-                          kappa = "log_t",
                           max_it,
+                          kappa = "log_t",
+                          delta = 0.1,
                           exp_data,
                           ogs5_obj,
                           outbloc_names,
                           ogs_exe,
                           target_function,
                           ensemble_path,
+                          ensemble_cores,
                           scale_which = NULL,
                           scale_fun = I,
                           unscale_fun = I) {
@@ -99,8 +108,10 @@ cal_bayesOpt <- function(par_init,
     }
 
     k <- switch(kappa,
-                "log_t" = function(d, i) {
-                    sqrt(0.2*d*log(2*i))},
+                "log_t" = function (d, i) {
+                    beta_i <- 2 * log((d * pi**2 * i**2) / (6 * delta))
+                    return(sqrt(beta_i))
+                },
                 kappa)
     # if constat make function that returns constant
     if (!is.function(k)) {
@@ -116,13 +127,25 @@ cal_bayesOpt <- function(par_init,
     err <- NULL
     errs <- NULL
     regret <- NULL
-    pred_mu <- 0
     par_df <- par_init
     rel_var <- 99
+    pred_mu <- NULL
+    pred_sigma <- NULL
 
-    while(i < max_it & rel_var > 0.1) {
+    while(i <= max_it) {
 
-        if (i > 1) {
+        # evaluate ogs simulation and calculate error with helper function
+        err <- cal_simulation_error(par_df,
+                                    exp_data = exp_data,
+                                    ogs5_obj = ogs5_obj,
+                                    outbloc_names = outbloc_names,
+                                    ogs_exe = ogs_exe,
+                                    target_function = target_function,
+                                    ensemble_path = ensemble_path,
+                                    ensemble_cores = ensemble_cores)
+        # add to previous errors
+        errs <- c(errs, err)
+
         #=== fit meta model and select next parameters ====
 
         # transform values into 0, 1 interval and transpose
@@ -133,9 +156,23 @@ cal_bayesOpt <- function(par_init,
                             scale_fun,
                             unscale_fun)[7:ncol(par_df)])))
 
-        meta <- GPfit::GP_fit(X = X, # design matrix of parameters in the 0 1 interval
-                              Y = errs, # corresponding vector of simulation errors
-                              corr = list(type = "exponential", power = 1.95))
+        if (i > 1) {
+            # Warm start with previous values
+            meta <- GPfit::GP_fit(X = X, # design matrix of parameters in the 0 1 interval
+                                  Y = errs, # corresponding vector of simulation errors
+                                  corr = list(type = "exponential",
+                                              power = 1.95),
+                                  # LHD, best points, clusters
+                                  control = c(d * 20, d * 8, d),
+                                  optim_start = beta)
+        } else {
+            meta <- GPfit::GP_fit(X = X, # design matrix of parameters in the 0 1 interval
+                                  Y = errs, # corresponding vector of simulation errors
+                                  corr = list(type = "exponential", power = 1.95))
+        }
+
+        # save parameters as starting values next model fitting
+        beta <- meta$beta
 
         # sample from 0 1 interval
         x_new <- cal_sample_parameters(par_init[, c(1:6)],
@@ -149,39 +186,31 @@ cal_bayesOpt <- function(par_init,
 
         # evaluate acquisition function (could be another modular funciton)
         lcb <- pred$Y_hat - sqrt(pred$MSE) * k(d, i)
+        print(k(d, i))
         # select value according to minimum lcb
         x_star <- x_new[which.min(lcb), ]
         # create ogs input from the new value
         par_df <- from01(cbind(par_init[, c(1:6)], t(x_star)),
                          scale_which, scale_fun, unscale_fun)
 
-        }
+        # === Calculate stopping criterion ====
+        # if (i > 1) {
+        #     # evaluate prediction from last iteration with simulation error
+        #     regret <- c(regret, (err - pred_mu)**2)
+        # }
 
-        # evaluate ogs simulation and calculate error with helper function
-        err <- cal_simulation_error(par_df,
-                                    exp_data = exp_data,
-                                    ogs5_obj = ogs5_obj,
-                                    outbloc_names,
-                                    ogs_exe = ogs_exe,
-                                    target_function = target_function,
-                                    ensemble_path = ensemble_path)
-        # add to previous errors
-        errs <- c(errs, err)
+        # if (i > 4) {
+        #     # update moving window and stopping criterion
+        #     moving_window <- (length(regret) - 3):length(regret)
+        #     rel_var <- var(regret[moving_window] / mean(regret[moving_window]))
+        #     message(paste0("Iteration ", i,
+        #                    "; Relative regret variance ", round(rel_var, 3)),
+        #             "Normalized regret: ", regret[i-1] / pred_sigma)
+        # }
 
-        if (i > 1) {
-            # evaluate recent prediction with simulation error
-            regret <- c(regret, (err - pred$Y_hat[which.min(lcb)])**2)
-        }
-
-        if (i > 4) {
-            # update moving window and stopping criterion
-            moving_window <- (length(regret) - 3):length(regret)
-            rel_var <- var(regret[moving_window] / mean(regret[moving_window]))
-            message(paste0("Iteration ", i,
-                           "; Relative regret variance ", round(rel_var, 3)))
-        }
-
-
+        # store current prediction for next iteration
+        pred_mu <- c(pred_mu, pred$Y_hat[which.min(lcb)])
+        pred_sigma <- c(pred_sigma, sqrt(pred$MSE[which.min(lcb)]))
 
         i <- i + 1
     }
@@ -195,11 +224,23 @@ cal_bayesOpt <- function(par_init,
         values = X,
         sim_errors = errs,
         min = mn,
-        regret = regret
+        pred_mu = pred_mu,
+        pred_sigma = pred_sigma
+        #regret = regret
     ))
 }
 
 
+#' Transform to unit interval
+#'
+#' @param par_df *tibble* such as explained in [cal_bayesOpt()] with original values
+#' @param scale_which *character* (optional) that identifies the parameters to be scaled
+#' @param scale_fun *function* (optional) to scale the values, e.g. [log10()]
+#' @param unscale_fun *function* (optional) inverse of `scale_fun`, e.g. [10**x]
+#'
+#' @return *tibble* with parameter specification and transformed values in the unit interval
+#'
+#' @examples
 to01 <- function(par_df, scale_which = NULL, scale_fun = I, unscale_fun = I) {
     # converts to unit interval
     for (k in seq_len(nrow(par_df))) {
@@ -214,13 +255,23 @@ to01 <- function(par_df, scale_which = NULL, scale_fun = I, unscale_fun = I) {
 
             unlist %>%
             scale_fun %>% # e.g. log10()
-            punif(min = scale_fun(par_df[k, "min"]),
-                  max = scale_fun(par_df[k, "max"]))
+            punif(min = scale_fun(par_df[[k, "min"]]),
+                  max = scale_fun(par_df[[k, "max"]])) %>%
+            t # tell tibble this is a row
     }
     return(par_df)
 }
 
-
+#' Transform from unit interval
+#'
+#' @param par_df *tibble* such as explained in [cal_bayesOpt()] with values in the unit interval
+#' @param scale_which *character* (optional) that identifies the parameters to be scaled
+#' @param scale_fun *function* (optional) to scale the values, e.g. [log10()]
+#' @param unscale_fun *function* (optional) inverse of `scale_fun`, e.g. [10**x]
+#'
+#' @return *tibble* with parameter specification and transformed values in the actual parameter space
+#'
+#' @examples
 from01 <- function(par_df, scale_which = NULL, scale_fun = I, unscale_fun = I) {
     # converts from unit interval
     for (k in seq_len(nrow(par_df))) {
@@ -234,9 +285,10 @@ from01 <- function(par_df, scale_which = NULL, scale_fun = I, unscale_fun = I) {
         par_df[k, -c(1:6)] <- par_df[k, -c(1:6)] %>%
 
             unlist %>%
-            qunif(min = scale_fun(par_df[k, "min"]),
-                  max = scale_fun(par_df[k, "max"])) %>%
-            unscale_fun # e.g. 10**x
+            qunif(min = scale_fun(par_df[[k, "min"]]),
+                  max = scale_fun(par_df[[k, "max"]])) %>%
+            unscale_fun %>%  # e.g. 10**x
+            t # tell tibble this is a row
     }
     return(par_df)
 }
