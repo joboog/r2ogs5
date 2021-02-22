@@ -36,7 +36,7 @@ ens_add_ogs5 <- function(x, ogs5_obj){
 #' ens_write_inputfiles
 #' @description Wrapper function to write input files for all *ogs5* simulation
 #'   objects belonging to an *ens* instance.
-#' @param Instanc of class *ens* containing the simulation objects.
+#' @param x Instanc of class *ens* containing the simulation objects.
 #' @param type *character* Type of input files to write, see [ogs5_write_inputfiles()].
 #' @export
 ens_write_inputfiles <- function(x, type = "all"){

@@ -616,12 +616,12 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 #' (input file extension) will be overwritten. In order to add several blocs of
 #' the same type, the option needs to be set to FALSE.
 #'
-#' @details If [filename] is set to "all", the whole folder specified in
-#'  [file_dir] will be searched for possible input files excluding [*.tec],
-#'  [*.vtu] [*.vtk] and [*.pvd] files. However, the presence of files that are
-#'  not ogs5 input files such as for example [*.log]-files might have the
-#'  function crashing. For [filenames] that are different from [sim_basename], blocs of
-#'  the class [ogs5_additional] are added.
+#' @details If `filename` is set to "all", the whole folder specified in
+#'  `file_dir` will be searched for possible input files excluding `*.tec`,
+#'  `*.vtu` `*.vtk` and `*.pvd` files. However, the presence of files that are
+#'  not ogs5 input files such as for example `*.log` files might have the
+#'  function crashing. For filenames that are different from `sim_basename`, blocs of
+#'  the class `ogs5_additional` are added.
 #'
 #' @return returns an instance of *ogs5* with the new input blocs added
 #' as instances of their respective class.
