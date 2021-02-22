@@ -86,7 +86,141 @@ input_add_krc_bloc(
 \item{mkey}{Main keyword of the \emph{ogs5_krc_bloc}: c("BLOB_PROPERTIES",
 "KINREACTIONDATA", "MICROBE_PROPERTIES", "REACTION").}
 
-\item{drmc_PARAMETERS}{}
+\item{ACTIVITY_MODEL}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{ALLOW_REACTIONS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{BACTERIACAPACITY}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{BACTERIAL_YIELD}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{BACTERIANAME}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{BACTERIA_SPECIFIC_CAPACITY}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{BASETERM}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{CALC_SHERWOOD}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{CALC_SHERWOOD_MODIFIED}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{CHEMAPPNAME}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{COPY_CONCENTRATIONS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{D50}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{DEBUG_OUTPUT}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{DM}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{DS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{EQUATION}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{EQUILIBRIUM_CONSTANT}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{EXCHANGE_PARAMETERS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{GAS_DISSOLUTION}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{GEOMETRY}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{GRAIN_SPHERE_RATIO}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{GROWTH}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{INHIBITIONTERMS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{INITIAL_TIMESTEP}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{INTERFACIAL_AREA}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{ISOTOPE_FRACTIONATION}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{LAGNEAU_BENCHMARK}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{LENGTH}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{MECHANISMTERM}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{MICROBENAME}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{MINERALNAME}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{MIN_BACTERIACONC}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{MIN_CONCENTRATION_REPLACE}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{MIN_TIMESTEP}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{MONODTERMS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{MONOD_REACTION_NAME}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{NAME}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{NAPL_CONTENT_INI}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{NAPL_CONTENT_RES}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{NAPL_PROPERTIES}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{NO_REACTIONS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{OMEGA_THRESHOLD}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{PRECIPITATION_BY_BASETERM_ONLY}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{PRECIPITATION_EXPONENT}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{PRECIPITATION_FACTOR}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{PRODUCTIONSTOCH}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{PRODUCTIONTERMS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{RATECONSTANT}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{RATE_EXPONENTS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{REACTION_DEACTIVATION}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{REACTION_ORDER}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{REACTIVE_SURFACE_AREA}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{RELATIVE_ERROR}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{SCALE_DCDT}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{SHERWOOD_MODEL}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{SOLVER_TYPE}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{SORPTION_TYPE}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{SORT_NODES}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{STANDARD_GIBBS_ENERGY}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{SURFACES}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{SWITCH_OFF_GEOMETRY}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{TEMPERATURE_DEPENDENCE}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{THRESHHOLDTERMS}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{TORTUOSITY}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{TYPE}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{UI}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{drmc}{ogs5 \strong{krc} bloc sub key word.}
+
+\item{drmc_PARAMETERS}{ogs5 \strong{krc} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

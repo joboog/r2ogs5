@@ -9,17 +9,17 @@
 #'   Most arguments have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param tim_name Name of the **tim** sub-bloc.
-#' @param CRITICAL_TIME
-#' @param INDEPENDENT
-#' @param PCS_TYPE
-#' @param SUBSTEPS
-#' @param TIME_CONTROL
+#' @param CRITICAL_TIME ogs5 **tim** bloc sub key word.
+#' @param INDEPENDENT ogs5 **tim** bloc sub key word.
+#' @param PCS_TYPE ogs5 **tim** bloc sub key word.
+#' @param SUBSTEPS ogs5 **tim** bloc sub key word.
+#' @param TIME_CONTROL ogs5 **tim** bloc sub key word.
 #' @param TIME_END *numeric*
-#' @param TIME_FIXED_POINTS
-#' @param TIME_SPLITS
+#' @param TIME_FIXED_POINTS ogs5 **tim** bloc sub key word.
+#' @param TIME_SPLITS ogs5 **tim** bloc sub key word.
 #' @param TIME_START *numeric*
-#' @param TIME_STEPS
-#' @param TIME_UNIT
+#' @param TIME_STEPS ogs5 **tim** bloc sub key word.
+#' @param TIME_UNIT ogs5 **tim** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export

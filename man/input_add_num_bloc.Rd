@@ -35,7 +35,47 @@ input_add_num_bloc(
 
 \item{num_name}{Name of the sub-bloc.}
 
-\item{TIME_STEPS}{}
+\item{COUPLED_PROCESS}{ogs5 \strong{num} bloc sub key word.}
+
+\item{COUPLING_CONTROL}{ogs5 \strong{num} bloc sub key word.}
+
+\item{COUPLING_ITERATIONS}{ogs5 \strong{num} bloc sub key word.}
+
+\item{DYNAMIC_DAMPING}{ogs5 \strong{num} bloc sub key word.}
+
+\item{ELE_GAUSS_POINTS}{ogs5 \strong{num} bloc sub key word.}
+
+\item{ELE_MASS_LUMPING}{ogs5 \strong{num} bloc sub key word.}
+
+\item{ELE_SUPG}{ogs5 \strong{num} bloc sub key word.}
+
+\item{ELE_UPWINDING}{ogs5 \strong{num} bloc sub key word.}
+
+\item{EXTERNAL_SOLVER_OPTION}{ogs5 \strong{num} bloc sub key word.}
+
+\item{FEM_FCT}{ogs5 \strong{num} bloc sub key word.}
+
+\item{GRAVITY_PROFILE}{ogs5 \strong{num} bloc sub key word.}
+
+\item{LINEAR_SOLVER}{ogs5 \strong{num} bloc sub key word.}
+
+\item{LOCAL_PICARD1}{ogs5 \strong{num} bloc sub key word.}
+
+\item{NON_LINEAR_ITERATION}{ogs5 \strong{num} bloc sub key word.}
+
+\item{NON_LINEAR_SOLVER}{ogs5 \strong{num} bloc sub key word.}
+
+\item{NON_LINEAR_UPDATE_VELOCITY}{ogs5 \strong{num} bloc sub key word.}
+
+\item{OVERALL_COUPLING}{ogs5 \strong{num} bloc sub key word.}
+
+\item{PCS_TYPE}{ogs5 \strong{num} bloc sub key word.}
+
+\item{PLASTICITY_TOLERANCE}{ogs5 \strong{num} bloc sub key word.}
+
+\item{RENUMBER}{ogs5 \strong{num} bloc sub key word.}
+
+\item{TIME_STEPS}{ogs5 \strong{num} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

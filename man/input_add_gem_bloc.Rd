@@ -37,11 +37,31 @@ input_add_gem_bloc(
 
 \item{FLAG_COUPLING_HYDROLOGY}{\emph{character vector}}
 
-\item{FLAG_POROSITY_CHANGE}{\emph{character vector}}
+\item{FLAG_DISABLE_GEM}{ogs5 \strong{gem} bloc sub key word.}
+
+\item{FLAG_POROSITY_CHANGE}{\emph{character vector}.}
+
+\item{GEM_CALCULATE_BOUNDARY_NODES}{ogs5 \strong{gem} bloc sub key word.}
+
+\item{GEM_INIT_FILE}{ogs5 \strong{gem} bloc sub key word.}
 
 \item{GEM_THREADS}{\emph{integer}}
 
 \item{ITERATIVE_SCHEME}{\emph{logical}}
+
+\item{KINETIC_GEM}{ogs5 \strong{gem} bloc sub key word.}
+
+\item{MAX_FAILED_NODES}{ogs5 \strong{gem} bloc sub key word.}
+
+\item{MAX_POROSITY}{ogs5 \strong{gem} bloc sub key word.}
+
+\item{MIN_POROSITY}{ogs5 \strong{gem} bloc sub key word.}
+
+\item{MY_SMART_GEMS}{ogs5 \strong{gem} bloc sub key word.}
+
+\item{PRESSURE_GEM}{ogs5 \strong{gem} bloc sub key word.}
+
+\item{TEMPERATURE_GEM}{ogs5 \strong{gem} bloc sub key word.}
 
 \item{TRANSPORT_B}{\emph{logical}}
 }

@@ -38,12 +38,12 @@ Function to add input files directly from ogs5 input files
 to an instance of class  \emph{ogs5}.
 }
 \details{
-If \link{filename} is set to "all", the whole folder specified in
-\link{file_dir} will be searched for possible input files excluding \link{*.tec},
-\link{*.vtu} \link{*.vtk} and \link{*.pvd} files. However, the presence of files that are
-not ogs5 input files such as for example \link{*.log}-files might have the
-function crashing. For \link{filenames} that are different from \link{sim_basename}, blocs of
-the class \link{ogs5_additional} are added.
+If \code{filename} is set to "all", the whole folder specified in
+\code{file_dir} will be searched for possible input files excluding \verb{*.tec},
+\verb{*.vtu} \verb{*.vtk} and \verb{*.pvd} files. However, the presence of files that are
+not ogs5 input files such as for example \verb{*.log} files might have the
+function crashing. For filenames that are different from \code{sim_basename}, blocs of
+the class \code{ogs5_additional} are added.
 }
 \examples{
 ex1 <- input_add_blocs_from_file(ogs5_obj = NULL,

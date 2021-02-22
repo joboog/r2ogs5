@@ -18,74 +18,74 @@
 #' @param krc_name Name of the **krc** sub bloc.
 #' @param mkey Main keyword of the *ogs5_krc_bloc*: c("BLOB_PROPERTIES",
 #' "KINREACTIONDATA", "MICROBE_PROPERTIES", "REACTION").
-#' @param ACTIVITY_MODEL
-#' @param ALLOW_REACTIONS
-#' @param BACTERIACAPACITY
-#' @param BACTERIAL_YIELD
-#' @param BACTERIANAME
-#' @param BACTERIA_SPECIFIC_CAPACITY
-#' @param BASETERM
-#' @param CALC_SHERWOOD
-#' @param CALC_SHERWOOD_MODIFIED
-#' @param CHEMAPPNAME
-#' @param COPY_CONCENTRATIONS
-#' @param D50
-#' @param DEBUG_OUTPUT
-#' @param DM
-#' @param DS
-#' @param EQUATION
-#' @param EQUILIBRIUM_CONSTANT
-#' @param EXCHANGE_PARAMETERS
-#' @param GAS_DISSOLUTION
-#' @param GEOMETRY
-#' @param GRAIN_SPHERE_RATIO
-#' @param GROWTH
-#' @param INHIBITIONTERMS
-#' @param INITIAL_TIMESTEP
-#' @param INTERFACIAL_AREA
-#' @param ISOTOPE_FRACTIONATION
-#' @param LAGNEAU_BENCHMARK
-#' @param LENGTH
-#' @param MECHANISMTERM
-#' @param MICROBENAME
-#' @param MINERALNAME
-#' @param MIN_BACTERIACONC
-#' @param MIN_CONCENTRATION_REPLACE
-#' @param MIN_TIMESTEP
-#' @param MONODTERMS
-#' @param MONOD_REACTION_NAME
-#' @param NAME
-#' @param NAPL_CONTENT_INI
-#' @param NAPL_CONTENT_RES
-#' @param NAPL_PROPERTIES
-#' @param NO_REACTIONS
-#' @param OMEGA_THRESHOLD
-#' @param PRECIPITATION_BY_BASETERM_ONLY
-#' @param PRECIPITATION_EXPONENT
-#' @param PRECIPITATION_FACTOR
-#' @param PRODUCTIONSTOCH
-#' @param PRODUCTIONTERMS
-#' @param RATECONSTANT
-#' @param RATE_EXPONENTS
-#' @param REACTION_DEACTIVATION
-#' @param REACTION_ORDER
-#' @param REACTIVE_SURFACE_AREA
-#' @param RELATIVE_ERROR
-#' @param SCALE_DCDT
-#' @param SHERWOOD_MODEL
-#' @param SOLVER_TYPE
-#' @param SORPTION_TYPE
-#' @param SORT_NODES
-#' @param STANDARD_GIBBS_ENERGY
-#' @param SURFACES
-#' @param SWITCH_OFF_GEOMETRY
-#' @param TEMPERATURE_DEPENDENCE
-#' @param THRESHHOLDTERMS
-#' @param TORTUOSITY
-#' @param TYPE
-#' @param UI
-#' @param drmc
-#' @param drmc_PARAMETERS
+#' @param ACTIVITY_MODEL ogs5 **krc** bloc sub key word.
+#' @param ALLOW_REACTIONS ogs5 **krc** bloc sub key word.
+#' @param BACTERIACAPACITY ogs5 **krc** bloc sub key word.
+#' @param BACTERIAL_YIELD ogs5 **krc** bloc sub key word.
+#' @param BACTERIANAME ogs5 **krc** bloc sub key word.
+#' @param BACTERIA_SPECIFIC_CAPACITY ogs5 **krc** bloc sub key word.
+#' @param BASETERM ogs5 **krc** bloc sub key word.
+#' @param CALC_SHERWOOD ogs5 **krc** bloc sub key word.
+#' @param CALC_SHERWOOD_MODIFIED ogs5 **krc** bloc sub key word.
+#' @param CHEMAPPNAME ogs5 **krc** bloc sub key word.
+#' @param COPY_CONCENTRATIONS ogs5 **krc** bloc sub key word.
+#' @param D50 ogs5 **krc** bloc sub key word.
+#' @param DEBUG_OUTPUT ogs5 **krc** bloc sub key word.
+#' @param DM ogs5 **krc** bloc sub key word.
+#' @param DS ogs5 **krc** bloc sub key word.
+#' @param EQUATION ogs5 **krc** bloc sub key word.
+#' @param EQUILIBRIUM_CONSTANT ogs5 **krc** bloc sub key word.
+#' @param EXCHANGE_PARAMETERS ogs5 **krc** bloc sub key word.
+#' @param GAS_DISSOLUTION ogs5 **krc** bloc sub key word.
+#' @param GEOMETRY ogs5 **krc** bloc sub key word.
+#' @param GRAIN_SPHERE_RATIO ogs5 **krc** bloc sub key word.
+#' @param GROWTH ogs5 **krc** bloc sub key word.
+#' @param INHIBITIONTERMS ogs5 **krc** bloc sub key word.
+#' @param INITIAL_TIMESTEP ogs5 **krc** bloc sub key word.
+#' @param INTERFACIAL_AREA ogs5 **krc** bloc sub key word.
+#' @param ISOTOPE_FRACTIONATION ogs5 **krc** bloc sub key word.
+#' @param LAGNEAU_BENCHMARK ogs5 **krc** bloc sub key word.
+#' @param LENGTH ogs5 **krc** bloc sub key word.
+#' @param MECHANISMTERM ogs5 **krc** bloc sub key word.
+#' @param MICROBENAME ogs5 **krc** bloc sub key word.
+#' @param MINERALNAME ogs5 **krc** bloc sub key word.
+#' @param MIN_BACTERIACONC ogs5 **krc** bloc sub key word.
+#' @param MIN_CONCENTRATION_REPLACE ogs5 **krc** bloc sub key word.
+#' @param MIN_TIMESTEP ogs5 **krc** bloc sub key word.
+#' @param MONODTERMS ogs5 **krc** bloc sub key word.
+#' @param MONOD_REACTION_NAME ogs5 **krc** bloc sub key word.
+#' @param NAME ogs5 **krc** bloc sub key word.
+#' @param NAPL_CONTENT_INI ogs5 **krc** bloc sub key word.
+#' @param NAPL_CONTENT_RES ogs5 **krc** bloc sub key word.
+#' @param NAPL_PROPERTIES ogs5 **krc** bloc sub key word.
+#' @param NO_REACTIONS ogs5 **krc** bloc sub key word.
+#' @param OMEGA_THRESHOLD ogs5 **krc** bloc sub key word.
+#' @param PRECIPITATION_BY_BASETERM_ONLY ogs5 **krc** bloc sub key word.
+#' @param PRECIPITATION_EXPONENT ogs5 **krc** bloc sub key word.
+#' @param PRECIPITATION_FACTOR ogs5 **krc** bloc sub key word.
+#' @param PRODUCTIONSTOCH ogs5 **krc** bloc sub key word.
+#' @param PRODUCTIONTERMS ogs5 **krc** bloc sub key word.
+#' @param RATECONSTANT ogs5 **krc** bloc sub key word.
+#' @param RATE_EXPONENTS ogs5 **krc** bloc sub key word.
+#' @param REACTION_DEACTIVATION ogs5 **krc** bloc sub key word.
+#' @param REACTION_ORDER ogs5 **krc** bloc sub key word.
+#' @param REACTIVE_SURFACE_AREA ogs5 **krc** bloc sub key word.
+#' @param RELATIVE_ERROR ogs5 **krc** bloc sub key word.
+#' @param SCALE_DCDT ogs5 **krc** bloc sub key word.
+#' @param SHERWOOD_MODEL ogs5 **krc** bloc sub key word.
+#' @param SOLVER_TYPE ogs5 **krc** bloc sub key word.
+#' @param SORPTION_TYPE ogs5 **krc** bloc sub key word.
+#' @param SORT_NODES ogs5 **krc** bloc sub key word.
+#' @param STANDARD_GIBBS_ENERGY ogs5 **krc** bloc sub key word.
+#' @param SURFACES ogs5 **krc** bloc sub key word.
+#' @param SWITCH_OFF_GEOMETRY ogs5 **krc** bloc sub key word.
+#' @param TEMPERATURE_DEPENDENCE ogs5 **krc** bloc sub key word.
+#' @param THRESHHOLDTERMS ogs5 **krc** bloc sub key word.
+#' @param TORTUOSITY ogs5 **krc** bloc sub key word.
+#' @param TYPE ogs5 **krc** bloc sub key word.
+#' @param UI ogs5 **krc** bloc sub key word.
+#' @param drmc ogs5 **krc** bloc sub key word.
+#' @param drmc_PARAMETERS ogs5 **krc** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export

@@ -15,9 +15,9 @@
 #' @param data_type 'DATA' or 'MATRIX'. *character*
 #' @param data_values A *tibble* with data values
 #' @param DIMENSION Dimension if *data_type* is 'Matrix'.
-#' @param DIS_TYPE
+#' @param DIS_TYPE ogs5 **fct** bloc sub key word.
 #' @param GEO_TYPE Name of a geometry defined in **gml** to relate the function.
-#' @param TYPE
+#' @param TYPE ogs5 **fct** bloc sub key word.
 #' @return Updated *ogs5* object.
 #' @export
 input_add_fct_bloc <-

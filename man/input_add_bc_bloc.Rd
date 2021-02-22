@@ -32,15 +32,33 @@ input_add_bc_bloc(
 
 \item{COMP_NAME}{Component name.}
 
+\item{CONSTRAINED}{ogs5  \strong{bc} bloc sub keyword.}
+
+\item{COPY_VALUE}{ogs5  \strong{bc} bloc sub keyword.}
+
 \item{DIS_TYPE}{Distribution type of boundary condition.}
+
+\item{DIS_TYPE_CONDITION}{ogs5  \strong{bc} bloc sub keyword.}
+
+\item{EPSILON}{ogs5  \strong{bc} bloc sub keyword.}
+
+\item{EXCAVATION}{ogs5  \strong{bc} bloc sub keyword.}
 
 \item{FCT_TYPE}{Name of a function defined in \strong{fct} bloc to be used as BC.}
 
 \item{GEO_TYPE}{Name of a geometry defined in \strong{gml} to be apply the BC on.}
 
-\item{PCS_TYPE}{Apply bc for the process defined in \strong{pcs}.}
+\item{MSH_TYPE}{ogs5  \strong{bc} bloc sub keyword.}
 
-\item{PRIMARY_VARIABLE}{Apply bc for the primary variable defined in \strong{pcs}.}
+\item{NO_DIPS_INCREMENT}{ogs5  \strong{bc} bloc sub keyword.}
+
+\item{PCS_TYPE}{Apply \strong{bc} for the process defined in \strong{pcs}.}
+
+\item{PRESSURE_AS_HEAD}{ogs5  \strong{bc} bloc sub keyword.}
+
+\item{PRIMARY_VARIABLE}{Apply \strong{bc} for the primary variable defined in \strong{pcs}.}
+
+\item{TIME_CONTROLLED_ACTIVE}{ogs5  \strong{bc} bloc sub keyword.}
 
 \item{TIM_TYPE}{Set name of a \strong{CURVE} defined in \strong{rfd} if bc should be
 time dependend.}

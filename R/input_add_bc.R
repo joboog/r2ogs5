@@ -11,25 +11,24 @@
 #' @param x Simulation object of class *ogs5*.
 #' @param bc_name Name of the boundary condition.
 #' @param COMP_NAME Component name.
-#' @param CONSTRAINED
-#' @param COPY_VALUE
+#' @param CONSTRAINED ogs5  **bc** bloc sub keyword.
+#' @param COPY_VALUE ogs5  **bc** bloc sub keyword.
 #' @param DIS_TYPE Distribution type of boundary condition.
-#' @param DIS_TYPE_CONDITION
-#' @param EPSILON
-#' @param EXCAVATION
+#' @param DIS_TYPE_CONDITION ogs5  **bc** bloc sub keyword.
+#' @param EPSILON ogs5  **bc** bloc sub keyword.
+#' @param EXCAVATION ogs5  **bc** bloc sub keyword.
 #' @param FCT_TYPE Name of a function defined in **fct** bloc to be used as BC.
 #' @param GEO_TYPE Name of a geometry defined in **gml** to be apply the BC on.
-#' @param MSH_TYPE
-#' @param NO_DIPS_INCREMENT
-#' @param PCS_TYPE Apply bc for the process defined in **pcs**.
-#' @param PRESSURE_AS_HEAD
-#' @param PRIMARY_VARIABLE Apply bc for the primary variable defined in **pcs**.
-#' @param TIME_CONTROLLED_ACTIVE
+#' @param MSH_TYPE ogs5  **bc** bloc sub keyword.
+#' @param NO_DIPS_INCREMENT ogs5  **bc** bloc sub keyword.
+#' @param PCS_TYPE Apply **bc** for the process defined in **pcs**.
+#' @param PRESSURE_AS_HEAD ogs5  **bc** bloc sub keyword.
+#' @param PRIMARY_VARIABLE Apply **bc** for the primary variable defined in **pcs**.
+#' @param TIME_CONTROLLED_ACTIVE ogs5  **bc** bloc sub keyword.
 #' @param TIM_TYPE Set name of a **CURVE** defined in **rfd** if bc should be
 #'   time dependend.
 #' @return Updated *ogs5* simulation object.
 #' @export
-#'
 #' @examples
 #' ogs5_obj <- input_add_bc_bloc(ogs5_obj, bc_name = "BOUNDARY_CONDITION1",
 #'                               PCS_TYPE = "GROUNDWATER_FLOW",

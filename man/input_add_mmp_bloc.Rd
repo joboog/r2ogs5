@@ -58,6 +58,102 @@ input_add_mmp_bloc(
 }
 \arguments{
 \item{x}{Simulation object of class \emph{ogs5}.}
+
+\item{CAPILLARY_PRESSURE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{CHANNEL}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{COMPOUND_DEPENDENT_DT}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{CONDUCTIVITY_MODEL}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{CONVERSION_FACTOR}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{DATA}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{DIFFUSION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{DIS_TYPE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{ELEMENT_VOLUME_MULTIPLYER}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{EVAPORATION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{FLOWLINEARITY}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{GEOMETRY_AREA}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{GEOMETRY_DIMENSION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{GEOMETRY_INCLINATION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{GEO_TYPE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{HEAT_DISPERSION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{HEAT_TRANSFER}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{INTERPHASE_FRICTION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{MASS_DISPERSION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{MMP_TYPE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{MSH_TYPE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{NAME}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{ORGANIC_CARBON}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PARTICLE_DIAMETER}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PCS_TYPE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_DISTRIBUTION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_FUNCTION_DEFORMATION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_FUNCTION_EFFSTRESS}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_FUNCTION_POROSITY}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_FUNCTION_PRESSURE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_FUNCTION_STRAIN}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_FUNCTION_STRESS}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_FUNCTION_VELOCITY}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_SATURATION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{PERMEABILITY_TENSOR}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{POROSITY}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{POROSITY_DISTRIBUTION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{RILL}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{SPECIFIC_STORAGE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{STORAGE}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{STORAGE_FUNCTION_EFFSTRESS}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{SURFACE_FRICTION}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{TORTUOSITY}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{TRANSFER_COEFFICIENT}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{UNCONFINED}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{VOL_BIO}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{VOL_MAT}{ogs5 \strong{mmp} bloc sub key word.}
+
+\item{WIDTH}{ogs5 \strong{mmp} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

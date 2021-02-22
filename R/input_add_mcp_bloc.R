@@ -8,29 +8,29 @@
 #'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
 #'   All arguments except **x** have to be of class *character*.
 #' @param x *ogs5* simulation object.
-#' @param ACENTRIC_FACTOR
-#' @param A_ZERO
-#' @param BUBBLE_VELOCITY
-#' @param CRITICAL_PRESSURE
-#' @param CRITICAL_TEMPERATURE
-#' @param DECAY
-#' @param DIFFUSION
-#' @param FLUID_ID
-#' @param FLUID_PHASE
-#' @param FORMULA
-#' @param ISOTHERM
-#' @param MAXIMUM_AQUEOUS_SOLUBILITY
-#' @param MINERAL_DENSITY
-#' @param MOBILE
-#' @param MOLAR_DENSITY
-#' @param MOLAR_VOLUME
-#' @param MOLAR_WEIGHT
-#' @param MOL_MASS
+#' @param ACENTRIC_FACTOR ogs5 **mcp** bloc sub key word.
+#' @param A_ZERO ogs5 **mcp** bloc sub key word.
+#' @param BUBBLE_VELOCITY ogs5 **mcp** bloc sub key word.
+#' @param CRITICAL_PRESSURE ogs5 **mcp** bloc sub key word.
+#' @param CRITICAL_TEMPERATURE ogs5 **mcp** bloc sub key word.
+#' @param DECAY ogs5 **mcp** bloc sub key word.
+#' @param DIFFUSION ogs5 **mcp** bloc sub key word.
+#' @param FLUID_ID ogs5 **mcp** bloc sub key word.
+#' @param FLUID_PHASE ogs5 **mcp** bloc sub key word.
+#' @param FORMULA ogs5 **mcp** bloc sub key word.
+#' @param ISOTHERM ogs5 **mcp** bloc sub key word.
+#' @param MAXIMUM_AQUEOUS_SOLUBILITY ogs5 **mcp** bloc sub key word.
+#' @param MINERAL_DENSITY ogs5 **mcp** bloc sub key word.
+#' @param MOBILE ogs5 **mcp** bloc sub key word.
+#' @param MOLAR_DENSITY ogs5 **mcp** bloc sub key word.
+#' @param MOLAR_VOLUME ogs5 **mcp** bloc sub key word.
+#' @param MOLAR_WEIGHT ogs5 **mcp** bloc sub key word.
+#' @param MOL_MASS ogs5 **mcp** bloc sub key word.
 #' @param NAME Component name.
-#' @param OutputMassOfComponentInModel
-#' @param TRANSPORT_PHASE
-#' @param VALENCE
-#' @param VOLUME_DIFFUSION
+#' @param OutputMassOfComponentInModel ogs5 **mcp** bloc sub key word.
+#' @param TRANSPORT_PHASE ogs5 **mcp** bloc sub key word.
+#' @param VALENCE ogs5 **mcp** bloc sub key word.
+#' @param VOLUME_DIFFUSION ogs5 **mcp** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export

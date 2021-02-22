@@ -17,7 +17,11 @@ input_add_cct_bloc(
 
 \item{cct_name}{Name of the \strong{cct} bloc.}
 
-\item{NNEIGHBORS}{}
+\item{MYRANK}{ogs5 \strong{cct} bloc sub keword.}
+
+\item{NEIGHBOR}{ogs5 \strong{cct} bloc sub keword.}
+
+\item{NNEIGHBORS}{ogs5 \strong{cct} bloc sub keword.}
 }
 \value{
 Updated \emph{ogs5} object.

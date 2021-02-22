@@ -11,8 +11,8 @@
 #' @param mkey *character* ogs5 #-keyword: c("CURVE", "CURVES").
 #' @param data *Tibble* with two *numeric* columns. One colum has to be named
 #'   "time".
-#' @param INTERPOLATION
-#' @param MSH_TYPE
+#' @param INTERPOLATION ogs5 **rfd** bloc sub key word.
+#' @param MSH_TYPE  ogs5 **rfd** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export

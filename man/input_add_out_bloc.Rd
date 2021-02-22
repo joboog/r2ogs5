@@ -29,7 +29,33 @@ input_add_out_bloc(
 
 \item{out_name}{Name of the \strong{out} sub-bloc. \emph{character}}
 
+\item{AMPLIFIER}{ogs5 \strong{out} bloc sub key word.}
+
+\item{DAT_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{DIS_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{ELE_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{GEO_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{MFP_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{MMP_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{MSH_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{NOD_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{PCON_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{PCS_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{RWPT_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
 \item{TECPLOT_ZONE_SHARE}{\emph{logical}}
+
+\item{TIM_TYPE}{ogs5 \strong{out} bloc sub key word.}
 
 \item{VARIABLESHARING}{\emph{logical}}
 }

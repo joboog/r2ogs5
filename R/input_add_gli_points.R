@@ -83,12 +83,12 @@ input_add_gli_points <-
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gli/h_polyline).
 #' @param x Simulation object of class *ogs5*.
 #' @param EPSILON Error tolerance of the specified points to the mesh nodes.
-#' @param ID
-#' @param MAT_GROUP
+#' @param ID ogs5 **gli** bloc sub key word.
+#' @param MAT_GROUP ogs5 **gli** bloc sub key word.
 #' @param ply_name Name of the polyline.
 #' @param POINTS Points to be used for the polyline.
-#' @param POINT_VECTOR
-#' @param TYPE
+#' @param POINT_VECTOR ogs5 **gli** bloc sub key word.
+#' @param TYPE ogs5 **gli** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export
@@ -165,12 +165,12 @@ input_add_gli_polyline <-
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gli/h_surface).
 #' @param x Simulation object of class *ogs5*.
 #' @param EPSILON Error tolerance of the specified points to the mesh nodes.
-#' @param ID
-#' @param MAT_GROUP
+#' @param ID ogs5 **gli** bloc sub key word.
+#' @param MAT_GROUP ogs5 **gli** bloc sub key word.
 #' @param srf_name Name of the surface. *character*
 #' @param POLYLINES Names of the polylines that create the surface. *character*
-#' @param TYPE
-#' @param TIN
+#' @param TYPE ogs5 **gli** bloc sub key word.
+#' @param TIN ogs5 **gli** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export

@@ -9,16 +9,16 @@
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html).
 #' @param x Simulation object of class *ogs5*.
 #' @param msh_name Name of the mesh. *character*
-#' @param AREA
-#' @param AXISYMMETRY
-#' @param CROSS_SECTION
+#' @param AREA ogs5 **msh** bloc sub key word.
+#' @param AXISYMMETRY ogs5 **msh** bloc sub key word.
+#' @param CROSS_SECTION ogs5 **msh** bloc sub key word.
 #' @param ELEMENTS A *tibble* with columns material_id ele_type node1 node2
 #'                 (node3, node4)
-#' @param GEO_NAME
-#' @param GEO_TYPE
-#' @param LAYER
+#' @param GEO_NAME ogs5 **msh** bloc sub key word.
+#' @param GEO_TYPE ogs5 **msh** bloc sub key word.
+#' @param LAYER ogs5 **msh** bloc sub key word.
 #' @param NODES A *tibble* with columns x, y, z.
-#' @param PCS_TYPE
+#' @param PCS_TYPE ogs5 **msh** bloc sub key word.
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples

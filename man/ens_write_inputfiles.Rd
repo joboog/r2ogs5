@@ -7,9 +7,9 @@
 ens_write_inputfiles(x, type = "all")
 }
 \arguments{
-\item{type}{\emph{character} Type of input files to write, see \code{\link[=ogs5_write_inputfiles]{ogs5_write_inputfiles()}}.}
+\item{x}{Instanc of class \emph{ens} containing the simulation objects.}
 
-\item{Instanc}{of class \emph{ens} containing the simulation objects.}
+\item{type}{\emph{character} Type of input files to write, see \code{\link[=ogs5_write_inputfiles]{ogs5_write_inputfiles()}}.}
 }
 \description{
 Wrapper function to write input files for all \emph{ogs5} simulation

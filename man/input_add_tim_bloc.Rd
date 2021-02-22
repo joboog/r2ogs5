@@ -25,11 +25,27 @@ input_add_tim_bloc(
 
 \item{tim_name}{Name of the \strong{tim} sub-bloc.}
 
+\item{CRITICAL_TIME}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{INDEPENDENT}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{PCS_TYPE}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{SUBSTEPS}{ogs5 \strong{tim} bloc sub key word.}
+
 \item{TIME_END}{\emph{numeric}}
 
 \item{TIME_START}{\emph{numeric}}
 
-\item{TIME_UNIT}{}
+\item{TIME_STEPS}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{TIME_CONTROL}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{TIME_FIXED_POINTS}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{TIME_SPLITS}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{TIME_UNIT}{ogs5 \strong{tim} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

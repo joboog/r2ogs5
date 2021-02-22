@@ -10,10 +10,9 @@
 #'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object. *ogs*
 #' @param cct_name Name of the **cct** bloc.
-#' @param MYRANK
-#' @param NEIGHBOR
-#' @param NNEIGHBORS
-#'
+#' @param MYRANK ogs5 **cct** bloc sub keword.
+#' @param NEIGHBOR ogs5 **cct** bloc sub keword.
+#' @param NNEIGHBORS ogs5 **cct** bloc sub keword.
 #' @return Updated *ogs5* object.
 #' @export
 input_add_cct_bloc <-

@@ -20,11 +20,17 @@ input_add_gli_polyline(
 
 \item{EPSILON}{Error tolerance of the specified points to the mesh nodes.}
 
+\item{ID}{ogs5 \strong{gli} bloc sub key word.}
+
+\item{MAT_GROUP}{ogs5 \strong{gli} bloc sub key word.}
+
 \item{ply_name}{Name of the polyline.}
 
 \item{POINTS}{Points to be used for the polyline.}
 
-\item{TYPE}{}
+\item{POINT_VECTOR}{ogs5 \strong{gli} bloc sub key word.}
+
+\item{TYPE}{ogs5 \strong{gli} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

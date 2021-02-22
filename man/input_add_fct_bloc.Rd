@@ -23,7 +23,11 @@ input_add_fct_bloc(
 
 \item{DIMENSION}{Dimension if \emph{data_type} is 'Matrix'.}
 
+\item{DIS_TYPE}{ogs5 \strong{fct} bloc sub key word.}
+
 \item{GEO_TYPE}{Name of a geometry defined in \strong{gml} to relate the function.}
+
+\item{TYPE}{ogs5 \strong{fct} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

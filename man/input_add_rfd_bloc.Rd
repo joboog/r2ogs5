@@ -23,7 +23,9 @@ input_add_rfd_bloc(
 \item{data}{\emph{Tibble} with two \emph{numeric} columns. One colum has to be named
 "time".}
 
-\item{MSH_TYPE}{}
+\item{INTERPOLATION}{ogs5 \strong{rfd} bloc sub key word.}
+
+\item{MSH_TYPE}{ogs5 \strong{rfd} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

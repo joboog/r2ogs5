@@ -14,10 +14,9 @@ input_add_pqc_skeybloc(
 \arguments{
 \item{x}{\emph{ogs5} simulation object.}
 
-\item{skey}{Phreeqc keyword: c("EQUILIBRIUM_PHASES", "EXCHANGE", "GAS_PHASE",
+\item{skey}{\emph{character}  Phreeqc keyword: c("EQUILIBRIUM_PHASES", "EXCHANGE", "GAS_PHASE",
 "ISOTOPES", "KINETICS", "KNOBS", "RATES", "REACTION", "SOLID_SOLUTION",
-"SOLUTION", "SURFACE"). For Phreeqc documentation \link{see}
-(https://water.usgs.gov/water-resources/software/PHREEQC/documentation/phreeqc3-html/phreeqc3.htm)}
+"SOLUTION", "SURFACE"). For Phreeqc documentation \href{https://water.usgs.gov/water-resources/software/PHREEQC/documentation/phreeqc3-html/phreeqc3.htm}{see}}
 
 \item{bloc_text}{\emph{character} defining the sub-bloc.}
 }
@@ -26,7 +25,6 @@ Updated \emph{ogs5} object.
 }
 \description{
 Adds a keyword specific \strong{pqc} sub-bloc to an \emph{ogs5} simulation
-object to define the input of the chemical solver \link{Phreeqc}
-(https://www.usgs.gov/software/phreeqc-version-3/). For further
+object to define the input of the chemical solver \href{https://www.usgs.gov/software/phreeqc-version-3/}{Phreeqc}. For further
 documentation see \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pqc.html}{ogs5 keyword docs}
 }

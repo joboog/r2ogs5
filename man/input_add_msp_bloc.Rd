@@ -31,7 +31,45 @@ input_add_msp_bloc(
 \arguments{
 \item{x}{Simulation object of class \emph{ogs5}.}
 
+\item{BIOT_CONSTANT}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{CREEP}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{DENSITY}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{ELASTICITY}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{EXCAVATION}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{E_Function}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{GRAVITY_CONSTANT}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{MICRO_STRUCTURE_PLAS}{ogs5 \strong{msp} bloc sub key word.}
+
 \item{NAME}{Name of the solid. \emph{character}}
+
+\item{NON_REACTIVE_FRACTION}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{PLASTICITY}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{REACTIVE_SYSTEM}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{SOLID_BULK_MODULUS}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{SPECIFIC_HEAT_SOURCE}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{STRESS_INTEGRATION_TOLERANCE}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{STRESS_UNIT}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{SWELLING_PRESSURE_TYPE}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{THERMAL}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{THRESHOLD_DEV_STR}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{TIME_DEPENDENT_YOUNGS_POISSON}{ogs5 \strong{msp} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

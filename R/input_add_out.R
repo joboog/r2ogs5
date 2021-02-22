@@ -9,20 +9,20 @@
 #'  Most arguments have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param out_name Name of the **out** sub-bloc. *character*
-#' @param AMPLIFIER
-#' @param DAT_TYPE
-#' @param DIS_TYPE
-#' @param ELE_VALUES
-#' @param GEO_TYPE
-#' @param MFP_VALUES
-#' @param MMP_VALUES
-#' @param MSH_TYPE
-#' @param NOD_VALUES
-#' @param PCON_VALUES
-#' @param PCS_TYPE
-#' @param RWPT_VALUES
+#' @param AMPLIFIER ogs5 **out** bloc sub key word.
+#' @param DAT_TYPE ogs5 **out** bloc sub key word.
+#' @param DIS_TYPE ogs5 **out** bloc sub key word.
+#' @param ELE_VALUES ogs5 **out** bloc sub key word.
+#' @param GEO_TYPE ogs5 **out** bloc sub key word.
+#' @param MFP_VALUES ogs5 **out** bloc sub key word.
+#' @param MMP_VALUES ogs5 **out** bloc sub key word.
+#' @param MSH_TYPE ogs5 **out** bloc sub key word.
+#' @param NOD_VALUES ogs5 **out** bloc sub key word.
+#' @param PCON_VALUES ogs5 **out** bloc sub key word.
+#' @param PCS_TYPE ogs5 **out** bloc sub key word.
+#' @param RWPT_VALUES ogs5 **out** bloc sub key word.
 #' @param TECPLOT_ZONE_SHARE *logical*
-#' @param TIM_TYPE
+#' @param TIM_TYPE ogs5 **out** bloc sub key word.
 #' @param VARIABLESHARING *logical*
 #'
 #' @return Updated *ogs5* object.

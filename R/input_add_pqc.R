@@ -1,15 +1,15 @@
 
 #' input_add_pqc_skeybloc
 #' @description Adds a keyword specific **pqc** sub-bloc to an *ogs5* simulation
-#'   object to define the input of the chemical solver [Phreeqc]
-#'   (https://www.usgs.gov/software/phreeqc-version-3/). For further
+#'   object to define the input of the chemical solver [Phreeqc](
+#'   https://www.usgs.gov/software/phreeqc-version-3/). For further
 #'   documentation see [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pqc.html)
 #' @param x *ogs5* simulation object.
-#' @param skey Phreeqc keyword: c("EQUILIBRIUM_PHASES", "EXCHANGE", "GAS_PHASE",
+#' @param skey *character*  Phreeqc keyword: c("EQUILIBRIUM_PHASES", "EXCHANGE", "GAS_PHASE",
 #'   "ISOTOPES", "KINETICS", "KNOBS", "RATES", "REACTION", "SOLID_SOLUTION",
-#'   "SOLUTION", "SURFACE"). For Phreeqc documentation [see]
-#'   (https://water.usgs.gov/water-resources/software/PHREEQC/documentation/phreeqc3-html/phreeqc3.htm)
+#'   "SOLUTION", "SURFACE"). For Phreeqc documentation [see](
+#'   https://water.usgs.gov/water-resources/software/PHREEQC/documentation/phreeqc3-html/phreeqc3.htm)
 #' @param bloc_text *character* defining the sub-bloc.
 #'
 #' @return Updated *ogs5* object.
@@ -67,12 +67,12 @@ input_add_pqc_skeybloc <-
 
 #' input_add_pqcfile_as_pqc_bloc
 #' @description Add an entire ***.pqc** input file as **pqc** bloc to an *ogs5*
-#'   simulation object to define the input of the chemical solver [Phreeqc]
-#'   (https://www.usgs.gov/software/phreeqc-version-3/). For further
+#'   simulation object to define the input of the chemical solver [Phreeqc](
+#'   https://www.usgs.gov/software/phreeqc-version-3/). For further
 #'   documentation see [ogs5 keyword docs](
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pqc.html)
 #' @param x *ogs5* simulation object.
-#' @param pqc_filename Path to the ***.pqc** input file. *character*
+#' @param pqc_filename *character* Path to the ***.pqc** input file.
 #'
 #' @return Updated *ogs5* object.
 #' @export

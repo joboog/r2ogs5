@@ -23,10 +23,24 @@ input_add_msh_bloc(
 
 \item{msh_name}{Name of the mesh. \emph{character}}
 
+\item{AREA}{ogs5 \strong{msh} bloc sub key word.}
+
+\item{AXISYMMETRY}{ogs5 \strong{msh} bloc sub key word.}
+
+\item{CROSS_SECTION}{ogs5 \strong{msh} bloc sub key word.}
+
 \item{ELEMENTS}{A \emph{tibble} with columns material_id ele_type node1 node2
 (node3, node4)}
 
+\item{GEO_NAME}{ogs5 \strong{msh} bloc sub key word.}
+
+\item{GEO_TYPE}{ogs5 \strong{msh} bloc sub key word.}
+
+\item{LAYER}{ogs5 \strong{msh} bloc sub key word.}
+
 \item{NODES}{A \emph{tibble} with columns x, y, z.}
+
+\item{PCS_TYPE}{ogs5 \strong{msh} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.
