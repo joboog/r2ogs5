@@ -5,3 +5,5 @@
 ^LICENSE\.md$
 ^inst/ogs/
 ^tmp/
+^doc$
+^Meta$
