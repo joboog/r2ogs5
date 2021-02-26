@@ -1,4 +1,4 @@
-context("minimal working example for whole package")
+#context("minimal working example for whole package")
 
 test_that("all input files exist in the directory", {
 
@@ -8,7 +8,7 @@ test_that("all input files exist in the directory", {
 })
 
 # run ogs5 simulation, ex1 is in tests/testthat/temp
-ogs5_run(ogs5_obj = ex1, ogs_exe = "../../inst/ogs/ogs_5.76",
+ogs5_run(ogs5_obj = ex1, ogs_exe = "../../inst/ogs/ogs_fem",
          run_path = NULL,
          log_output = TRUE,
          log_path = paste0(tmp, "/log"))

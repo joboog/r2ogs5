@@ -124,7 +124,7 @@ ogs5_write_inputfiles(ex1_read, type = "all")
 # Engsesgaard/2Kin/slow_kin_pqc -------------------------------------------
 
 eg1_dir <- "../../inst/extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc"
-# eg1_dir <- "/inst/extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc"
+# eg1_dir <- "inst/extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc"
 
 # create new ogs5 object in temporary directory
 eg1_read <- create_ogs5(sim_name = "eg1_read", sim_id = 1L,

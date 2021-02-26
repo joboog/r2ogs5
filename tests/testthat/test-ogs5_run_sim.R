@@ -1,3 +1,4 @@
+#context("Run ogs5 sim and return errors.")
 
 test_that("ogs5_run returns errors", {
     expect_error(
