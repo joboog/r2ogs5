@@ -62,7 +62,7 @@ ogs5_run <- function(ogs5_obj = list(),
         stop("number_of_cores needs to be an integer that does not
              exceed the available number of CPUs")
     } else {
-      warning("number_of_cores has to agree with the partitioning of the mesh!")
+      message("number_of_cores has to agree with the partitioning of the mesh!")
       ogs_exe <- paste0("mpirun --oversubscribe -np ",
                         number_of_cores, " ", ogs_exe)
     }
