@@ -427,6 +427,8 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 "ic" = add_standard_blocs(filepath,
                                           "ogs5_ic_condition"),
 
+                "krc" = add_standard_blocs(filepath),
+
                 "mcp" = add_standard_blocs(filepath,
                                            "ogs5_mcp_component"),
 

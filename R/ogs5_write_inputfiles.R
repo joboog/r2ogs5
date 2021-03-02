@@ -425,24 +425,17 @@ ogs5_list_output.ogs5_krc <-
     # check ogs5_sublist
     stopifnot(class(ogs5_sublist) == "ogs5_krc")
 
+    mkeys <- names(ogs5_sublist) %>% stringr::str_extract("[:alpha:]+")
     # loop over sublists
-    for (i in seq_len(ogs5_sublist %>% length())) {
-
-        # line breaks for subkeys with more than one entry
-        sublist_i <- ogs5_sublist[[i]] %>%
-                      lapply(function(skeybloc){
-                        return(paste(skeybloc, collapse = "\n "))
-                      })
+    for (i in seq_along(mkeys)) {
         # check mkey
-        ogs5_mkey <- sublist_i$mkey
-        sublist_i$mkey <- NULL
-        if (!(ogs5_mkey %in% ogs5_get_keywordlist()$krc$mkey)) {
+        if (!(mkeys[i] %in% ogs5_get_keywordlist()$krc$mkey)) {
           stop("undefined ogs5 mkey in krc list")
         }
 
         # print
-        ogs5_print_mkey_bloc(mkey_bloc = sublist_i,
-                             mkey = ogs5_mkey)
+        ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                             mkey = mkeys[i], stack = TRUE)
         cat("\n")
       }
     cat("#STOP", "\n")
