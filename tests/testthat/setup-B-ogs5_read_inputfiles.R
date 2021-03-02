@@ -18,7 +18,10 @@ read_write_test <-
         # loop over filenames and read-write compare
         for (i in 1:length(read_filenames)) {
 
-            if(read_file_ext[i] %in% c("vtu", "vtk", "pvd", "tec", "asc")) {
+            if(!read_file_ext[i] %in%
+               c("bc", "cct", "ddc", "fct", "gli", "gem", "ic", "krc", "mcp",
+                 "mfp", "mmp", "msh", "msp", "num", "out", "pcs", "pqc", "rei",
+                 "st", "tim", "dat")) {
                 next
             }
 
