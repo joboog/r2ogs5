@@ -4,7 +4,12 @@
 \alias{cal_change_parameters}
 \title{change input parameters of an \emph{ogs5} object}
 \usage{
-cal_change_parameters(ogs5_obj, par_df, ensemble_path)
+cal_change_parameters(
+  ogs5_obj,
+  par_df,
+  ensemble_path = NULL,
+  ensemble_name = NULL
+)
 }
 \arguments{
 \item{ogs5_obj}{\emph{ogs5}}

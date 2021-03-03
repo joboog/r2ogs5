@@ -14,7 +14,9 @@ cal_simulation_error(
   log_path = NULL,
   run_path = attributes(ogs5_obj)$sim_path,
   target_function,
-  ensemble_path = NULL
+  ensemble_path = NULL,
+  ensemble_cores,
+  ensemble_name
 )
 }
 \arguments{

@@ -38,3 +38,13 @@ test_that("transformation behaves as expected", {
 test_that("cal_change_parameters cannot create input, only change",
           expect_error(cal_change_parameters(ex1, par_df = wrong_df))
           )
+
+
+context("cal_bayesOpt")
+
+test_that("main function throws errors", {
+    expect_error(cal_bayesOpt(kappa = -1))
+    expect_error(cal_bayesOpt(kappa = "Sam>Frodo"))
+    expect_error(cal_bayesOpt(BO_init = list("a", 4)))
+})
+

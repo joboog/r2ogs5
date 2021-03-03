@@ -38,7 +38,8 @@ cal_simulation_error <- function(par_df,
                                   run_path = attributes(ogs5_obj)$sim_path,
                                   target_function,
                                   ensemble_path = NULL,
-                                  ensemble_cores) {
+                                  ensemble_cores,
+                                  ensemble_name) {
 
     # general purpose function to sequentially call ogs5 runs
     # takes value(s) to evaluate by ogs, runs a simulation and calls
@@ -53,9 +54,10 @@ cal_simulation_error <- function(par_df,
     is_ens <- n_samples > 1
 
     if (is_ens) {
-        ens1 <- cal_change_parameters(ogs5_obj, par_df = par_df, ensemble_path)
+        ens1 <- cal_change_parameters(ogs5_obj, par_df = par_df,
+                                      ensemble_path, ensemble_name)
     } else {
-        ogs5_obj <- cal_change_parameters(ogs5_obj, par_df = par_df, ensemble_path)
+        ogs5_obj <- cal_change_parameters(ogs5_obj, par_df = par_df)
     }
 
 
@@ -65,7 +67,7 @@ cal_simulation_error <- function(par_df,
 
         # prepare parallel run
         '%dopar%' <- foreach::'%dopar%'
-        cl <- parallel::makeForkCluster(ensemble_cores)
+        cl <- parallel::makeForkCluster(ensemble_cores, outfile="")
         doParallel::registerDoParallel(cl)
 
         foreach::foreach(i = seq_along(ens1)) %dopar% {
@@ -145,7 +147,10 @@ cal_simulation_error <- function(par_df,
 #' @export
 #'
 #' @examples
-cal_change_parameters <- function(ogs5_obj, par_df, ensemble_path) {
+cal_change_parameters <- function(ogs5_obj,
+                                  par_df,
+                                  ensemble_path = NULL,
+                                  ensemble_name = NULL) {
 
     n_samples <- ncol(par_df) - 6
     # check if ensemble
@@ -155,7 +160,7 @@ cal_change_parameters <- function(ogs5_obj, par_df, ensemble_path) {
         # create ensemble
         ens1 <- create_ens(base_sim = ogs5_obj,
                            parameter_tbl = par_df[, c(7:ncol(par_df))],
-                           name = "initial_ensemble",
+                           name = ensemble_name,
                            path = ensemble_path)
         message(paste("Preparing ensemble run of", ncol(par_df) - 6))
     }
