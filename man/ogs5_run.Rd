@@ -37,8 +37,10 @@ Default: use 'attributes(ogs5_obj)$sim_path'}
 Run \strong{ogs5} simulation via call to OS.
 }
 \examples{
+\dontrun{
  ogs5_run(ogs5_obj = sim1, ogs_exe = "inst/ogs/ogs_5.76",
           run_path = NULL,
           log_output = TRUE,
           log_path = "examples/tmp/ex1/log")
+}
 }

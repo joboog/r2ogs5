@@ -25,6 +25,7 @@ Object of class \emph{og5}
 Constructor for the \emph{ogs5} base-class
 }
 \examples{
+tmp <- tempdir()
 ogs5_obj <- create_ogs5(sim_name = "ogs5_obj", sim_id = 1L,
-              sim_path = "examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc",)
+                        sim_path = paste0(tmp, "/ogs5_obj"))
 }

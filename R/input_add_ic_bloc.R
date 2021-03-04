@@ -19,11 +19,15 @@
 #' @export
 #'
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_ic_bloc(ogs5_obj, ic_name = "INITIAL_CONDITION1",
-#'  PCS_TYPE = "GROUNDWATER_FLOW",
-#' PRIMARY_VARIABLE = "HEAD",
-#' GEO_TYPE = "DOMAIN",
-#' DIS_TYPE = "CONSTANT 1.0")
+#'                               PCS_TYPE = "GROUNDWATER_FLOW",
+#'                               PRIMARY_VARIABLE = "HEAD",
+#'                               GEO_TYPE = "DOMAIN",
+#'                               DIS_TYPE = "CONSTANT 1.0")
 input_add_ic_bloc <-
 
    function(

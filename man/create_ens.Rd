@@ -31,10 +31,12 @@ simulations. Class \emph{ens} provides wrapper functions to define, execute and
 process multiple simulations.
 }
 \examples{
+\dontrun{
 para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 10),
               tracer_input_concentration = seq(0.1, 1, length.out = 5)) \%>\%
               tibble::as_tibble()
 
 ens1 <- create_ens(base_sim = ex1, parameter_tbl = para_df,
                   name = "tracersim", path = "path/to/my/ens")
+}
 }

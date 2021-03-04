@@ -54,6 +54,10 @@ For additional documentatoin of the input parameters see
 the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html}{ogs5 keyword docs}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 ogs5_obj <- input_add_msh_bloc(x = ogs5_obj, msh_name = "base_mesh",
                                NODES = mesh_lst[[1]],

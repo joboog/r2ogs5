@@ -22,8 +22,10 @@ Wrapper to execute \code{\link[=ogs5_run]{ogs5_run()}} for all included \emph{og
 included.
 }
 \examples{
+\dontrun{
 ens_run(ens1,
         ogs_exe = "../inst/ogs/ogs_5.76",
         log_output = TRUE,
         wait = FALSE)
+}
 }

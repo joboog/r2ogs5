@@ -36,6 +36,10 @@
 #' @export
 #'
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_mcp_bloc(ogs5_obj, NAME = "C(4)",
 #'                                MOBILE = "1",
 #'                                DIFFUSION = "1 0.0e-9",

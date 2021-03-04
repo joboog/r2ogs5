@@ -9,6 +9,19 @@
 #' @param folderpath *character* Path to write the outpufile(s) to.
 #' @export
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#' ogs5_obj <- input_add_pcs_bloc(ogs5_obj, pcs_name = "PROCESS1",
+#'                                PCS_TYPE = "GROUNDWATER_FLOW",
+#'                                NUM_TYPE = "NEW",
+#'                                ELEMENT_MATRIX_OUTPUT = "0")
+#' ogs5_obj <- input_add_bc_bloc(ogs5_obj, bc_name = "BOUNDARY_CONDITION1",
+#'                               PCS_TYPE = "GROUNDWATER_FLOW",
+#'                               PRIMARY_VARIABLE = "HEAD",
+#'                               GEO_TYPE = "POINT POINT0",
+#'                               DIS_TYPE = "CONSTANT 1.0e5")
+#'
 #' ogs5_write_inputfiles(ogs5_obj, "all")
 ogs5_write_inputfiles <-
 

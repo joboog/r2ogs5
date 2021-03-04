@@ -20,6 +20,8 @@ Reads many *.tec files from one filepath. Wrapper for
 \code{\link[=ogs5_read_tecplot]{ogs5_read_tecplot()}}.
 }
 \examples{
+\dontrun{
 tec_df <- ogs5_read_many_tecplots(filepath = "examples/tmp/ex1",
                                   geo_object = "domain")
+}
 }

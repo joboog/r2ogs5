@@ -17,6 +17,10 @@
 #' @return Updated *ogs5* object.
 #' @export
 #' @example
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_rfd_bloc(x = ogs5_obj,
 #'              rfd_name = "tracer", mkey = "CURVES",
 #'              data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),

@@ -263,8 +263,10 @@ ogs5_read_tecplot_point <- function(filepath){
 #' @return Dataframe.
 #' @export
 #' @examples
+#' \dontrun{
 #' tec_df <- ogs5_read_many_tecplots(filepath = "examples/tmp/ex1",
 #'                                   geo_object = "domain")
+#' }
 ogs5_read_many_tecplots <- function(filepath = character(),
                                     geo_object = character()){
 

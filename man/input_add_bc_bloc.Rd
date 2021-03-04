@@ -75,6 +75,10 @@ or have a look at the input scripts from the \href{https://gitlab.opengeosys.org
 All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_bc_bloc(ogs5_obj, bc_name = "BOUNDARY_CONDITION1",
                               PCS_TYPE = "GROUNDWATER_FLOW",
                               PRIMARY_VARIABLE = "HEAD",

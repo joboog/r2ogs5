@@ -19,5 +19,7 @@ Updated \emph{ogs5} object.
 Import all output of a \strong{ogs5} simulation to a \emph{ogs5} object.
 }
 \examples{
+\dontrun{
 sim1 <- ogs5_get_output_all(sim1)
+}
 }

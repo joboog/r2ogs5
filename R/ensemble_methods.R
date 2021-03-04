@@ -59,10 +59,12 @@ ens_write_inputfiles <- function(x, type = "all"){
 #'   all runs will be started the same time.
 #' @export
 #' @examples
+#' \dontrun{
 #' ens_run(ens1,
 #'         ogs_exe = "../inst/ogs/ogs_5.76",
 #'         log_output = TRUE,
 #'         wait = FALSE)
+#' }
 ens_run <- function(x, ogs_exe, log_output = TRUE , wait = FALSE){
 
 
@@ -92,10 +94,12 @@ ens_run <- function(x, ogs_exe, log_output = TRUE , wait = FALSE){
 #' @return Extended *x* with added output.
 #' @export
 #' @examples
+#' \dontrun{
 #' ens1 <- ens_get_output(ens1, type = "all")
 #' #' ens1 <- ens_get_output(ens1,
 #'                           type = "specific",
 #'                           outbloc_names = c("OUTPUT1", "OUTPUT2))
+#' }
 ens_get_output <- function(x, type = "all", ...){
 
     valid_ens(x)

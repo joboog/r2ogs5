@@ -631,11 +631,17 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 #' @export
 #'
 #' @examples
-#' ex1 <- input_add_blocs_from_file(ogs5_obj = NULL,
+#' \dontrun{
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "decal", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/decal"))
+#'
+#' ogs5_obj <- input_add_blocs_from_file(ogs5_obj = ogs5_obj,
 #'                        sim_basename = "decal",
 #'                        filename = "decal.mfp",
-#'                        file_dir = "examples/benchmarks/ConcreteCrack",
+#'                        file_dir = "inst/extdata/ogs5_benchmarks/ConcreteCrack",
 #'                        overwrite = FALSE)
+#' }
 input_add_blocs_from_file <- function(ogs5_obj = NULL,
                                       sim_basename,
                                       filename,

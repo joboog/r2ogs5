@@ -22,6 +22,10 @@
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 #' ogs5_obj <- input_add_msh_bloc(x = ogs5_obj, msh_name = "base_mesh",
 #'                                NODES = mesh_lst[[1]],
@@ -74,12 +78,12 @@ input_add_msh_bloc <-
     }
 
     # check ELEMENTS
-    if (!(tibble::is_tibble(ELEMENTS[[1]]))){
+    if (!(tibble::is_tibble(ELEMENTS))){
       stop("ELEMENTS has to be a 'tibble' ",
            call. = FALSE)
     }
 
-    if (!all(c("material_id", "ele_type", "node1", "node2") %in% names(ELEMENTS[[1]]))){
+    if (!all(c("material_id", "ele_type", "node1", "node2") %in% names(ELEMENTS))){
       stop("ELEMENTS has to have headers: 'material_id', 'ele_type', 'node1', 'node2', ...",
            call. = FALSE)
     }

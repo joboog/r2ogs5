@@ -83,6 +83,10 @@ All arguments except \strong{x} have to be of class \emph{character}.
 Note the syntax with line breaks "\\n" for ELASTICITY and THERMAL.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_msp_bloc(ogs5_obj, NAME = "SOLID_PROPERTIES1",
                                DENSITY = "1 1.80000e+003")
 }

@@ -26,5 +26,7 @@ Import the output from an \strong{ogs5} simulation defined in a
 specific \emph{ogs5} \strong{out} sub-bloc. Add output to \emph{ogs5} object.
 }
 \examples{
+\dontrun{
 ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
+}
 }

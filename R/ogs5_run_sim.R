@@ -13,10 +13,12 @@
 #' @param wait *logical* if 'TRUE', Freeze R-session until simulation is finished.
 #' @export
 #' @examples
+#' \dontrun{
 #'  ogs5_run(ogs5_obj = sim1, ogs_exe = "inst/ogs/ogs_5.76",
 #'           run_path = NULL,
 #'           log_output = TRUE,
 #'           log_path = "examples/tmp/ex1/log")
+#' }
 ogs5_run <- function(ogs5_obj = list(),
                      ogs_exe = NULL, run_path = NULL,
                      log_output = TRUE,

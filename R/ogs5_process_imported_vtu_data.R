@@ -10,8 +10,10 @@
 #' @return *Tibble*
 #' @export
 #' @examples
+#' \dontrun{
 #' foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
 #'            node_coords = tibble::tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
+#' }
 ogs5_read_data_at_nodes <-
 
   function(ogs5 = list(), outbloc_name = character(),

@@ -7,7 +7,9 @@
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples
+#' \dontrun{
 #' sim1 <- ogs5_get_output_all(sim1)
+#' }
 ogs5_get_output_all <- function(ogs5,# = list(),
                                 out_filepath = NULL){
 
@@ -108,7 +110,9 @@ ogs5_get_output_all <- function(ogs5,# = list(),
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples
+#' \dontrun{
 #' ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
+#' }
 ogs5_get_output_specific <- function(ogs5 = list(), outbloc_names = character(),
                                     out_filepath = NULL){
 

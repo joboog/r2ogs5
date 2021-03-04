@@ -25,6 +25,10 @@
 #' @export
 #'
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_tim_bloc(ogs5_obj, tim_name = "TIME_STEPPING1",
 #'                               PCS_TYPE = "GROUNDWATER_FLOW",
 #'                               TIME_STEPS = "210 100.0",
