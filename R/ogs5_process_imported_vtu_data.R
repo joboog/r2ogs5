@@ -29,8 +29,8 @@ ogs5_read_data_at_nodes <-
     }
 
     # get node indices
-    nodes_tbl <- ogs5$input$msh$base_mesh$NODES %>%
-                  dplyr::mutate(node_id = as.numeric(rownames(.)))
+    nodes_tbl <- ogs5$input$msh$base_mesh$NODES
+                  #dplyr::mutate(node_id = as.numeric(rownames(.)))
 
     if (!(is.null(node_coords))){
       nodes_tbl <-  nodes_tbl %>% dplyr::semi_join(node_coords)

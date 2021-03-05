@@ -184,15 +184,20 @@ create_structured_mesh_nodes_ele <-
 
   xyz_vector <- list(x_vector, y_vector, z_vector)
 
-  nodes_df <- tibble::as_tibble(expand.grid(x = xyz_vector[[1]], y = xyz_vector[[2]],
-                                    z = xyz_vector[[3]]))
+  nodes_df <- tibble::as_tibble(expand.grid(x = xyz_vector[[1]],
+                                            y = xyz_vector[[2]],
+                                            z = xyz_vector[[3]])) %>%
+              dplyr::mutate(
+                node_id = (1:length(.data$x) - 1) %>% as.integer()) %>%
+              dplyr::select_at(dplyr::vars("node_id", "x", "y", "z"))
 
   # create element_df
   # 1d
   if (length(mesh_dim[mesh_dim == TRUE]) == 1) {
 
     ele_type <- "line"
-    ele_df <-tibble::tibble(material_id = vector("numeric", length(nodes_df[[1]])-1),
+    ele_df <-tibble::tibble(
+                     material_id = vector("numeric", length(nodes_df[[1]])-1),
                      ele_type = rep(ele_type, times = length(nodes_df[[1]])-1),
                      node1 = seq(0, length(nodes_df[[1]])-2,1),
                      node2 = .data$node1 + 1)
@@ -213,8 +218,9 @@ create_structured_mesh_nodes_ele <-
   }
 
   ele_df <- ele_df %>%
-    dplyr::mutate(nr = 1:length(ele_type) - 1) %>%
-    dplyr::select(.data$nr, dplyr::everything())
+    dplyr::mutate(
+      ele_id = (1:length(ele_df[[1]]) - 1)) %>%
+    dplyr::select(.data$ele_id, dplyr::everything())
 
   return(list(NODES = nodes_df, ELEMENTS = ele_df))
 }

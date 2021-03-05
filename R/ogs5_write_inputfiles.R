@@ -381,8 +381,6 @@ ogs5_list_output.ogs5_gli <-
         cat("#POINTS\n")
 
         df <- ogs5_sublist[[i]] %>%
-              #tibble::rownames_to_column() %>%
-              #dplyr::mutate(rowname = as.numeric(.data$rowname)) %>%
               as.data.frame()
 
         if (any(colnames(df) == "name")) {
@@ -395,7 +393,6 @@ ogs5_list_output.ogs5_gli <-
           df$md <-stringr::str_c("$MD ", df$md)
         }
         names(df) <- NULL
-        #df %>% print(row.names = TRUE)
 
         cat(" ", paste(colnames(df)), "\n")
         cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
@@ -547,10 +544,10 @@ ogs5_print_msh_mkey_bloc <-
 
     # print NODES
     df <- mkey_bloc$NODES %>%
-          tibble::rownames_to_column() %>%
-          dplyr::mutate(rowname = as.numeric(.data$rowname) - 1) %>%
+          #tibble::rownames_to_column() %>%
+          #dplyr::mutate(rowname = as.numeric(.data$rowname) - 1) %>%
           as.data.frame()
-    rownames(df) <- rownames(df) %>% as.numeric() %>% -1
+    #rownames(df) <- rownames(df) %>% as.numeric() %>% -1
     names(df) <- NULL
     cat("$NODES\n", length(df[[1]]), "\n")
     #df %>% print(row.names = TRUE)

@@ -452,9 +452,11 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                                    as.double %>%
                                    matrix(nrow = length(nds),
                                           byrow = TRUE) %>%
-                                   'colnames<-' (c("n", "x", "y", "z")) %>%
+                                   'colnames<-' (c("node_id", "x", "y", "z"))%>%
                                    tibble::as_tibble() %>%
-                                   dplyr::select(-n) # remove numbering column
+                                   dplyr::mutate_at(dplyr::vars("node_id"),
+                                                    list(as.integer))
+                                   #dplyr::select(-n) # remove numbering column
 
                 # Convert ELEMENTS into tibble
                 emts <- bloc[["ELEMENTS"]][-1] # leave out first line
@@ -475,15 +477,18 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                         unlist %>%
                         matrix(nrow = n, byrow = TRUE)
 
-                    colnames(mat) <- c("nr",
+                    colnames(mat) <- c("ele_id",
                                        "material_id",
                                        "ele_type",
                                        paste0("node", 1:(ncol(mat) - 3)))
 
                     bloc[["ELEMENTS"]][[paste0(g)]] <- mat %>%
                         tibble::as_tibble() %>%
-                        dplyr::mutate_at(dplyr::vars(-.data$ele_type),
-                                         list(as.double))
+                        dplyr::mutate_at(dplyr::vars(-"ele_id",
+                                                     -"ele_type"),
+                                         list(as.double)) %>%
+                        dplyr::mutate_at(dplyr::vars("ele_id"),
+                                         list(as.integer))
                 }
                 bloc[["ELEMENTS"]] <- bloc[["ELEMENTS"]] %>% dplyr::bind_rows()
 

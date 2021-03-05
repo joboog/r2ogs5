@@ -29,8 +29,8 @@ input_add_msh_bloc(
 
 \item{CROSS_SECTION}{ogs5 \strong{msh} bloc sub key word.}
 
-\item{ELEMENTS}{A \emph{tibble} with columns material_id ele_type node1 node2
-(node3, node4)}
+\item{ELEMENTS}{A \emph{tibble} with columns c("ele_id", "material_id",
+"ele_type", "node1", "node2" ...).}
 
 \item{GEO_NAME}{ogs5 \strong{msh} bloc sub key word.}
 
@@ -38,7 +38,7 @@ input_add_msh_bloc(
 
 \item{LAYER}{ogs5 \strong{msh} bloc sub key word.}
 
-\item{NODES}{A \emph{tibble} with columns x, y, z.}
+\item{NODES}{A \emph{tibble} with columns c("node_id", "x", "y", "z").}
 
 \item{PCS_TYPE}{ogs5 \strong{msh} bloc sub key word.}
 }
