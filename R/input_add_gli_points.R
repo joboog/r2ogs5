@@ -68,9 +68,13 @@ input_add_gli_points <-
 
       # create and add sublist to gli-list
       df <- ogs5_points %>%
-              dplyr::select(.data$x, .data$y, .data$z, .data$name) %>%
-              tibble::as_tibble()
-      rownames(df) <- df %>% rownames() %>% as.numeric() %>% -1
+              tibble::as_tibble() %>%
+              dplyr::mutate(
+                     pnt_id = ogs5_points %>% rownames() %>%
+                              as.integer() %>% -1L
+               ) %>%
+              dplyr::select(.data$pnt_id, .data$x, .data$y, .data$z, .data$name)
+      #rownames(df) <- df %>% rownames() %>% as.numeric() %>% -1
 
       x$input$gli$points <- df
 
@@ -125,8 +129,8 @@ input_add_gli_polyline <-
       }
 
       # check if POINTS exist
-      ply_points <-stringr::str_split(POINTS, " ") %>% .[[1]] %>% as.numeric()
-      if (max(ply_points) > nrow(x$input$gli$points[,1])) {
+      ply_points <-stringr::str_split(POINTS, " ") %>% .[[1]] %>% as.integer()
+      if (!(ply_points %in% x$input$gli$points$pnt_id %>% all())) {
          stop("required POINTS missing", call. = FALSE)
       }
 

@@ -381,8 +381,8 @@ ogs5_list_output.ogs5_gli <-
         cat("#POINTS\n")
 
         df <- ogs5_sublist[[i]] %>%
-              tibble::rownames_to_column() %>%
-              dplyr::mutate(rowname = as.numeric(.data$rowname)) %>%
+              #tibble::rownames_to_column() %>%
+              #dplyr::mutate(rowname = as.numeric(.data$rowname)) %>%
               as.data.frame()
 
         if (any(colnames(df) == "name")) {

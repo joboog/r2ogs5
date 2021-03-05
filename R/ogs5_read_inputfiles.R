@@ -398,12 +398,15 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                          .vars = dollars + 1,
                          .funs = ~ names) %>%
                      dplyr::select_if(!stringr::str_detect(., "\\$")) %>%
-                     dplyr::rename_at(2:4, ~c("x", "y", "z")) %>%
+                     dplyr::rename_at(1:4, ~c("pnt_id", "x", "y", "z")) %>%
                      dplyr::mutate_at(.vars = c("x", "y", "z"),
                                       .funs = as.double) %>%
+                     dplyr::mutate_at(.vars = c("pnt_id"),
+                                      .funs = as.integer) %>%
                      tibble::as_tibble() %>%
-                     tibble::column_to_rownames("...1") %>%
-                     dplyr::select(.data$x, .data$y, .data$z, {{names}})
+                     #tibble::column_to_rownames("...1") %>%
+                     dplyr::select(.data$pnt_id, .data$x, .data$y, .data$z,
+                                   {{names}})
                             ))
 
                     } else {
