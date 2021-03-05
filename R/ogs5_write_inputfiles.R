@@ -558,19 +558,21 @@ ogs5_print_msh_mkey_bloc <-
     cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
 
     # print ELEMENTS
-    n_ele <- lapply(mkey_bloc$ELEMENTS, nrow) %>% unlist %>% sum
-    cat("$ELEMENTS\n", n_ele, "\n")
-    # loop over geometries
-    for (geometry in names(mkey_bloc$ELEMENTS)) {
+    #n_ele <- lapply(mkey_bloc$ELEMENTS, nrow) %>% unlist %>% sum
+    #cat("$ELEMENTS\n", n_ele, "\n")
 
-      df <- mkey_bloc$ELEMENTS[[paste0(geometry)]] %>%
-        tidyr::replace_na(list(node3 = "", node4 = "", node5 = "",
-                               node6 = "", node7 = "", node8 = "")) %>%
-        as.data.frame()
-      # rownames(df) <- rownames(df) %>% as.numeric() %>% -1
-      names(df) <- NULL
-      cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
-    }
+    # loop over geometries
+    #for (geometry in names(mkey_bloc$ELEMENTS)) {
+
+    df <- mkey_bloc$ELEMENTS %>%
+      tidyr::replace_na(list(node3 = "", node4 = "", node5 = "",
+                             node6 = "", node7 = "", node8 = "")) %>%
+      as.data.frame()
+    # rownames(df) <- rownames(df) %>% as.numeric() %>% -1
+    names(df) <- NULL
+    cat("$ELEMENTS\n", length(df[[1]]), "\n")
+    cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
+    #}
 
   }
 

@@ -124,7 +124,7 @@ ex1 <- input_add_gli_points(x = ex1,
 mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
                           NODES = mesh_lst[[1]],
-                          ELEMENTS = list(nodes = mesh_lst[[2]]))
+                          ELEMENTS = mesh_lst[[2]])
 
 # write input files -------------------------------------------------------
 ogs5_write_inputfiles(ex1, "all")

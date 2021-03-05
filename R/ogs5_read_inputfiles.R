@@ -482,6 +482,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                         dplyr::mutate_at(dplyr::vars(-.data$ele_type),
                                          list(as.double))
                 }
+                bloc[["ELEMENTS"]] <- bloc[["ELEMENTS"]] %>% dplyr::bind_rows()
 
                 # unlist all other blocs
                 other_skeys <- which(!(names(bloc) == "NODES" |

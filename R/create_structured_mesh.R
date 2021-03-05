@@ -14,7 +14,6 @@
 # sz <- NULL
 # nz <- NULL
 
-# computes axis parallel vector based on size_ele or n_ele
 comp_coordinate_vector <- function(origin = numeric(), d = numeric(),
                                    dist = numeric(), n_ele = NULL, s_ele = NULL){
 
@@ -109,6 +108,25 @@ generateRegQuadEle <- function(vector1 = numeric(), vector2 = numeric()){
 
 # main functoin -----------------------------------------------------------
 
+#' create_structured_mesh_nodes_ele
+#' @description Create a structured finite-element mesh in 1D, 2D or 3D.
+#'
+#' @param origin *numeric* vector of c(x,y,z) coordinates.
+#' @param lx *numeric* length in 'x' direction in 'meter'.
+#' @param nx *numeric* number of elements in 'x' direction.
+#' @param sx *numeric* multiplication factor of element size in 'x' direction.
+#' @param ly *numeric* length in 'y' direction in 'meter'.
+#' @param ny *numeric* number of elements in 'y' direction.
+#' @param sy *numeric* multiplication factor of element size in 'y' direction.
+#' @param lz *numeric* length in 'z' direction in 'meter'.
+#' @param nz *numeric* multiplication factor of element size in 'z' direction.
+#' @param sz *numeric* number of elements in 'z' direction.
+#'
+#' @return *list* of NODES *tibble* and ELEMENTS *tibble*.
+#' @export
+#'
+#' @examples
+#' mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 create_structured_mesh_nodes_ele <-
 
   function(
