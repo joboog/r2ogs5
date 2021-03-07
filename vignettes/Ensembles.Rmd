@@ -1,0 +1,252 @@
+---
+title: "Ensembles"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Ensembles}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+An ensemble refers to several simulations of the same type with different input parameters. Here a set of helper functions are presented in order to set up and run an ensemble. 
+
+
+1. [Prerequisites](#inst)
+2. [Preprocessing](#preproc)
+3. [Simulate](#sim) 
+4. [Postprocessing](#post)
+5. [Visualization](#viz)
+
+
+## Prerequisites  <a name="inst"></a>
+
+Before being able to run any simulation, the package r2ogs needs to be installed 
+via 
+```{r, eval=FALSE}
+devtools::install_gitlab("online/repo/path")
+```
+or 
+```{bash, eval=FALSE}
+git clone online/repo/path
+R --slave -e 'devtools::install("local/repo/path")'
+```
+and an appropriate **OGS5** executable has to be compiled the `exe_path` set as explained in the \link{simple_example.html} vignette.
+
+```{r}
+# library(r2ogs)
+devtools::load_all("/home/phit0/Public/r2ogs")
+```
+
+Before setting up the ensemble, a base *ogs5* simulation has to be defined.
+```{r, results='hide'}
+library(dplyr)
+ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L, sim_path = "tmp/ex1")
+
+ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
+                          PRIMARY_VARIABLE = "PRESSURE1")
+
+ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "tracer", PCS_TYPE = "MASS_TRANSPORT",
+                          PRIMARY_VARIABLE = "Tracer1", RELOAD = c("1", "1"))
+
+ex1 <- input_add_bc_bloc(x=ex1, bc_name = "pressure_out",
+                         PRIMARY_VARIABLE = "PRESSURE1",
+                         DIS_TYPE = "CONSTANT 9810", PCS_TYPE = "LIQUID_FLOW",
+                         GEO_TYPE = "POINT point1")
+
+ex1 <- input_add_bc_bloc(x=ex1, bc_name = "tracer_in", PRIMARY_VARIABLE = "Tracer",
+                         DIS_TYPE = "CONSTANT 1.19438", PCS_TYPE = "MASS_TRANSPORT",
+                         GEO_TYPE = "POINT point0", TIM_TYPE = "CURVE 1")
+
+ex1 <- input_add_ic_bloc(x = ex1, ic_name = "pressure", PCS_TYPE = "LIQUID_FLOW",
+                         PRIMARY_VARIABLE = "PRESSURE1", GEO_TYPE = "DOMAIN",
+                         DIS_TYPE = "CONSTANT 9810")
+
+ex1 <- input_add_ic_bloc(x = ex1, ic_name = "tracer", PCS_TYPE = "MASS_TRANSPORT",
+                         PRIMARY_VARIABLE = "Tracer", GEO_TYPE = "DOMAIN",
+                         DIS_TYPE = "CONSTANT 0.0")
+
+ex1 <- input_add_mcp_bloc(x = ex1, NAME = "Tracer", MOBILE = 1)
+
+ex1 <- input_add_mfp_bloc(x = ex1, FLUID_NAME = "water", FLUID_TYPE = "LIQUID",
+                          DENSITY = "1 1.0E+3", VISCOSITY = "1 1.0E-3")
+
+ex1 <- input_add_mmp_bloc(x = ex1, GEOMETRY_DIMENSION = "1", GEOMETRY_AREA = "1.2",
+                          POROSITY = "1 0.38",
+                          PERMEABILITY_TENSOR = "ISOTROPIC 1.0E-8",
+                          MASS_DISPERSION = "1 1.0",
+                          TORTUOSITY = "1 1.0", NAME = "gravel")
+
+ex1 <- input_add_msp_bloc(x = ex1, NAME = "gravel" , DENSITY = "1 1.8E+3")
+
+ex1 <- input_add_num_bloc(x = ex1, num_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
+                          LINEAR_SOLVER = "2 6 1.0E-14 100 1.0 100 4")
+
+ex1 <- input_add_num_bloc(x = ex1, num_name = "tracer", PCS_TYPE = "MASS_TRANSPORT",
+                          LINEAR_SOLVER = "2 6 1.0E-14 100 1.0 100 4")
+
+ex1 <- input_add_out_bloc(x = ex1, out_name = "tracer_tec",
+                          PCS_TYPE = "MASS_TRANSPORT",
+                          NOD_VALUES = "Tracer", GEO_TYPE = "DOMAIN",
+                          DAT_TYPE = "TECPLOT", TIM_TYPE = "STEPS 1")
+
+ex1 <- input_add_st_bloc(x = ex1, st_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
+                         PRIMARY_VARIABLE = "PRESSURE1", GEO_TYPE = "POINT point0",
+                         DIS_TYPE = "CONSTANT_NEUMANN 7.8611E-06")
+
+ex1 <- input_add_tim_bloc(x = ex1,  tim_name = "waterflow",
+                          PCS_TYPE = "LIQUID_FLOW", TIME_START = "0",
+                          TIME_END = "36000000", TIME_STEPS = "229 3600")
+
+ex1 <- input_add_tim_bloc(x = ex1,  tim_name = "tracer",
+                          PCS_TYPE = "MASS_TRANSPORT", TIME_START = "0",
+                          TIME_END = "36000000", TIME_STEPS = "229 3600")
+
+ex1 <- input_add_rfd_bloc(x = ex1, rfd_name = "tracer", mkey = "CURVES",
+                    data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),
+                                          conc=c(1,1,0,0,0)))
+
+ex1 <- input_add_gli_points(x = ex1,
+                        ogs5_points = tibble::tibble(x = c(0, 4.7), y = c(0,0),
+                                                 z = c(0,0),
+                                                 name = c("point0", "point1")))
+
+mesh_lst <- r2ogs:::create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
+ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
+                          NODES = mesh_lst[[1]],
+                          ELEMENTS = list(nodes = mesh_lst[[2]]))
+```
+
+
+## Preprocessing  <a name="preproc"></a>
+
+Define a parameter table for the ensemble for two parameters that will be arranged on a grid. Here, every combination of 10 mass dispersion and 5 tracer input concentrations  is a point on the grid thus resulting in 50 points/rows in the table. This can be easily extended to more parameters, but it has to be kept in mind that the number of points is the product of the parameter sequences every point corresponds to a simulation run.
+```{r results = "markup"}
+para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 10),
+                       tracer_input_concentration = seq(0.1, 1, length.out = 5)) %>% 
+            tibble::as_tibble()
+
+head(para_df)
+```
+Next, an ensemble object of class *ens* is created, where all the information is stored and a path to the directory where ensemble files should be written. 
+```{r}
+ens1 = create_ens(base_sim = ex1, parameter_tbl = para_df, name = "tracersim",
+                  path = "tmp")
+names(attributes(ens1))
+
+```
+
+In a simple loop, each parameter combination can be changed in the base simulation and then added to the ensemble with the helper function `ens_add_ogs5`. 
+
+```{r}
+# ensemble_add_sims <- functoin(ensemble = list())
+# add sims
+for (i in 1:dim(attributes(ens1)$sim_plan)[1]){
+
+  # define new ogs5 obj based on attributes(ens1)$base_sim 
+  tmp <- attributes(ens1)$base_sim
+ 
+  # set parameters
+  tmp$input$mmp$gravel$MASS_DISPERSION <- 
+    paste("1 ", round(attributes(ens1)$sim_plan[i, "mass_dispersion"], 2))
+  
+  tmp$input$bc$tracer_in$DIS_TYPE <- 
+    paste("CONSTANT", attributes(ens1)$sim_plan[i, "tracer_input_concentration"])
+  
+  # add to ens1
+  ens1 <- ens_add_ogs5(x = ens1, ogs5_obj = tmp)
+}
+```
+
+With another helper function, input files will be written in corresponding folders in the specified ensemble path. The overall folder structure is  
+
+ensemble_path/  
+  | - ensemble_name/  
+    | - ensemble_name1  
+    | - ensemble_name2  
+    | - ...  
+
+```{r}
+# ens_write_inputfiles(ens1)
+```
+
+
+
+## Simulate  <a name="sim"></a>
+
+Execute simulations.
+```{r, results='hide'}
+# ens_run(ens1,
+#         ogs_exe = "../inst/ogs/ogs",
+#         log_output = TRUE,
+#         wait = FALSE)
+
+```
+
+Read output.
+```{r}
+ens1 <- ens_get_output(ens1, type = "all")
+ens1$sim1$output$tracer_tec[[1]] %>% head
+```
+
+## Postprocessing  <a name="post"></a>
+For every element of the ensemble there is now a single placed *tibble* in `$output`, as can be seen above. 
+
+```{r}
+# create tibble of all outputted *.tec files
+tracer_out_df <- tibble::tibble()
+
+for (i in 1:length(ens1)){
+  tracer_out_df <- tracer_out_df %>% 
+                    dplyr::bind_rows(
+                      ens1[[i]]$output$tracer_tec[[1]] %>% 
+                        dplyr::mutate(sim_name = attributes(ens1[[i]])$sim_name)
+                    )   
+}
+```
+
+
+```{r}
+# linke output with paramter table
+tracer_out_df <-
+  tracer_out_df %>% 
+                  dplyr::filter(X == 4.7) %>% 
+                  dplyr::left_join(attributes(ens1)$sim_plan, by= "sim_name") %>% 
+                  dplyr::mutate(TIME = TIME/(3600*24))
+```
+
+
+## Visualization  <a name="viz"></a>
+
+```{r, fig.asp=0.5, fig.width=8}
+library("ggridges")
+
+tracer_out_df %>% 
+  dplyr::filter(X == 4.7) %>% 
+  
+  ggplot2::ggplot(ggplot2::aes(x = TIME, y = mass_dispersion, 
+             height= (Tracer), group = mass_dispersion,
+             fill = Tracer))+
+    ggridges::geom_density_ridges_gradient(stat = "identity", 
+                                           rel_min_height = 0.01,
+                                           panel_scaling = TRUE)+
+    
+    ggplot2::facet_grid(.~tracer_input_concentration)+
+  
+    ggridges::theme_ridges()+
+    ggplot2::theme(axis.text.x.bottom = ggplot2::element_text(angle = 30) )+
+    ggplot2::labs(x = "time (days)",
+         y = expression(Dispersion~Length~(m)),
+         fill = expression(c[Tracer]~(mg~L^{-1}))
+    )
+```
+
+## Clear ip
+```{r}
+#unlink(attributes(ens1)$path, recursive = TRUE)
+```
