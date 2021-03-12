@@ -20,7 +20,8 @@ if (1 %in% bm) {
 
     context("Engesgaard benchmark 1 vs reference")
     # run ogs from compiled directory
-    ogs5_run(ogs5_obj = eg1_read, ogs_exe = "../../inst/ogs/ogs_ipqc",
+    ogs5_run(ogs5_obj = eg1_read,
+             ogs_exe = "ogs_ipqc",
              run_path = NULL,
              log_output = TRUE,
              log_path = paste0(tmp, "/eg1_read/log"))
@@ -82,7 +83,7 @@ if (2 %in% bm) {
 
     context("Groundwater_flow/Transient_flow benchmark")
     ogs5_run(fct_read,
-             ogs_exe = "../../inst/ogs/ogs_fem",
+             ogs_exe = "ogs_fem",
              run_path = NULL,
              log_output = TRUE,
              log_path = paste0(tmp, "/fct_read/log"))
@@ -104,7 +105,7 @@ if (3 %in% bm)  {
     test_that("simulation with PETSC runs",
            expect_invisible(
                ogs5_run(cct_read,
-                    ogs_exe = "../../inst/ogs/ogs_petsc-gems",
+                    ogs_exe = "ogs_petsc-gems",
                     run_path = NULL,
                     log_output = TRUE,
                     log_path = paste0(tmp, "/cct_read/log"),
@@ -123,7 +124,7 @@ if (3 %in% bm)  {
 if (4 %in% bm) {
     context("MPI/McWhorter")
     ogs5_run(ddc_read,
-             ogs_exe = "../../inst/ogs/ogs_mpi",
+             ogs_exe = "ogs_mpi",
              run_path = NULL,
              log_output = TRUE,
              log_path = paste0(tmp, "/ddc_read/log"),

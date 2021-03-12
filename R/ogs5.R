@@ -25,7 +25,11 @@ create_ogs5 <- function(
       stop("'sim_name' has to be of type character", call. = FALSE)
    }
 
-   if (!is.character(sim_path)) {
+   if (is.null(sim_path)) {
+      sim_path <- paste0(
+                     unlist(options("r2ogs5.default_sim_path")), "/", sim_name)
+   }
+   else if (!is.character(sim_path)) {
       stop("'sim_path' has to be of type character", call. = FALSE)
    }
 

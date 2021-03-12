@@ -14,13 +14,15 @@
 #' @export
 #' @examples
 #' \dontrun{
-#'  ogs5_run(ogs5_obj = sim1, ogs_exe = "inst/ogs/ogs_5.76",
+#'  ogs5_run(ogs5_obj = sim1,
+#'           ogs_exe = "inst/ogs/ogs_5.76",
 #'           run_path = NULL,
 #'           log_output = TRUE,
 #'           log_path = "examples/tmp/ex1/log")
 #' }
 ogs5_run <- function(ogs5_obj = list(),
-                     ogs_exe = NULL, run_path = NULL,
+                     ogs_exe = NULL,
+                     run_path = NULL,
                      log_output = TRUE,
                      log_path = NULL,
                      use_mpi = FALSE,
@@ -30,15 +32,29 @@ ogs5_run <- function(ogs5_obj = list(),
   # validate input
   valid_ogs5(ogs5_obj)
 
-  # check paths
+  # check ogs_exe
   if (is.null(ogs_exe)){
-    stop("You did not specifiy the full name of the ogs executable.",
+    ogs_exe <- unlist(options("r2ogs5.default_ogs5_bin"))
+  }
+  else if (dir.exists(ogs_exe)) { # if is dir
+
+    stop("You did not specifiy the full path of the ogs executable.",
          call. = FALSE)
   }
-  if (!(file.exists(ogs_exe))){
-    stop("The provided ogs executable does not exist.", call. = FALSE)
+  else if (!(dir.exists(ogs_exe)) & !(file.exists(ogs_exe))) {
+
+    # check if provided ogs_exe exist in default path
+    ogs_exe <- paste0(
+                unlist(options("r2ogs5.default_ogs5_bin_path")), ogs_exe)
+
+    if (!(file.exists(ogs_exe))){
+      stop(paste0("The provided ogs executable does not exist. ",
+                  "Even not at 'r2ogs5.default_ogs5_bin_path'"),
+           call. = FALSE)
+    }
   }
 
+  # check run_path
   if (is.null(run_path)){
     run_path <- paste0(attributes(ogs5_obj)$sim_path)
   }

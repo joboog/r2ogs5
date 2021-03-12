@@ -23,5 +23,5 @@ Extended \emph{x} with added output.
 \description{
 Wrapper to retrieve output for all included \emph{ogs5} simulation
 objects. It calls on the functions \code{\link[=ogs5_get_output_all]{ogs5_get_output_all()}} and
-\code{\link[=ogs5_get_output_specific]{ogs5_get_output_specific()}} of the \strong{r2ogs} package.
+\code{\link[=ogs5_get_output_specific]{ogs5_get_output_specific()}} of the \strong{r2ogs5} package.
 }

@@ -3,7 +3,7 @@
 test_that("ogs5_run returns errors", {
     expect_error(
         ogs5_run(cct_read,
-             ogs_exe = "../../inst/ogs/ogs_petsc-gems",
+             ogs_exe = "ogs_petsc-gems",
              run_path = paste0(bm_prefix,
                                "extdata/ogs5_benchmarks/ConcreteCrack"),
              log_output = FALSE,
@@ -11,7 +11,7 @@ test_that("ogs5_run returns errors", {
         )
     expect_error(
         ogs5_run(cct_read,
-                 ogs_exe = "../../inst/ogs/ogs_petsc-gems",
+                 ogs_exe = "ogs_petsc-gems",
                  run_path =paste0(bm_prefix,
                                   "extdata/ogs5_benchmarks/ConcreteCrack"),
                  log_output = FALSE,
