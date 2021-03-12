@@ -18,7 +18,8 @@ tec_df_ex1 <- ogs5_read_many_tecplots(filepath = paste0(tmp, "/ex1"),
                                   geo_object = "domain")
 # load original result
 tracer_sol <- unlist(read.table(
-                        file = "../../inst/extdata/ex1_tracer_result.txt"))
+                        file = paste0(bm_prefix,
+                                      "extdata/ex1_tracer_result.txt")))
 
 test_that("running ex1 gives the correct results", {
     # test results

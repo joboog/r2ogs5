@@ -1,6 +1,3 @@
-# read in ex1 input files -------------------------------------------------
-
-
 
 # helper function to test read/write functionality ------------------------
 
@@ -119,14 +116,18 @@ ex1_read <- input_add_blocs_from_file(ex1_read,
 ogs5_write_inputfiles(ex1_read, type = "all")
 
 
-###########################################################################
-####           read and write Engesgaard benchmark input files          ###
-###########################################################################
 
+
+# set folders for benchmark input files -----------------------------------
+bm_prefix = "../../inst/"
+if (!(dir.exists(bm_prefix))) bm_prefix=""
+
+# read and write Engesgaard benchmark input files -------------------------
 
 # Engsesgaard/2Kin/slow_kin_pqc -------------------------------------------
 
-eg1_dir <- "../../inst/extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc"
+eg1_dir <- paste0(bm_prefix,
+                  "extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc")
 # eg1_dir <- "inst/extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc"
 
 # create new ogs5 object in temporary directory
@@ -159,10 +160,10 @@ ogs5_write_inputfiles(eg1_read, type = "all")
 
 # Engsesgaard/2Kin/slow_kin_pqc_kcr -------------------------------------------
 
-
-eg2_dir <- "../../inst/extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc_krc"
+eg2_dir <- paste0(bm_prefix,
+                  "extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc_krc")
 #eg2_dir <- "inst/extdata/ogs5_benchmarks/Engesgaard/2Kin/slow_kin_pqc_krc"
-# tmp <- "inst/examples/tmp"
+
 # create new ogs5 object in temporary directory
 eg2_read <- create_ogs5(sim_name = "eg2_read", sim_id = 1L,
                         sim_path = paste0(tmp, "/eg2_read"))
@@ -194,9 +195,11 @@ eg2_read <- input_add_blocs_from_file(eg2_read,
 
 ogs5_write_inputfiles(eg2_read, type = "all")
 
+
 # read GROUNDWATER_FLOW/Transient_flow ------------------------------------
 
-fct_dir <- "../../inst/extdata/ogs5_benchmarks/Transient_flow"
+fct_dir <- paste0(bm_prefix,
+                  "extdata/ogs5_benchmarks/Transient_flow")
 fct_read <- create_ogs5(sim_name = "fct_read", sim_id = 1L,
                         sim_path = paste0(tmp, "/fct_read"))
 
@@ -225,7 +228,8 @@ ogs5_write_inputfiles(fct_read, type = "all")
 # read ConcreteCrack benchmark --------------------------------------------
 
 # cct_dir <- "/inst/extdata/ogs5_benchmarks/ConcreteCrack"
-cct_dir <- "../../inst/extdata/ogs5_benchmarks/ConcreteCrack"
+cct_dir <- paste0(bm_prefix,
+                  "extdata/ogs5_benchmarks/ConcreteCrack")
 cct_read <- create_ogs5(sim_name = "decal", sim_id = 1L,
                         sim_path = paste0(tmp, "/cct_read"))
 #debug(input_add_blocs_from_file)
@@ -260,7 +264,9 @@ cct_read <-  input_add_blocs_from_file(cct_read,
 ogs5_write_inputfiles(cct_read, type = "all")
 
 
-ddc_dir <- "../../inst/extdata/ogs5_benchmarks/McWhorter"
+# read McWorter benchmark --------------------------------------------
+ddc_dir <- paste0(bm_prefix,
+                  "extdata/ogs5_benchmarks/McWhorter")
 ddc_read <- create_ogs5(sim_name = "ddc_read", sim_id = 1L,
                         sim_path = paste0(tmp, "/ddc_read"))
 
