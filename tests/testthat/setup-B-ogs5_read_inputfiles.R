@@ -119,8 +119,13 @@ ogs5_write_inputfiles(ex1_read, type = "all")
 
 
 # set folders for benchmark input files -----------------------------------
-bm_prefix = "../../inst/"
-if (!(dir.exists(bm_prefix))) bm_prefix=""
+
+# when running 'check()' the paackage is installed and tests are run
+# however, installation changes the directory tree
+
+# prefix for running tests locally using 'test()'
+bm_prefix <- "../../inst/"
+if (!(dir.exists(bm_prefix))) bm_prefix="../../r2ogs5/"
 
 # read and write Engesgaard benchmark input files -------------------------
 
