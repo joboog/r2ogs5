@@ -1,4 +1,4 @@
-Package: r2ogs
+Package: r2ogs5
 Title: An API to the OpenGeoSys Multiphysics Simulator
 Version: 0.0.0.9000
 Authors@R: 

@@ -82,7 +82,7 @@ ens_run <- function(x, ogs_exe, log_output = TRUE , wait = FALSE){
 #' ens_get_output
 #' @description Wrapper to retrieve output for all included *ogs5* simulation
 #'   objects. It calls on the functions [ogs5_get_output_all()] and
-#'   [ogs5_get_output_specific()] of the **r2ogs** package.
+#'   [ogs5_get_output_specific()] of the **r2ogs5** package.
 #' @param x  Instanc of class *ens* containing the simulation objects.
 #' @param type *character* If 'all' retrieve all produced output, if 'specific'
 #'   retrieve output stated in a certain *OUT* bloc of the *ogs5* simulation
