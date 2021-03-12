@@ -16,7 +16,7 @@
 #'
 #' @return Updated *ogs5* object.
 #' @export
-#' @example
+#' @examples
 #' tmp <- tempdir()
 #' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
 #'                         sim_path = paste0(tmp, "/ex1"))
@@ -55,7 +55,7 @@ input_add_rfd_bloc <-
     }
 
     # check data
-    if (!(data %>% names %in% "time") ||
+    if (!(data %>% names %in% "time" %>% any) ||
            !(data[[1]] %>% is.numeric) ||
            !(data[[2]] %>% is.numeric)
         ){
