@@ -24,10 +24,11 @@
             r2ogs5.default_sim_path = "/home/boog/ufz/11_r2ogs/r2ogs/tmp/",
             r2ogs5.default_ogs5_benchmark_path =
                 "/home/boog/ufz/11_r2ogs/r2ogs5-benchmarks/ogs5_benchmarks/",
-            r2ogs5.default_ogs5_bin =
-                "/home/boog/ufz/11_r2ogs/r2ogs/inst/ogs/ogs_fem",
-            r2ogs5.default_ogs5_bin_path =
-                "/home/boog/ufz/11_r2ogs/r2ogs/inst/ogs/",
+            r2ogs5.default_ogs5_bin = search_ogs5_bin_path(
+                                        "ogs_fem", return_ogs5_bin = TRUE),
+                #"/home/boog/ufz/11_r2ogs/r2ogs/inst/ogs/ogs_fem",
+            r2ogs5.default_ogs5_bin_path = search_ogs5_bin_path("ogs_fem"),
+                #"/home/boog/ufz/11_r2ogs/r2ogs/inst/ogs/",
             r2ogs5.use_python =
                 "/home/boog/software/miniconda3/envs/py37_r2ogs/bin/python"
         )

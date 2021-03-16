@@ -93,3 +93,42 @@ ogs5_run <- function(ogs5_obj = list(),
 
   system(command = command_to_os, wait = wait)
 }
+
+
+#' search_ogs5_bin_path
+#' @description Search paths to ogs5 binary or ogs5 bin folder. Includes
+#'   'PATH' environment variable. Returns first match of provided 'ogs_exe'.
+#' @param ogs_exe *character* Name of the ogs5 executable.
+#' @param return_ogs5_bin *boolean* If TRUE returns the path to the ogs5
+#'   binary instead of the bin folder path.
+#'
+#' @return *character* of path to ogs5 bin folder or ogs5 binary
+#' @export
+search_ogs5_bin_path <- function(ogs_exe="ogs", return_ogs5_bin=FALSE){
+
+  # set defautl search path
+  search_paths <- Sys.getenv("PATH") %>% stringr::str_split(":") %>% `[[`(1)
+
+  if (Sys.info()["sysname"] == "Linux") {
+
+    search_paths <- search_paths %>% c(c("inst/ogs/", "../../inst/ogs/"))
+  }
+  else if (Sys.info()["sysname"] == "Windows") {
+    search_paths <- search_paths %>% c(c("C:/Programme/OpenGeoSys/bin/",
+                                        "C:/Programs/OpenGeoSys/bin/"))
+
+    if (!(stringr::str_detect(ogs_exe, ".exe"))) {
+      ogs_exe <- paste0(ogs_exe, ".exe")
+    }
+  }
+
+  for (search_path in search_paths) {
+
+    files <- list.files(search_path)
+    if (any(ogs_exe %in% files)) {
+      ifelse(return_ogs5_bin==FALSE,
+             return(search_path),
+             return(paste0(search_path, ogs_exe)))
+    }
+  }
+}
