@@ -36,3 +36,13 @@ dependent functions. For additional documentation of the input parameters
 see the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/rfd.html}{ogs5 keyword docs}
 or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
 }
+\examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
+ogs5_obj <- input_add_rfd_bloc(x = ogs5_obj,
+             rfd_name = "tracer", mkey = "CURVES",
+             data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),
+                                   conc=c(1,1,0,0,0)))
+}
