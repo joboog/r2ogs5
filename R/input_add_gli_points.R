@@ -12,10 +12,15 @@
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples
-#' ex1 <- input_add_gli_points(x = ex1,
-#' ogs5_points = tibble::tibble(x = c(0, 4.7), y = c(0,0),
-#'                             z = c(0,0),
-#'                              name = c("point0", "point1")))
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
+#' ogs5_obj <- input_add_gli_points(x = ogs5_obj,
+#'                 ogs5_points = tibble::tibble(x = c(0, 4.7),
+#'                                              y = c(0,0),
+#'                                              z = c(0,0),
+#'                                              name = c("point0", "point1")))
 input_add_gli_points <-
 
    function(
@@ -54,15 +59,22 @@ input_add_gli_points <-
          stop("ogs5_points$name is not of type 'character' ", call. = FALSE)
       }
 
-      if (ogs5_points %>%dplyr::select(x,y,z) %>% is.na() %>%  any()){
+      if (ogs5_points %>%
+            dplyr::select(.data$x, .data$y, .data$z) %>%
+            is.na() %>%
+            any()){
          stop("ogs5_points coordinates contain NA ", call. = FALSE)
       }
 
       # create and add sublist to gli-list
       df <- ogs5_points %>%
-              dplyr::select(x, y, z, name) %>%
-              tibble::as_tibble()
-      rownames(df) <- df %>% rownames() %>% as.numeric() %>% -1
+              tibble::as_tibble() %>%
+              dplyr::mutate(
+                     pnt_id = ogs5_points %>% rownames() %>%
+                              as.integer() %>% -1L
+               ) %>%
+              dplyr::select(.data$pnt_id, .data$x, .data$y, .data$z, .data$name)
+      #rownames(df) <- df %>% rownames() %>% as.numeric() %>% -1
 
       x$input$gli$points <- df
 
@@ -80,12 +92,12 @@ input_add_gli_points <-
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gli/h_polyline).
 #' @param x Simulation object of class *ogs5*.
 #' @param EPSILON Error tolerance of the specified points to the mesh nodes.
-#' @param ID
-#' @param MAT_GROUP
+#' @param ID ogs5 **gli** bloc sub key word.
+#' @param MAT_GROUP ogs5 **gli** bloc sub key word.
 #' @param ply_name Name of the polyline.
 #' @param POINTS Points to be used for the polyline.
-#' @param POINT_VECTOR
-#' @param TYPE
+#' @param POINT_VECTOR ogs5 **gli** bloc sub key word.
+#' @param TYPE ogs5 **gli** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export
@@ -117,8 +129,8 @@ input_add_gli_polyline <-
       }
 
       # check if POINTS exist
-      ply_points <-stringr::str_split(POINTS, " ") %>% .[[1]] %>% as.numeric()
-      if (max(ply_points) > nrow(x$input$gli$points[,1])) {
+      ply_points <-stringr::str_split(POINTS, " ") %>% .[[1]] %>% as.integer()
+      if (!(ply_points %in% x$input$gli$points$pnt_id %>% all())) {
          stop("required POINTS missing", call. = FALSE)
       }
 
@@ -162,12 +174,12 @@ input_add_gli_polyline <-
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gli/h_surface).
 #' @param x Simulation object of class *ogs5*.
 #' @param EPSILON Error tolerance of the specified points to the mesh nodes.
-#' @param ID
-#' @param MAT_GROUP
+#' @param ID ogs5 **gli** bloc sub key word.
+#' @param MAT_GROUP ogs5 **gli** bloc sub key word.
 #' @param srf_name Name of the surface. *character*
 #' @param POLYLINES Names of the polylines that create the surface. *character*
-#' @param TYPE
-#' @param TIN
+#' @param TYPE ogs5 **gli** bloc sub key word.
+#' @param TIN ogs5 **gli** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export

@@ -4,10 +4,10 @@
 \alias{ogs5_read_tecplot_domain}
 \title{ogs5_read_tecplot_domain}
 \usage{
-ogs5_read_tecplot_domain(filename)
+ogs5_read_tecplot_domain(filepath)
 }
 \arguments{
-\item{filename}{Path to *\strong{.tec} file. \emph{character}}
+\item{filepath}{\emph{character} Path to *\strong{.tec} file.}
 }
 \value{
 Dataframe.

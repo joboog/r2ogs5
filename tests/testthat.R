@@ -1,4 +1,4 @@
 library(testthat)
-library(r2ogs)
+library(r2ogs5)
 
-test_check("r2ogs")
+test_check("r2ogs5")

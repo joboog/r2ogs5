@@ -31,10 +31,48 @@ input_add_mfp_bloc(
 \arguments{
 \item{x}{Simulation object of class \emph{ogs5}.}
 
-\item{VISCOSITY}{}
+\item{COMPONENTS}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{COMPRESSIBILITY}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{DAT_TYPE}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{DECAY}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{DENSITY}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{DIFFUSION}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{DRHO_DT_UNSATURATED}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{EOS_TYPE}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{FLUID_NAME}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{FLUID_TYPE}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{GRAVITY}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{HEAT_CONDUCTIVITY}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{ISOTHERM}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{JTC}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{NON_GRAVITY}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{PHASE_DIFFUSION}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{SPECIFIC_HEAT_CAPACITY}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{SPECIFIC_HEAT_SOURCE}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{TEMPERATURE}{ogs5 \strong{mfp} bloc sub key word.}
+
+\item{VISCOSITY}{ogs5 \strong{mfp} bloc sub key word.}
 }
 \value{
-
+Updated \emph{ogs5} object.
 }
 \description{
 Adds a sub-bloc to \strong{mfp} bloc of \emph{ogs5} for defining fluid
@@ -44,6 +82,10 @@ or have a look at the input scripts from the \href{https://gitlab.opengeosys.org
 All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_mfp_bloc(ogs5_obj, FLUID_NAME = "FLUID_PROPERTIES1",
                                FLUID_TYPE = "LIQUID",
                                DENSITY = "1 1000.0",

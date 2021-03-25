@@ -10,8 +10,10 @@
 #' @return *Tibble*
 #' @export
 #' @examples
+#' \dontrun{
 #' foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
 #'            node_coords = tibble::tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
+#' }
 ogs5_read_data_at_nodes <-
 
   function(ogs5 = list(), outbloc_name = character(),
@@ -27,8 +29,8 @@ ogs5_read_data_at_nodes <-
     }
 
     # get node indices
-    nodes_tbl <- ogs5$input$msh$base_mesh$NODES %>%
-                  dplyr::mutate(node_id = as.numeric(rownames(.)))
+    nodes_tbl <- ogs5$input$msh$base_mesh$NODES
+                  #dplyr::mutate(node_id = as.numeric(rownames(.)))
 
     if (!(is.null(node_coords))){
       nodes_tbl <-  nodes_tbl %>% dplyr::semi_join(node_coords)

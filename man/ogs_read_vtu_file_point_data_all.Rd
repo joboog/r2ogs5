@@ -7,10 +7,10 @@
 ogs_read_vtu_file_point_data_all(filename)
 }
 \arguments{
-\item{filename}{Path to *\strong{.vtu} file. \emph{character}}
+\item{filename}{\emph{charcter} Path to *\strong{.vtu} file.}
 }
 \value{
-\emph{List}
+\emph{list}
 }
 \description{
 Read all point data array from a *\strong{.vtu} output file.

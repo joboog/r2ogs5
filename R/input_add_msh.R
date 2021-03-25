@@ -9,21 +9,23 @@
 #'   https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html).
 #' @param x Simulation object of class *ogs5*.
 #' @param msh_name Name of the mesh. *character*
-#' @param AREA
-#' @param AXISYMMETRY
-#' @param CROSS_SECTION
-#' @param ELEMENTS A *tibble* with columns material_id ele_type node1 node2
-#'                 (node3, node4)
-#' @param GEO_NAME
-#' @param GEO_TYPE
-#' @param LAYER
-#' @param NODES A *tibble* with columns x, y, z.
-#' @param PCS_TYPE
-#'
-#' @return
+#' @param AREA ogs5 **msh** bloc sub key word.
+#' @param AXISYMMETRY ogs5 **msh** bloc sub key word.
+#' @param CROSS_SECTION ogs5 **msh** bloc sub key word.
+#' @param ELEMENTS A *tibble* with columns c("ele_id", "material_id",
+#'                 "ele_type", "node1", "node2" ...).
+#' @param GEO_NAME ogs5 **msh** bloc sub key word.
+#' @param GEO_TYPE ogs5 **msh** bloc sub key word.
+#' @param LAYER ogs5 **msh** bloc sub key word.
+#' @param NODES A *tibble* with columns c("node_id", "x", "y", "z").
+#' @param PCS_TYPE ogs5 **msh** bloc sub key word.
+#' @return Updated *ogs5* object.
 #' @export
-#'
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 #' ogs5_obj <- input_add_msh_bloc(x = ogs5_obj, msh_name = "base_mesh",
 #'                                NODES = mesh_lst[[1]],
@@ -76,14 +78,18 @@ input_add_msh_bloc <-
     }
 
     # check ELEMENTS
-    if (!(tibble::is_tibble(ELEMENTS[[1]]))){
+    if (!(tibble::is_tibble(ELEMENTS))){
       stop("ELEMENTS has to be a 'tibble' ",
            call. = FALSE)
     }
 
-    if (!all(c("material_id", "ele_type", "node1", "node2") %in% names(ELEMENTS[[1]]))){
-      stop("ELEMENTS has to have headers: 'material_id', 'ele_type', 'node1', 'node2', ...",
+    if (!all(c("ele_id", "material_id", "ele_type", "node1", "node2") %in% names(ELEMENTS))){
+      stop("ELEMENTS has to have headers: 'ele_id', 'material_id', 'ele_type', 'node1', 'node2', ...",
            call. = FALSE)
+    }
+
+    if (ELEMENTS$ele_id[1] != 0){
+      ELEMENTS$ele_id <- ELEMENTS$ele_id %>% as.numeric() %>% -1L
     }
 
     # check NODES
@@ -92,22 +98,16 @@ input_add_msh_bloc <-
            call. = FALSE)
     }
 
-    if (!all(c("x", "y", "z") %in% names(NODES))){
-      stop("NODES has to have headers: 'x', 'y', 'z'",
+    if (!all(c("node_id", "x", "y", "z") %in% names(NODES))){
+      stop("NODES has to have headers: 'node_id', 'x', 'y', 'z'",
            call. = FALSE)
     }
 
-    # # check elements and node orders
-    # if (rownames(ELEMENTS)[1] != 0){
-    #   rownames(ELEMENTS) <- rownames(ELEMENTS) %>% as.numeric %>% -1
-    # }
-    #
-    # if (rownames(NODES)[1] != 0){
-    #   rownames(NODES) <- rownames(NODES) %>% as.numeric %>% -1
-    # }
+    if (NODES$node_id[1] != 0){
+      NODES$node_id <- NODES$node_id %>% as.numeric() %>% -1L
+    }
 
     # create and add sublist to bc-list
-
     x$input$msh[[paste(msh_name)]] <- list(
 
       "AREA" = AREA,

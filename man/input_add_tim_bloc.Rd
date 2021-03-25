@@ -11,12 +11,12 @@ input_add_tim_bloc(
   INDEPENDENT = NULL,
   PCS_TYPE = NULL,
   SUBSTEPS = NULL,
+  TIME_END = NULL,
+  TIME_START = NULL,
+  TIME_STEPS = NULL,
   TIME_CONTROL = NULL,
-  TIME_END = numeric(NULL),
   TIME_FIXED_POINTS = NULL,
   TIME_SPLITS = NULL,
-  TIME_START = numeric(NULL),
-  TIME_STEPS = NULL,
   TIME_UNIT = NULL
 )
 }
@@ -25,11 +25,27 @@ input_add_tim_bloc(
 
 \item{tim_name}{Name of the \strong{tim} sub-bloc.}
 
+\item{CRITICAL_TIME}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{INDEPENDENT}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{PCS_TYPE}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{SUBSTEPS}{ogs5 \strong{tim} bloc sub key word.}
+
 \item{TIME_END}{\emph{numeric}}
 
 \item{TIME_START}{\emph{numeric}}
 
-\item{TIME_UNIT}{}
+\item{TIME_STEPS}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{TIME_CONTROL}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{TIME_FIXED_POINTS}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{TIME_SPLITS}{ogs5 \strong{tim} bloc sub key word.}
+
+\item{TIME_UNIT}{ogs5 \strong{tim} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.
@@ -42,6 +58,10 @@ or have a look at the input scripts from the \href{https://gitlab.opengeosys.org
 Most arguments have to be of class \emph{character}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_tim_bloc(ogs5_obj, tim_name = "TIME_STEPPING1",
                               PCS_TYPE = "GROUNDWATER_FLOW",
                               TIME_STEPS = "210 100.0",

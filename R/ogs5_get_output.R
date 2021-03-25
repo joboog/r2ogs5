@@ -7,7 +7,9 @@
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples
+#' \dontrun{
 #' sim1 <- ogs5_get_output_all(sim1)
+#' }
 ogs5_get_output_all <- function(ogs5,# = list(),
                                 out_filepath = NULL){
 
@@ -82,7 +84,7 @@ ogs5_get_output_all <- function(ogs5,# = list(),
 
       out_data_list <- lapply(out_files,
                          FUN = function(x){
-                           l <- ogs5_read_tecplot(filename = x,
+                           l <- ogs5_read_tecplot(filepath = x,
                                     geo_object = out_geo_object)
                            return(l)
                          })
@@ -108,7 +110,9 @@ ogs5_get_output_all <- function(ogs5,# = list(),
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples
+#' \dontrun{
 #' ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
+#' }
 ogs5_get_output_specific <- function(ogs5 = list(), outbloc_names = character(),
                                     out_filepath = NULL){
 
@@ -178,11 +182,11 @@ ogs5_get_output_specific <- function(ogs5 = list(), outbloc_names = character(),
                                 )]
 
       out_data_list <- lapply(out_files,
-                              FUN = function(x){
-                                l <- ogs5_read_tecplot(filename = x,
-                                                       geo_object = out_geo_object)
-                                return(l)
-                              })
+                          FUN = function(x){
+                            l <- ogs5_read_tecplot(filepath = x,
+                                                   geo_object = out_geo_object)
+                            return(l)
+                          })
     }
 
     # attach output data as list to ogs5$output$i

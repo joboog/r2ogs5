@@ -14,7 +14,8 @@ retrieve output stated in a certain \emph{OUT} bloc of the \emph{ogs5} simulatio
 objects.}
 
 \item{...}{\emph{list(character)} If \emph{type} = 'specific', state names  of the \emph{OUT}
-blocs you wish to retrieve output for.}
+blocs you wish to retrieve output for. Arguments will be passed to
+' ogs5_get_output_specific()'.}
 }
 \value{
 Extended \emph{x} with added output.
@@ -22,8 +23,5 @@ Extended \emph{x} with added output.
 \description{
 Wrapper to retrieve output for all included \emph{ogs5} simulation
 objects. It calls on the functions \code{\link[=ogs5_get_output_all]{ogs5_get_output_all()}} and
-\code{\link[=ogs5_get_output_specific]{ogs5_get_output_specific()}} of the \strong{r2ogs} package.
-}
-\examples{
-ens1 <- ens_get_output(ens1, type = "all")
+\code{\link[=ogs5_get_output_specific]{ogs5_get_output_specific()}} of the \strong{r2ogs5} package.
 }

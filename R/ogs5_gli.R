@@ -30,8 +30,8 @@ valid_ogs5_gli_points <- function(x){
 
    )
 
-   if (!(length(x[1,])<=4 &&
-       (x %>% names %in% c("x", "y", "z", "name") %>% all()))
+   if (!(length(x[1,])<=5 &&
+       (x %>% names %in% c("pnt_id", "x", "y", "z", "name") %>% all()))
        ){
       stop(paste(x, " column names do not fit to 'x, y, z, name' "))
    }

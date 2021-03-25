@@ -9,6 +9,19 @@
 #' @param folderpath *character* Path to write the outpufile(s) to.
 #' @export
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#' ogs5_obj <- input_add_pcs_bloc(ogs5_obj, pcs_name = "PROCESS1",
+#'                                PCS_TYPE = "GROUNDWATER_FLOW",
+#'                                NUM_TYPE = "NEW",
+#'                                ELEMENT_MATRIX_OUTPUT = "0")
+#' ogs5_obj <- input_add_bc_bloc(ogs5_obj, bc_name = "BOUNDARY_CONDITION1",
+#'                               PCS_TYPE = "GROUNDWATER_FLOW",
+#'                               PRIMARY_VARIABLE = "HEAD",
+#'                               GEO_TYPE = "POINT POINT0",
+#'                               DIS_TYPE = "CONSTANT 1.0e5")
+#'
 #' ogs5_write_inputfiles(ogs5_obj, "all")
 ogs5_write_inputfiles <-
 
@@ -315,7 +328,7 @@ ogs5_fct_bloc_output <-
   function(ogs5_fct_bloc){
 
     # check ogs5_sublist
-    stopifnot(class(ogs5_sublist) == "ogs5_fct_bloc")
+    stopifnot(class(ogs5_fct_bloc) == "ogs5_fct_bloc")
 
     nn <- names(ogs5_fct_bloc)
 
@@ -323,10 +336,11 @@ ogs5_fct_bloc_output <-
 
       if (nn == "data_type") cat(ogs5_fct_bloc[[i]], "\n")
 
-      if (nn == "data_values")
-      ogs5_print_fct_bloc(fct_bloc = ogs5_sublist[[i]],
-                          mkey = "FUNCTION")
-      cat("\n")
+      if (nn == "data_values") {
+        ogs5_print_fct_bloc(mkey_bloc = ogs5_fct_bloc[[i]],
+                            mkey = "FUNCTION")
+        cat("\n")
+      }
     }
     cat("#STOP", "\n")
   }
@@ -367,8 +381,6 @@ ogs5_list_output.ogs5_gli <-
         cat("#POINTS\n")
 
         df <- ogs5_sublist[[i]] %>%
-              tibble::rownames_to_column() %>%
-              dplyr::mutate(rowname = as.numeric(rowname)) %>%
               as.data.frame()
 
         if (any(colnames(df) == "name")) {
@@ -381,7 +393,6 @@ ogs5_list_output.ogs5_gli <-
           df$md <-stringr::str_c("$MD ", df$md)
         }
         names(df) <- NULL
-        #df %>% print(row.names = TRUE)
 
         cat(" ", paste(colnames(df)), "\n")
         cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
@@ -424,24 +435,17 @@ ogs5_list_output.ogs5_krc <-
     # check ogs5_sublist
     stopifnot(class(ogs5_sublist) == "ogs5_krc")
 
+    mkeys <- names(ogs5_sublist) %>% stringr::str_extract("[:alpha:]+")
     # loop over sublists
-    for (i in seq_len(ogs5_sublist %>% length())) {
-
-        # line breaks for subkeys with more than one entry
-        sublist_i <- ogs5_sublist[[i]] %>%
-                      lapply(function(skeybloc){
-                        return(paste(skeybloc, collapse = "\n "))
-                      })
+    for (i in seq_along(mkeys)) {
         # check mkey
-        ogs5_mkey <- sublist_i$mkey
-        sublist_i$mkey <- NULL
-        if (!(ogs5_mkey %in% ogs5_get_keywordlist()$krc$mkey)) {
+        if (!(mkeys[i] %in% ogs5_get_keywordlist()$krc$mkey)) {
           stop("undefined ogs5 mkey in krc list")
         }
 
         # print
-        ogs5_print_mkey_bloc(mkey_bloc = sublist_i,
-                             mkey = ogs5_mkey)
+        ogs5_print_mkey_bloc(mkey_bloc = ogs5_sublist[[i]],
+                             mkey = mkeys[i], stack = TRUE)
         cat("\n")
       }
     cat("#STOP", "\n")
@@ -540,10 +544,10 @@ ogs5_print_msh_mkey_bloc <-
 
     # print NODES
     df <- mkey_bloc$NODES %>%
-          tibble::rownames_to_column() %>%
-          dplyr::mutate(rowname = as.numeric(rowname) - 1) %>%
+          #tibble::rownames_to_column() %>%
+          #dplyr::mutate(rowname = as.numeric(.data$rowname) - 1) %>%
           as.data.frame()
-    rownames(df) <- rownames(df) %>% as.numeric() %>% -1
+    #rownames(df) <- rownames(df) %>% as.numeric() %>% -1
     names(df) <- NULL
     cat("$NODES\n", length(df[[1]]), "\n")
     #df %>% print(row.names = TRUE)
@@ -551,19 +555,21 @@ ogs5_print_msh_mkey_bloc <-
     cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
 
     # print ELEMENTS
-    n_ele <- lapply(mkey_bloc$ELEMENTS, nrow) %>% unlist %>% sum
-    cat("$ELEMENTS\n", n_ele, "\n")
-    # loop over geometries
-    for (geometry in names(mkey_bloc$ELEMENTS)) {
+    #n_ele <- lapply(mkey_bloc$ELEMENTS, nrow) %>% unlist %>% sum
+    #cat("$ELEMENTS\n", n_ele, "\n")
 
-      df <- mkey_bloc$ELEMENTS[[paste0(geometry)]] %>%
-        tidyr::replace_na(list(node3 = "", node4 = "", node5 = "",
-                               node6 = "", node7 = "", node8 = "")) %>%
-        as.data.frame()
-      # rownames(df) <- rownames(df) %>% as.numeric() %>% -1
-      names(df) <- NULL
-      cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
-    }
+    # loop over geometries
+    #for (geometry in names(mkey_bloc$ELEMENTS)) {
+
+    df <- mkey_bloc$ELEMENTS %>%
+      tidyr::replace_na(list(node3 = "", node4 = "", node5 = "",
+                             node6 = "", node7 = "", node8 = "")) %>%
+      as.data.frame()
+    # rownames(df) <- rownames(df) %>% as.numeric() %>% -1
+    names(df) <- NULL
+    cat("$ELEMENTS\n", length(df[[1]]), "\n")
+    cat(apply(df, 1, paste0, collapse=" "), sep = "\n")
+    #}
 
   }
 

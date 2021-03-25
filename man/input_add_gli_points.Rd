@@ -21,8 +21,13 @@ the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/gli/
 or have a look at the input scripts from the \href{https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks}{r2ogs5-benchmarks repository}.
 }
 \examples{
-ex1 <- input_add_gli_points(x = ex1,
-ogs5_points = tibble::tibble(x = c(0, 4.7), y = c(0,0),
-                            z = c(0,0),
-                             name = c("point0", "point1")))
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
+ogs5_obj <- input_add_gli_points(x = ogs5_obj,
+                ogs5_points = tibble::tibble(x = c(0, 4.7),
+                                             y = c(0,0),
+                                             z = c(0,0),
+                                             name = c("point0", "point1")))
 }

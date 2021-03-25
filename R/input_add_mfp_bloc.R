@@ -8,31 +8,33 @@
 #'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
 #'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
-#' @param COMPONENTS
-#' @param COMPRESSIBILITY
-#' @param DAT_TYPE
-#' @param DECAY
-#' @param DENSITY
-#' @param DIFFUSION
-#' @param DRHO_DT_UNSATURATED
-#' @param EOS_TYPE
-#' @param FLUID_NAME
-#' @param FLUID_TYPE
-#' @param GRAVITY
-#' @param HEAT_CONDUCTIVITY
-#' @param ISOTHERM
-#' @param JTC
-#' @param NON_GRAVITY
-#' @param PHASE_DIFFUSION
-#' @param SPECIFIC_HEAT_CAPACITY
-#' @param SPECIFIC_HEAT_SOURCE
-#' @param TEMPERATURE
-#' @param VISCOSITY
-#'
-#' @return
+#' @param COMPONENTS ogs5 **mfp** bloc sub key word.
+#' @param COMPRESSIBILITY ogs5 **mfp** bloc sub key word.
+#' @param DAT_TYPE ogs5 **mfp** bloc sub key word.
+#' @param DECAY ogs5 **mfp** bloc sub key word.
+#' @param DENSITY ogs5 **mfp** bloc sub key word.
+#' @param DIFFUSION ogs5 **mfp** bloc sub key word.
+#' @param DRHO_DT_UNSATURATED ogs5 **mfp** bloc sub key word.
+#' @param EOS_TYPE ogs5 **mfp** bloc sub key word.
+#' @param FLUID_NAME ogs5 **mfp** bloc sub key word.
+#' @param FLUID_TYPE ogs5 **mfp** bloc sub key word.
+#' @param GRAVITY ogs5 **mfp** bloc sub key word.
+#' @param HEAT_CONDUCTIVITY ogs5 **mfp** bloc sub key word.
+#' @param ISOTHERM ogs5 **mfp** bloc sub key word.
+#' @param JTC ogs5 **mfp** bloc sub key word.
+#' @param NON_GRAVITY ogs5 **mfp** bloc sub key word.
+#' @param PHASE_DIFFUSION ogs5 **mfp** bloc sub key word.
+#' @param SPECIFIC_HEAT_CAPACITY ogs5 **mfp** bloc sub key word.
+#' @param SPECIFIC_HEAT_SOURCE ogs5 **mfp** bloc sub key word.
+#' @param TEMPERATURE ogs5 **mfp** bloc sub key word.
+#' @param VISCOSITY ogs5 **mfp** bloc sub key word.
+#' @return Updated *ogs5* object.
 #' @export
-#'
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_mfp_bloc(ogs5_obj, FLUID_NAME = "FLUID_PROPERTIES1",
 #'                                FLUID_TYPE = "LIQUID",
 #'                                DENSITY = "1 1000.0",

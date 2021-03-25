@@ -14,18 +14,21 @@
 #' @param path *character* Path where to place all individual ensemble runs.
 #'
 #' @return Instance of class *ens*
+#' @importFrom plyr .
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 10),
 #'               tracer_input_concentration = seq(0.1, 1, length.out = 5)) %>%
 #'               tibble::as_tibble()
 #'
 #' ens1 <- create_ens(base_sim = ex1, parameter_tbl = para_df,
 #'                   name = "tracersim", path = "path/to/my/ens")
-create_ens <- function(
+#' }
+    create_ens <- function(
     base_sim = list(),
-    parameter_tbl = tbl(),
+    parameter_tbl = dplyr::tbl(),
     name = character(NULL),
     path = character(NULL)
 ) {

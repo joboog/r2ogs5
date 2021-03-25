@@ -15,7 +15,7 @@ ogs5_get_output_specific(
 
 \item{outbloc_names}{\emph{Character} vector of the \strong{out} sub bloc names.}
 
-\item{out_filepath}{Path to output files. \emph{character}. Default:
+\item{out_filepath}{\emph{character} Path to output files. Default:
 'attributes(ogs5)$sim_path'.}
 }
 \value{
@@ -26,5 +26,7 @@ Import the output from an \strong{ogs5} simulation defined in a
 specific \emph{ogs5} \strong{out} sub-bloc. Add output to \emph{ogs5} object.
 }
 \examples{
+\dontrun{
 ex1 <- ogs5_get_output_specific(ex1, outbloc_names = "tracer")
+}
 }

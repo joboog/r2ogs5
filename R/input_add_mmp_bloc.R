@@ -8,59 +8,61 @@
 #'   https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs5-benchmarks).
 #'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
-#' @param CAPILLARY_PRESSURE
-#' @param CHANNEL
-#' @param COMPOUND_DEPENDENT_DT
-#' @param CONDUCTIVITY_MODEL
-#' @param CONVERSION_FACTOR
-#' @param DATA
-#' @param DIFFUSION
-#' @param DIS_TYPE
-#' @param ELEMENT_VOLUME_MULTIPLYER
-#' @param EVAPORATION
-#' @param FLOWLINEARITY
-#' @param GEOMETRY_AREA
-#' @param GEOMETRY_DIMENSION
-#' @param GEOMETRY_INCLINATION
-#' @param GEO_TYPE
-#' @param HEAT_DISPERSION
-#' @param HEAT_TRANSFER
-#' @param INTERPHASE_FRICTION
-#' @param MASS_DISPERSION
-#' @param MMP_TYPE
-#' @param MSH_TYPE
-#' @param NAME
-#' @param ORGANIC_CARBON
-#' @param PARTICLE_DIAMETER
-#' @param PCS_TYPE
-#' @param PERMEABILITY_DISTRIBUTION
-#' @param PERMEABILITY_FUNCTION_DEFORMATION
-#' @param PERMEABILITY_FUNCTION_EFFSTRESS
-#' @param PERMEABILITY_FUNCTION_POROSITY
-#' @param PERMEABILITY_FUNCTION_PRESSURE
-#' @param PERMEABILITY_FUNCTION_STRAIN
-#' @param PERMEABILITY_FUNCTION_STRESS
-#' @param PERMEABILITY_FUNCTION_VELOCITY
-#' @param PERMEABILITY_SATURATION
-#' @param PERMEABILITY_TENSOR
-#' @param POROSITY
-#' @param POROSITY_DISTRIBUTION
-#' @param RILL
-#' @param SPECIFIC_STORAGE
-#' @param STORAGE
-#' @param STORAGE_FUNCTION_EFFSTRESS
-#' @param SURFACE_FRICTION
-#' @param TORTUOSITY
-#' @param TRANSFER_COEFFICIENT
-#' @param UNCONFINED
-#' @param VOL_BIO
-#' @param VOL_MAT
-#' @param WIDTH
-#'
-#' @return
+#' @param CAPILLARY_PRESSURE ogs5 **mmp** bloc sub key word.
+#' @param CHANNEL ogs5 **mmp** bloc sub key word.
+#' @param COMPOUND_DEPENDENT_DT ogs5 **mmp** bloc sub key word.
+#' @param CONDUCTIVITY_MODEL ogs5 **mmp** bloc sub key word.
+#' @param CONVERSION_FACTOR ogs5 **mmp** bloc sub key word.
+#' @param DATA ogs5 **mmp** bloc sub key word.
+#' @param DIFFUSION ogs5 **mmp** bloc sub key word.
+#' @param DIS_TYPE ogs5 **mmp** bloc sub key word.
+#' @param ELEMENT_VOLUME_MULTIPLYER ogs5 **mmp** bloc sub key word.
+#' @param EVAPORATION ogs5 **mmp** bloc sub key word.
+#' @param FLOWLINEARITY ogs5 **mmp** bloc sub key word.
+#' @param GEOMETRY_AREA ogs5 **mmp** bloc sub key word.
+#' @param GEOMETRY_DIMENSION ogs5 **mmp** bloc sub key word.
+#' @param GEOMETRY_INCLINATION ogs5 **mmp** bloc sub key word.
+#' @param GEO_TYPE ogs5 **mmp** bloc sub key word.
+#' @param HEAT_DISPERSION ogs5 **mmp** bloc sub key word.
+#' @param HEAT_TRANSFER ogs5 **mmp** bloc sub key word.
+#' @param INTERPHASE_FRICTION ogs5 **mmp** bloc sub key word.
+#' @param MASS_DISPERSION ogs5 **mmp** bloc sub key word.
+#' @param MMP_TYPE ogs5 **mmp** bloc sub key word.
+#' @param MSH_TYPE ogs5 **mmp** bloc sub key word.
+#' @param NAME ogs5 **mmp** bloc sub key word.
+#' @param ORGANIC_CARBON ogs5 **mmp** bloc sub key word.
+#' @param PARTICLE_DIAMETER ogs5 **mmp** bloc sub key word.
+#' @param PCS_TYPE ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_DISTRIBUTION ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_FUNCTION_DEFORMATION ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_FUNCTION_EFFSTRESS ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_FUNCTION_POROSITY ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_FUNCTION_PRESSURE ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_FUNCTION_STRAIN ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_FUNCTION_STRESS ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_FUNCTION_VELOCITY ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_SATURATION ogs5 **mmp** bloc sub key word.
+#' @param PERMEABILITY_TENSOR ogs5 **mmp** bloc sub key word.
+#' @param POROSITY ogs5 **mmp** bloc sub key word.
+#' @param POROSITY_DISTRIBUTION ogs5 **mmp** bloc sub key word.
+#' @param RILL ogs5 **mmp** bloc sub key word.
+#' @param SPECIFIC_STORAGE ogs5 **mmp** bloc sub key word.
+#' @param STORAGE ogs5 **mmp** bloc sub key word.
+#' @param STORAGE_FUNCTION_EFFSTRESS ogs5 **mmp** bloc sub key word.
+#' @param SURFACE_FRICTION ogs5 **mmp** bloc sub key word.
+#' @param TORTUOSITY ogs5 **mmp** bloc sub key word.
+#' @param TRANSFER_COEFFICIENT ogs5 **mmp** bloc sub key word.
+#' @param UNCONFINED ogs5 **mmp** bloc sub key word.
+#' @param VOL_BIO ogs5 **mmp** bloc sub key word.
+#' @param VOL_MAT ogs5 **mmp** bloc sub key word.
+#' @param WIDTH ogs5 **mmp** bloc sub key word.
+#' @return Updated *ogs5* object.
 #' @export
-#'
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_mmp_bloc(ogs5_obj, NAME = "MEDIUM_PROPERTIES1",
 #'                                GEOMETRY_DIMENSION = "1",
 #'                                GEOMETRY_AREA = "1.000000e+000",

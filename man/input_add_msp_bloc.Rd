@@ -31,12 +31,48 @@ input_add_msp_bloc(
 \arguments{
 \item{x}{Simulation object of class \emph{ogs5}.}
 
+\item{BIOT_CONSTANT}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{CREEP}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{DENSITY}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{ELASTICITY}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{EXCAVATION}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{E_Function}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{GRAVITY_CONSTANT}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{MICRO_STRUCTURE_PLAS}{ogs5 \strong{msp} bloc sub key word.}
+
 \item{NAME}{Name of the solid. \emph{character}}
 
-\item{TIME_DEPENDENT_YOUNGS_POISSON}{}
+\item{NON_REACTIVE_FRACTION}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{PLASTICITY}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{REACTIVE_SYSTEM}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{SOLID_BULK_MODULUS}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{SPECIFIC_HEAT_SOURCE}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{STRESS_INTEGRATION_TOLERANCE}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{STRESS_UNIT}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{SWELLING_PRESSURE_TYPE}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{THERMAL}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{THRESHOLD_DEV_STR}{ogs5 \strong{msp} bloc sub key word.}
+
+\item{TIME_DEPENDENT_YOUNGS_POISSON}{ogs5 \strong{msp} bloc sub key word.}
 }
 \value{
-
+Updated \emph{ogs5} object.
 }
 \description{
 Adds a sub-bloc to \strong{msp} bloc of \emph{ogs5} for defining solid
@@ -47,6 +83,10 @@ All arguments except \strong{x} have to be of class \emph{character}.
 Note the syntax with line breaks "\\n" for ELASTICITY and THERMAL.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_msp_bloc(ogs5_obj, NAME = "SOLID_PROPERTIES1",
                                DENSITY = "1 1.80000e+003")
 }

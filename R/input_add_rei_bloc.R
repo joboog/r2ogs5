@@ -10,25 +10,25 @@
 #' @param x Simulation object of class *ogs5*.
 #' @param rei_name Name of the **rei** sub-bloc.
 #' @param ALL_PCS_DUMP *logical*
-#' @param DISSOLVED_NEUTRAL_CO2_SPECIES_NAME
-#' @param HEATPUMP_2DH_TO_2DV
+#' @param DISSOLVED_NEUTRAL_CO2_SPECIES_NAME ogs5 **rei** bloc sub key word.
+#' @param HEATPUMP_2DH_TO_2DV ogs5 **rei** bloc sub key word.
 #' @param INITIAL_CONDITION_OUTPUT *logical*
-#' @param MOL_PER
+#' @param MOL_PER ogs5 **rei** bloc sub key word.
 #' @param PCS_RENAME_INIT *logical*
 #' @param PCS_RENAME_POST *logical*
 #' @param PCS_RENAME_PRE *logical*
-#' @param POROSITY_RESTART
-#' @param PRESSURE
-#' @param P_VLE
-#' @param RESIDUAL
-#' @param SODIUM_SPECIES_NAME
-#' @param SOLID_SPECIES_DUMP_MOLES
-#' @param TEMPERATURE
+#' @param POROSITY_RESTART ogs5 **rei** bloc sub key word.
+#' @param PRESSURE ogs5 **rei** bloc sub key word.
+#' @param P_VLE ogs5 **rei** bloc sub key word.
+#' @param RESIDUAL ogs5 **rei** bloc sub key word.
+#' @param SODIUM_SPECIES_NAME ogs5 **rei** bloc sub key word.
+#' @param SOLID_SPECIES_DUMP_MOLES ogs5 **rei** bloc sub key word.
+#' @param TEMPERATURE ogs5 **rei** bloc sub key word.
 #' @param UPDATE_INITIAL_SOLID_COMPOSITION *logical*
-#' @param VLE
-#' @param WATER_CONCENTRATION
-#' @param WATER_SATURATION_LIMIT
-#' @param WATER_SPECIES_NAME
+#' @param VLE ogs5 **rei** bloc sub key word.
+#' @param WATER_CONCENTRATION ogs5 **rei** bloc sub key word.
+#' @param WATER_SATURATION_LIMIT ogs5 **rei** bloc sub key word.
+#' @param WATER_SPECIES_NAME ogs5 **rei** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export

@@ -10,8 +10,9 @@
 #' @export
 #'
 #' @examples
+#' tmp <- tempdir()
 #' ogs5_obj <- create_ogs5(sim_name = "ogs5_obj", sim_id = 1L,
-#'               sim_path = "examples/benchmarks/Engesgaard/2Kin/slow_kin_pqc",)
+#'                         sim_path = paste0(tmp, "/ogs5_obj"))
 create_ogs5 <- function(
    #x = list(input=list(), output=list(mod)),
    sim_name = character(NULL),
@@ -24,7 +25,11 @@ create_ogs5 <- function(
       stop("'sim_name' has to be of type character", call. = FALSE)
    }
 
-   if (!is.character(sim_path)) {
+   if (is.null(sim_path)) {
+      sim_path <- paste0(
+                     unlist(options("r2ogs5.default_sim_path")), "/", sim_name)
+   }
+   else if (!is.character(sim_path)) {
       stop("'sim_path' has to be of type character", call. = FALSE)
    }
 

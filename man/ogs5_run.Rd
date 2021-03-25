@@ -18,27 +18,30 @@ ogs5_run(
 \arguments{
 \item{ogs5_obj}{\emph{ogs5} simulation object.}
 
-\item{ogs_exe}{Path to \strong{ogs5} executable.}
+\item{ogs_exe}{\emph{character} Path to \strong{ogs5} executable.}
 
-\item{run_path}{Path to directory where the simulation should be executed.
+\item{run_path}{\emph{character} Path to directory where the simulation should be executed.
 Default: use 'attributes(ogs5_obj)$sim_path'}
 
-\item{log_output}{Should a log file be written? \emph{logical}}
+\item{log_output}{\emph{logical} Should a log file be written?}
 
-\item{log_path}{Path of directory to write log file. \emph{character}}
+\item{log_path}{\emph{character} Path of directory to write log file.}
 
-\item{use_mpi}{Execute parallelized simulation using MPI. \emph{logical}}
+\item{use_mpi}{\emph{logical} Execute parallelized simulation using MPI.}
 
-\item{number_of_cores}{Use number of computing cores if 'use_mpi=TRUE'.}
+\item{number_of_cores}{\emph{integer} Use number of computing cores if 'use_mpi=TRUE'.}
 
-\item{wait}{if 'TRUE', Freeze R-session until simulation finished. \emph{logical}}
+\item{wait}{\emph{logical} if 'TRUE', Freeze R-session until simulation is finished.}
 }
 \description{
 Run \strong{ogs5} simulation via call to OS.
 }
 \examples{
- ogs5_run(ogs5_obj = sim1, ogs_exe = "inst/ogs/ogs_5.76",
+\dontrun{
+ ogs5_run(ogs5_obj = sim1,
+          ogs_exe = "inst/ogs/ogs_5.76",
           run_path = NULL,
           log_output = TRUE,
           log_path = "examples/tmp/ex1/log")
+}
 }

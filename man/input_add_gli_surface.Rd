@@ -20,11 +20,17 @@ input_add_gli_surface(
 
 \item{EPSILON}{Error tolerance of the specified points to the mesh nodes.}
 
+\item{ID}{ogs5 \strong{gli} bloc sub key word.}
+
+\item{MAT_GROUP}{ogs5 \strong{gli} bloc sub key word.}
+
 \item{srf_name}{Name of the surface. \emph{character}}
 
 \item{POLYLINES}{Names of the polylines that create the surface. \emph{character}}
 
-\item{TIN}{}
+\item{TYPE}{ogs5 \strong{gli} bloc sub key word.}
+
+\item{TIN}{ogs5 \strong{gli} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.

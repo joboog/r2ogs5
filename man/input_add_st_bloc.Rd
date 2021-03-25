@@ -30,7 +30,37 @@ input_add_st_bloc(
 
 \item{st_name}{Name of the source term.}
 
-\item{TIM_TYPE}{}
+\item{AIR_BREAKING}{ogs5 \strong{st} bloc sub key word.}
+
+\item{CHANNEL}{ogs5 \strong{st} bloc sub key word.}
+
+\item{COMP_NAME}{ogs5 \strong{st} bloc sub key word.}
+
+\item{CONSTRAINED}{ogs5 \strong{st} bloc sub key word.}
+
+\item{DISTRIBUTE_VOLUME_FLUX}{ogs5 \strong{st} bloc sub key word.}
+
+\item{DIS_TYPE}{ogs5 \strong{st} bloc sub key word.}
+
+\item{EXPLICIT_SURFACE_WATER_PRESSURE}{ogs5 \strong{st} bloc sub key word.}
+
+\item{FCT_TYPE}{ogs5 \strong{st} bloc sub key word.}
+
+\item{GEO_TYPE}{ogs5 \strong{st} bloc sub key word.}
+
+\item{MSH_TYPE}{ogs5 \strong{st} bloc sub key word.}
+
+\item{NEGLECT_SURFACE_WATER_PRESSURE}{ogs5 \strong{st} bloc sub key word.}
+
+\item{NODE_AVERAGING}{ogs5 \strong{st} bloc sub key word.}
+
+\item{PCS_TYPE}{ogs5 \strong{st} bloc sub key word.}
+
+\item{PRIMARY_VARIABLE}{ogs5 \strong{st} bloc sub key word.}
+
+\item{TIME_INTERPOLATION}{ogs5 \strong{st} bloc sub key word.}
+
+\item{TIM_TYPE}{ogs5 \strong{st} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.
@@ -43,6 +73,10 @@ or have a look at the input scripts from the \href{https://gitlab.opengeosys.org
 All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_st_bloc(ogs5_obj, st_name = "SOURCE_TERM1",
                               PCS_TYPE = "GROUNDWATER_FLOW",
                               PRIMARY_VARIABLE = "HEAD",

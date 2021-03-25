@@ -34,9 +34,51 @@ input_add_mcp_bloc(
 \arguments{
 \item{x}{\emph{ogs5} simulation object.}
 
+\item{ACENTRIC_FACTOR}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{A_ZERO}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{BUBBLE_VELOCITY}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{CRITICAL_PRESSURE}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{CRITICAL_TEMPERATURE}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{DECAY}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{DIFFUSION}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{FLUID_ID}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{FLUID_PHASE}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{FORMULA}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{ISOTHERM}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{MAXIMUM_AQUEOUS_SOLUBILITY}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{MINERAL_DENSITY}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{MOBILE}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{MOLAR_DENSITY}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{MOLAR_VOLUME}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{MOLAR_WEIGHT}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{MOL_MASS}{ogs5 \strong{mcp} bloc sub key word.}
+
 \item{NAME}{Component name.}
 
-\item{VOLUME_DIFFUSION}{}
+\item{OutputMassOfComponentInModel}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{TRANSPORT_PHASE}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{VALENCE}{ogs5 \strong{mcp} bloc sub key word.}
+
+\item{VOLUME_DIFFUSION}{ogs5 \strong{mcp} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.
@@ -49,6 +91,10 @@ or have a look at the input scripts from the \href{https://gitlab.opengeosys.org
 All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_mcp_bloc(ogs5_obj, NAME = "C(4)",
                                MOBILE = "1",
                                DIFFUSION = "1 0.0e-9",

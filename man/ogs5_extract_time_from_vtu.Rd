@@ -7,7 +7,7 @@
 ogs5_extract_time_from_vtu(filename)
 }
 \arguments{
-\item{filename}{Path to file. \emph{character}}
+\item{filename}{\emph{charcter} Path to file.}
 }
 \value{
 \emph{numeric} vector.

@@ -11,12 +11,16 @@
 #' @param mkey *character* ogs5 #-keyword: c("CURVE", "CURVES").
 #' @param data *Tibble* with two *numeric* columns. One colum has to be named
 #'   "time".
-#' @param INTERPOLATION
-#' @param MSH_TYPE
+#' @param INTERPOLATION ogs5 **rfd** bloc sub key word.
+#' @param MSH_TYPE  ogs5 **rfd** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export
-#' @example
+#' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_rfd_bloc(x = ogs5_obj,
 #'              rfd_name = "tracer", mkey = "CURVES",
 #'              data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),
@@ -51,7 +55,7 @@ input_add_rfd_bloc <-
     }
 
     # check data
-    if (!(data %>% names %in% "time") ||
+    if (!(data %>% names %in% "time" %>% any) ||
            !(data[[1]] %>% is.numeric) ||
            !(data[[2]] %>% is.numeric)
         ){

@@ -12,19 +12,19 @@
 #' @param CALCULATE_BOUNDARY_NODES *character vector*
 #' @param DISABLE_GEMS *logical*
 #' @param FLAG_COUPLING_HYDROLOGY *character vector*
-#' @param FLAG_DISABLE_GEM
-#' @param FLAG_POROSITY_CHANGE *character vector*
-#' @param GEM_CALCULATE_BOUNDARY_NODES
-#' @param GEM_INIT_FILE
+#' @param FLAG_DISABLE_GEM ogs5 **gem** bloc sub key word.
+#' @param FLAG_POROSITY_CHANGE *character vector*.
+#' @param GEM_CALCULATE_BOUNDARY_NODES ogs5 **gem** bloc sub key word.
+#' @param GEM_INIT_FILE ogs5 **gem** bloc sub key word.
 #' @param GEM_THREADS *integer*
 #' @param ITERATIVE_SCHEME *logical*
-#' @param KINETIC_GEM
-#' @param MAX_FAILED_NODES
-#' @param MAX_POROSITY
-#' @param MIN_POROSITY
-#' @param MY_SMART_GEMS
-#' @param PRESSURE_GEM
-#' @param TEMPERATURE_GEM
+#' @param KINETIC_GEM ogs5 **gem** bloc sub key word.
+#' @param MAX_FAILED_NODES ogs5 **gem** bloc sub key word.
+#' @param MAX_POROSITY ogs5 **gem** bloc sub key word.
+#' @param MIN_POROSITY ogs5 **gem** bloc sub key word.
+#' @param MY_SMART_GEMS ogs5 **gem** bloc sub key word.
+#' @param PRESSURE_GEM ogs5 **gem** bloc sub key word.
+#' @param TEMPERATURE_GEM ogs5 **gem** bloc sub key word.
 #' @param TRANSPORT_B *logical*
 #'
 #' @return Updated *ogs5* simulation object.

@@ -14,7 +14,6 @@
 # sz <- NULL
 # nz <- NULL
 
-# computes axis parallel vector based on size_ele or n_ele
 comp_coordinate_vector <- function(origin = numeric(), d = numeric(),
                                    dist = numeric(), n_ele = NULL, s_ele = NULL){
 
@@ -61,7 +60,7 @@ generateRegHexEle <- function(x_vector = numeric(), y_vector = numeric(),
       offset_y1 <- j * n_nodes_x
       offset_y2 <- (j+1) * n_nodes_x
       for (k in 0:(n_ele_x-1)){
-        ele_df <- add_row(.data = ele_df,
+        ele_df <- tibble::add_row(.data = ele_df,
                           material_id = 0,
                           ele_type = "hex",
                           node1 = offset_z1 + offset_y1 + k,
@@ -96,7 +95,7 @@ generateRegQuadEle <- function(vector1 = numeric(), vector2 = numeric()){
     offset_v2_2 <- (j+1) * n_nodes1
     for (k in 0:(n_ele1-1)){
       ele_df <- tibble::add_row(.data = ele_df,
-                        material_id = 0,
+                       material_id = 0,
                        ele_type = "quad",
                        node1 = offset_v1_1 + k,
                        node2 = offset_v1_1 + k + 1,
@@ -109,6 +108,25 @@ generateRegQuadEle <- function(vector1 = numeric(), vector2 = numeric()){
 
 # main functoin -----------------------------------------------------------
 
+#' create_structured_mesh_nodes_ele
+#' @description Create a structured finite-element mesh in 1D, 2D or 3D.
+#'
+#' @param origin *numeric* vector of c(x,y,z) coordinates.
+#' @param lx *numeric* length in 'x' direction in 'meter'.
+#' @param nx *numeric* number of elements in 'x' direction.
+#' @param sx *numeric* multiplication factor of element size in 'x' direction.
+#' @param ly *numeric* length in 'y' direction in 'meter'.
+#' @param ny *numeric* number of elements in 'y' direction.
+#' @param sy *numeric* multiplication factor of element size in 'y' direction.
+#' @param lz *numeric* length in 'z' direction in 'meter'.
+#' @param nz *numeric* multiplication factor of element size in 'z' direction.
+#' @param sz *numeric* number of elements in 'z' direction.
+#'
+#' @return *list* of NODES *tibble* and ELEMENTS *tibble*.
+#' @export
+#'
+#' @examples
+#' mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 create_structured_mesh_nodes_ele <-
 
   function(
@@ -166,18 +184,23 @@ create_structured_mesh_nodes_ele <-
 
   xyz_vector <- list(x_vector, y_vector, z_vector)
 
-  nodes_df <- tibble::as_tibble(expand.grid(x = xyz_vector[[1]], y = xyz_vector[[2]],
-                                    z = xyz_vector[[3]]))
+  nodes_df <- tibble::as_tibble(expand.grid(x = xyz_vector[[1]],
+                                            y = xyz_vector[[2]],
+                                            z = xyz_vector[[3]])) %>%
+              dplyr::mutate(
+                node_id = (1:length(.data$x) - 1) %>% as.integer()) %>%
+              dplyr::select_at(dplyr::vars("node_id", "x", "y", "z"))
 
   # create element_df
   # 1d
   if (length(mesh_dim[mesh_dim == TRUE]) == 1) {
 
     ele_type <- "line"
-    ele_df <-tibble::tibble(material_id = vector("numeric", length(nodes_df[[1]])-1),
+    ele_df <-tibble::tibble(
+                     material_id = vector("numeric", length(nodes_df[[1]])-1),
                      ele_type = rep(ele_type, times = length(nodes_df[[1]])-1),
                      node1 = seq(0, length(nodes_df[[1]])-2,1),
-                     node2 = node1 + 1)
+                     node2 = .data$node1 + 1)
   }
 
   # 2d
@@ -195,8 +218,9 @@ create_structured_mesh_nodes_ele <-
   }
 
   ele_df <- ele_df %>%
-    dplyr::mutate(nr = 1:length(ele_type) - 1) %>%
-    dplyr::select(nr, dplyr::everything())
+    dplyr::mutate(
+      ele_id = (1:length(ele_df[[1]]) - 1)) %>%
+    dplyr::select(.data$ele_id, dplyr::everything())
 
   return(list(NODES = nodes_df, ELEMENTS = ele_df))
 }

@@ -9,31 +9,33 @@
 #'   All arguments except **x** have to be of class *character*.
 #'   Note the syntax with line breaks "\\n" for ELASTICITY and THERMAL.
 #' @param x Simulation object of class *ogs5*.
-#' @param BIOT_CONSTANT
-#' @param CREEP
-#' @param DENSITY
-#' @param ELASTICITY
-#' @param EXCAVATION
-#' @param E_Function
-#' @param GRAVITY_CONSTANT
-#' @param MICRO_STRUCTURE_PLAS
+#' @param BIOT_CONSTANT ogs5 **msp** bloc sub key word.
+#' @param CREEP ogs5 **msp** bloc sub key word.
+#' @param DENSITY ogs5 **msp** bloc sub key word.
+#' @param ELASTICITY ogs5 **msp** bloc sub key word.
+#' @param EXCAVATION ogs5 **msp** bloc sub key word.
+#' @param E_Function ogs5 **msp** bloc sub key word.
+#' @param GRAVITY_CONSTANT ogs5 **msp** bloc sub key word.
+#' @param MICRO_STRUCTURE_PLAS ogs5 **msp** bloc sub key word.
 #' @param NAME Name of the solid. *character*
-#' @param NON_REACTIVE_FRACTION
-#' @param PLASTICITY
-#' @param REACTIVE_SYSTEM
-#' @param SOLID_BULK_MODULUS
-#' @param SPECIFIC_HEAT_SOURCE
-#' @param STRESS_INTEGRATION_TOLERANCE
-#' @param STRESS_UNIT
-#' @param SWELLING_PRESSURE_TYPE
-#' @param THERMAL
-#' @param THRESHOLD_DEV_STR
-#' @param TIME_DEPENDENT_YOUNGS_POISSON
-#'
-#' @return
+#' @param NON_REACTIVE_FRACTION ogs5 **msp** bloc sub key word.
+#' @param PLASTICITY ogs5 **msp** bloc sub key word.
+#' @param REACTIVE_SYSTEM ogs5 **msp** bloc sub key word.
+#' @param SOLID_BULK_MODULUS ogs5 **msp** bloc sub key word.
+#' @param SPECIFIC_HEAT_SOURCE ogs5 **msp** bloc sub key word.
+#' @param STRESS_INTEGRATION_TOLERANCE ogs5 **msp** bloc sub key word.
+#' @param STRESS_UNIT ogs5 **msp** bloc sub key word.
+#' @param SWELLING_PRESSURE_TYPE ogs5 **msp** bloc sub key word.
+#' @param THERMAL ogs5 **msp** bloc sub key word.
+#' @param THRESHOLD_DEV_STR ogs5 **msp** bloc sub key word.
+#' @param TIME_DEPENDENT_YOUNGS_POISSON ogs5 **msp** bloc sub key word.
+#' @return Updated *ogs5* object.
 #' @export
-#'
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_msp_bloc(ogs5_obj, NAME = "SOLID_PROPERTIES1",
 #'                                DENSITY = "1 1.80000e+003")
 input_add_msp_bloc <-

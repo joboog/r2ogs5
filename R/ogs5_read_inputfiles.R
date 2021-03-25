@@ -371,7 +371,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                               lapply(function(sub) {
                                   sub[dollars] %>%
                                       stringr::str_remove("\\$") %>%
-                                      na.omit}) %>%
+                                      stats::na.omit()}) %>%
                               unlist %>%
                               tolower %>%
                               unique
@@ -398,12 +398,15 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                          .vars = dollars + 1,
                          .funs = ~ names) %>%
                      dplyr::select_if(!stringr::str_detect(., "\\$")) %>%
-                     dplyr::rename_at(2:4, ~c("x", "y", "z")) %>%
+                     dplyr::rename_at(1:4, ~c("pnt_id", "x", "y", "z")) %>%
                      dplyr::mutate_at(.vars = c("x", "y", "z"),
                                       .funs = as.double) %>%
+                     dplyr::mutate_at(.vars = c("pnt_id"),
+                                      .funs = as.integer) %>%
                      tibble::as_tibble() %>%
-                     tibble::column_to_rownames("...1") %>%
-                     dplyr::select(x, y, z, names)
+                     #tibble::column_to_rownames("...1") %>%
+                     dplyr::select(.data$pnt_id, .data$x, .data$y, .data$z,
+                                   {{names}})
                             ))
 
                     } else {
@@ -427,6 +430,8 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                 "ic" = add_standard_blocs(filepath,
                                           "ogs5_ic_condition"),
 
+                "krc" = add_standard_blocs(filepath),
+
                 "mcp" = add_standard_blocs(filepath,
                                            "ogs5_mcp_component"),
 
@@ -447,9 +452,11 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                                    as.double %>%
                                    matrix(nrow = length(nds),
                                           byrow = TRUE) %>%
-                                   'colnames<-' (c("n", "x", "y", "z")) %>%
+                                   'colnames<-' (c("node_id", "x", "y", "z"))%>%
                                    tibble::as_tibble() %>%
-                                   dplyr::select(-n) # remove numbering column
+                                   dplyr::mutate_at(dplyr::vars("node_id"),
+                                                    list(as.integer))
+                                   #dplyr::select(-n) # remove numbering column
 
                 # Convert ELEMENTS into tibble
                 emts <- bloc[["ELEMENTS"]][-1] # leave out first line
@@ -470,16 +477,20 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                         unlist %>%
                         matrix(nrow = n, byrow = TRUE)
 
-                    colnames(mat) <- c("nr",
+                    colnames(mat) <- c("ele_id",
                                        "material_id",
                                        "ele_type",
                                        paste0("node", 1:(ncol(mat) - 3)))
 
                     bloc[["ELEMENTS"]][[paste0(g)]] <- mat %>%
                         tibble::as_tibble() %>%
-                        dplyr::mutate_at(dplyr::vars(-ele_type),
-                                         list(as.double))
+                        dplyr::mutate_at(dplyr::vars(-"ele_id",
+                                                     -"ele_type"),
+                                         list(as.double)) %>%
+                        dplyr::mutate_at(dplyr::vars("ele_id"),
+                                         list(as.integer))
                 }
+                bloc[["ELEMENTS"]] <- bloc[["ELEMENTS"]] %>% dplyr::bind_rows()
 
                 # unlist all other blocs
                 other_skeys <- which(!(names(bloc) == "NODES" |
@@ -616,12 +627,12 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 #' (input file extension) will be overwritten. In order to add several blocs of
 #' the same type, the option needs to be set to FALSE.
 #'
-#' @details If [filename] is set to "all", the whole folder specified in
-#'  [file_dir] will be searched for possible input files excluding [*.tec],
-#'  [*.vtu] [*.vtk] and [*.pvd] files. However, the presence of files that are
-#'  not ogs5 input files such as for example [*.log]-files might have the
-#'  function crashing. For [filenames] that are different from [sim_basename], blocs of
-#'  the class [ogs5_additional] are added.
+#' @details If `filename` is set to "all", the whole folder specified in
+#'  `file_dir` will be searched for possible input files excluding `*.tec`,
+#'  `*.vtu` `*.vtk` and `*.pvd` files. However, the presence of files that are
+#'  not ogs5 input files such as for example `*.log` files might have the
+#'  function crashing. For filenames that are different from `sim_basename`, blocs of
+#'  the class `ogs5_additional` are added.
 #'
 #' @return returns an instance of *ogs5* with the new input blocs added
 #' as instances of their respective class.
@@ -629,11 +640,17 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
 #' @export
 #'
 #' @examples
-#' ex1 <- input_add_blocs_from_file(ogs5_obj = NULL,
+#' \dontrun{
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "decal", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/decal"))
+#'
+#' ogs5_obj <- input_add_blocs_from_file(ogs5_obj = ogs5_obj,
 #'                        sim_basename = "decal",
 #'                        filename = "decal.mfp",
-#'                        file_dir = "examples/benchmarks/ConcreteCrack",
+#'                        file_dir = "inst/extdata/ogs5_benchmarks/ConcreteCrack",
 #'                        overwrite = FALSE)
+#' }
 input_add_blocs_from_file <- function(ogs5_obj = NULL,
                                       sim_basename,
                                       filename,

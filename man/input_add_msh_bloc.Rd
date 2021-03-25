@@ -23,15 +23,27 @@ input_add_msh_bloc(
 
 \item{msh_name}{Name of the mesh. \emph{character}}
 
-\item{ELEMENTS}{A \emph{tibble} with columns material_id ele_type node1 node2
-(node3, node4)}
+\item{AREA}{ogs5 \strong{msh} bloc sub key word.}
 
-\item{NODES}{A \emph{tibble} with columns x, y, z.}
+\item{AXISYMMETRY}{ogs5 \strong{msh} bloc sub key word.}
 
-\item{PCS_TYPE}{}
+\item{CROSS_SECTION}{ogs5 \strong{msh} bloc sub key word.}
+
+\item{ELEMENTS}{A \emph{tibble} with columns c("ele_id", "material_id",
+"ele_type", "node1", "node2" ...).}
+
+\item{GEO_NAME}{ogs5 \strong{msh} bloc sub key word.}
+
+\item{GEO_TYPE}{ogs5 \strong{msh} bloc sub key word.}
+
+\item{LAYER}{ogs5 \strong{msh} bloc sub key word.}
+
+\item{NODES}{A \emph{tibble} with columns c("node_id", "x", "y", "z").}
+
+\item{PCS_TYPE}{ogs5 \strong{msh} bloc sub key word.}
 }
 \value{
-
+Updated \emph{ogs5} object.
 }
 \description{
 Adds a sub-bloc to \strong{msh} bloc of \emph{ogs5} for defining meshes.
@@ -42,6 +54,10 @@ For additional documentatoin of the input parameters see
 the \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/msh.html}{ogs5 keyword docs}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 ogs5_obj <- input_add_msh_bloc(x = ogs5_obj, msh_name = "base_mesh",
                                NODES = mesh_lst[[1]],

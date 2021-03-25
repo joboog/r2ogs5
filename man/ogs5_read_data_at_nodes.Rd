@@ -13,7 +13,7 @@ ogs5_read_data_at_nodes(
 \arguments{
 \item{ogs5}{\emph{ogs5} simulation object.}
 
-\item{outbloc_name}{Name of the corresponding \emph{ogs5} \strong{out} sub-bloc where
+\item{outbloc_name}{\emph{character} Name of the corresponding \emph{ogs5} \strong{out} sub-bloc where
 the output was defined.}
 
 \item{node_coords}{\emph{Tibble} of coordinates (x,y,z) of nodes where data has
@@ -27,6 +27,8 @@ Extract data from \emph{lists} read from *\strong{.vtu} files
 at given node locations.
 }
 \examples{
+\dontrun{
 foo <- ogs5_read_data_at_nodes(ex1, outbloc_name = "waterflow",
            node_coords = tibble::tibble(x=c(2,5), y=c(0,0), z=c(0,0)))
+}
 }

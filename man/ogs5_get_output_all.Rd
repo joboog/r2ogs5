@@ -9,7 +9,7 @@ ogs5_get_output_all(ogs5, out_filepath = NULL)
 \arguments{
 \item{ogs5}{\emph{ogs5} simulation object.}
 
-\item{out_filepath}{Path to output files. \emph{character}. Default:
+\item{out_filepath}{\emph{character} Path to output files. Default:
 'attributes(ogs5)$sim_path'.}
 }
 \value{
@@ -19,5 +19,7 @@ Updated \emph{ogs5} object.
 Import all output of a \strong{ogs5} simulation to a \emph{ogs5} object.
 }
 \examples{
+\dontrun{
 sim1 <- ogs5_get_output_all(sim1)
+}
 }

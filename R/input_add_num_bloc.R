@@ -9,31 +9,35 @@
 #'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param num_name Name of the sub-bloc.
-#' @param COUPLED_PROCESS
-#' @param COUPLING_CONTROL
-#' @param COUPLING_ITERATIONS
-#' @param DYNAMIC_DAMPING
-#' @param ELE_GAUSS_POINTS
-#' @param ELE_MASS_LUMPING
-#' @param ELE_SUPG
-#' @param ELE_UPWINDING
-#' @param EXTERNAL_SOLVER_OPTION
-#' @param FEM_FCT
-#' @param GRAVITY_PROFILE
-#' @param LINEAR_SOLVER
-#' @param LOCAL_PICARD1
-#' @param NON_LINEAR_ITERATION
-#' @param NON_LINEAR_SOLVER
-#' @param NON_LINEAR_UPDATE_VELOCITY
-#' @param OVERALL_COUPLING
-#' @param PCS_TYPE
-#' @param PLASTICITY_TOLERANCE
-#' @param RENUMBER
-#' @param TIME_STEPS
+#' @param COUPLED_PROCESS ogs5 **num** bloc sub key word.
+#' @param COUPLING_CONTROL ogs5 **num** bloc sub key word.
+#' @param COUPLING_ITERATIONS ogs5 **num** bloc sub key word.
+#' @param DYNAMIC_DAMPING ogs5 **num** bloc sub key word.
+#' @param ELE_GAUSS_POINTS ogs5 **num** bloc sub key word.
+#' @param ELE_MASS_LUMPING ogs5 **num** bloc sub key word.
+#' @param ELE_SUPG ogs5 **num** bloc sub key word.
+#' @param ELE_UPWINDING ogs5 **num** bloc sub key word.
+#' @param EXTERNAL_SOLVER_OPTION ogs5 **num** bloc sub key word.
+#' @param FEM_FCT ogs5 **num** bloc sub key word.
+#' @param GRAVITY_PROFILE ogs5 **num** bloc sub key word.
+#' @param LINEAR_SOLVER ogs5 **num** bloc sub key word.
+#' @param LOCAL_PICARD1 ogs5 **num** bloc sub key word.
+#' @param NON_LINEAR_ITERATION ogs5 **num** bloc sub key word.
+#' @param NON_LINEAR_SOLVER ogs5 **num** bloc sub key word.
+#' @param NON_LINEAR_UPDATE_VELOCITY ogs5 **num** bloc sub key word.
+#' @param OVERALL_COUPLING ogs5 **num** bloc sub key word.
+#' @param PCS_TYPE ogs5 **num** bloc sub key word.
+#' @param PLASTICITY_TOLERANCE ogs5 **num** bloc sub key word.
+#' @param RENUMBER ogs5 **num** bloc sub key word.
+#' @param TIME_STEPS ogs5 **num** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_num_bloc(ogs5_obj, num_name = "NUMERICS1",
 #'                                PCS_TYPE = "GROUNDWATER_FLOW",
 #'                                ELE_GAUSS_POINTS = "3",

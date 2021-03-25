@@ -9,43 +9,47 @@
 #'   Most arguments have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param pcs_name Name of the **pcs** sub-bloc.
-#' @param APP_TYPE
-#' @param BOUNDARY_CONDITION_OUTPUT
-#' @param COUNT
-#' @param CPL_TYPE
-#' @param DEACTIVATED_SUBDOMAIN
-#' @param DISSOLVED_CO2_INGAS_PCS_NAME
-#' @param DISSOLVED_CO2_PCS_NAME
-#' @param ELEMENT_MATRIX_OUTPUT
-#' @param GEO_TYPE
-#' @param MEDIUM_TYPE
-#' @param MEMORY_TYPE
-#' @param MSH_TYPE
-#' @param NEGLECT_H_INI_EFFECT
-#' @param NUM_TYPE
-#' @param OutputMassOfGasInModel
-#' @param PCS_TYPE
-#' @param PHASE_TRANSITION
-#' @param PRIMARY_VARIABLE
-#' @param PROCESSED_BC
-#' @param RELOAD
-#' @param SATURATION_SWITCH
-#' @param SAVE_ECLIPSE_DATA_FILES
-#' @param SIMULATOR
-#' @param SIMULATOR_MODEL_PATH
-#' @param SIMULATOR_PATH
-#' @param SIMULATOR_WELL_PATH
-#' @param ST_RHS
-#' @param TIME_CONTROLLED_EXCAVATION
-#' @param TIM_TYPE
-#' @param UPDATE_INI_STATE
-#' @param USE_PRECALCULATED_FILES
-#' @param USE_VELOCITIES_FOR_TRANSPORT
+#' @param APP_TYPE ogs5 **pcs** bloc sub key word.
+#' @param BOUNDARY_CONDITION_OUTPUT ogs5 **pcs** bloc sub key word.
+#' @param COUNT ogs5 **pcs** bloc sub key word.
+#' @param CPL_TYPE ogs5 **pcs** bloc sub key word.
+#' @param DEACTIVATED_SUBDOMAIN ogs5 **pcs** bloc sub key word.
+#' @param DISSOLVED_CO2_INGAS_PCS_NAME ogs5 **pcs** bloc sub key word.
+#' @param DISSOLVED_CO2_PCS_NAME ogs5 **pcs** bloc sub key word.
+#' @param ELEMENT_MATRIX_OUTPUT ogs5 **pcs** bloc sub key word.
+#' @param GEO_TYPE ogs5 **pcs** bloc sub key word.
+#' @param MEDIUM_TYPE ogs5 **pcs** bloc sub key word.
+#' @param MEMORY_TYPE ogs5 **pcs** bloc sub key word.
+#' @param MSH_TYPE ogs5 **pcs** bloc sub key word.
+#' @param NEGLECT_H_INI_EFFECT ogs5 **pcs** bloc sub key word.
+#' @param NUM_TYPE ogs5 **pcs** bloc sub key word.
+#' @param OutputMassOfGasInModel ogs5 **pcs** bloc sub key word.
+#' @param PCS_TYPE ogs5 **pcs** bloc sub key word.
+#' @param PHASE_TRANSITION ogs5 **pcs** bloc sub key word.
+#' @param PRIMARY_VARIABLE ogs5 **pcs** bloc sub key word.
+#' @param PROCESSED_BC ogs5 **pcs** bloc sub key word.
+#' @param RELOAD ogs5 **pcs** bloc sub key word.
+#' @param SATURATION_SWITCH ogs5 **pcs** bloc sub key word.
+#' @param SAVE_ECLIPSE_DATA_FILES ogs5 **pcs** bloc sub key word.
+#' @param SIMULATOR ogs5 **pcs** bloc sub key word.
+#' @param SIMULATOR_MODEL_PATH ogs5 **pcs** bloc sub key word.
+#' @param SIMULATOR_PATH ogs5 **pcs** bloc sub key word.
+#' @param SIMULATOR_WELL_PATH ogs5 **pcs** bloc sub key word.
+#' @param ST_RHS ogs5 **pcs** bloc sub key word.
+#' @param TIME_CONTROLLED_EXCAVATION ogs5 **pcs** bloc sub key word.
+#' @param TIM_TYPE ogs5 **pcs** bloc sub key word.
+#' @param UPDATE_INI_STATE ogs5 **pcs** bloc sub key word.
+#' @param USE_PRECALCULATED_FILES ogs5 **pcs** bloc sub key word.
+#' @param USE_VELOCITIES_FOR_TRANSPORT ogs5 **pcs** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export
 #'
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_pcs_bloc(ogs5_obj, pcs_name = "PROCESS1",
 #'                                PCS_TYPE = "GROUNDWATER_FLOW",
 #'                                NUM_TYPE = "NEW",

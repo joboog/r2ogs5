@@ -9,14 +9,13 @@ input_add_pqcfile_as_pqc_bloc(x = list(), pqc_filename = character(NULL))
 \arguments{
 \item{x}{\emph{ogs5} simulation object.}
 
-\item{pqc_filename}{Path to the *\strong{.pqc} input file. \emph{character}}
+\item{pqc_filename}{\emph{character} Path to the *\strong{.pqc} input file.}
 }
 \value{
 Updated \emph{ogs5} object.
 }
 \description{
 Add an entire *\strong{.pqc} input file as \strong{pqc} bloc to an \emph{ogs5}
-simulation object to define the input of the chemical solver \link{Phreeqc}
-(https://www.usgs.gov/software/phreeqc-version-3/). For further
+simulation object to define the input of the chemical solver \href{https://www.usgs.gov/software/phreeqc-version-3/}{Phreeqc}. For further
 documentation see \href{https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto/by_ext/pqc.html}{ogs5 keyword docs}
 }

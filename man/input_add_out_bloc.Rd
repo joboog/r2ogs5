@@ -29,7 +29,33 @@ input_add_out_bloc(
 
 \item{out_name}{Name of the \strong{out} sub-bloc. \emph{character}}
 
+\item{AMPLIFIER}{ogs5 \strong{out} bloc sub key word.}
+
+\item{DAT_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{DIS_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{ELE_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{GEO_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{MFP_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{MMP_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{MSH_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{NOD_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{PCON_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
+\item{PCS_TYPE}{ogs5 \strong{out} bloc sub key word.}
+
+\item{RWPT_VALUES}{ogs5 \strong{out} bloc sub key word.}
+
 \item{TECPLOT_ZONE_SHARE}{\emph{logical}}
+
+\item{TIM_TYPE}{ogs5 \strong{out} bloc sub key word.}
 
 \item{VARIABLESHARING}{\emph{logical}}
 }
@@ -44,6 +70,10 @@ or have a look at the input scripts from the \href{https://gitlab.opengeosys.org
 Most arguments have to be of class \emph{character}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_out_bloc(ogs5_obj, out_name = "OUTPUT1",
                    NOD_VALUES = "C(4) Ca Mg Cl pH pe Calcite Dolomite(dis)",
                    GEO_TYPE = "POINT POINT2",

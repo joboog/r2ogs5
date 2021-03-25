@@ -9,26 +9,30 @@
 #'   All arguments except **x** have to be of class *character*.
 #' @param x Simulation object of class *ogs5*.
 #' @param st_name Name of the source term.
-#' @param AIR_BREAKING
-#' @param CHANNEL
-#' @param COMP_NAME
-#' @param CONSTRAINED
-#' @param DISTRIBUTE_VOLUME_FLUX
-#' @param DIS_TYPE
-#' @param EXPLICIT_SURFACE_WATER_PRESSURE
-#' @param FCT_TYPE
-#' @param GEO_TYPE
-#' @param MSH_TYPE
-#' @param NEGLECT_SURFACE_WATER_PRESSURE
-#' @param NODE_AVERAGING
-#' @param PCS_TYPE
-#' @param PRIMARY_VARIABLE
-#' @param TIME_INTERPOLATION
-#' @param TIM_TYPE
+#' @param AIR_BREAKING ogs5 **st** bloc sub key word.
+#' @param CHANNEL ogs5 **st** bloc sub key word.
+#' @param COMP_NAME ogs5 **st** bloc sub key word.
+#' @param CONSTRAINED ogs5 **st** bloc sub key word.
+#' @param DISTRIBUTE_VOLUME_FLUX ogs5 **st** bloc sub key word.
+#' @param DIS_TYPE ogs5 **st** bloc sub key word.
+#' @param EXPLICIT_SURFACE_WATER_PRESSURE ogs5 **st** bloc sub key word.
+#' @param FCT_TYPE ogs5 **st** bloc sub key word.
+#' @param GEO_TYPE ogs5 **st** bloc sub key word.
+#' @param MSH_TYPE ogs5 **st** bloc sub key word.
+#' @param NEGLECT_SURFACE_WATER_PRESSURE ogs5 **st** bloc sub key word.
+#' @param NODE_AVERAGING ogs5 **st** bloc sub key word.
+#' @param PCS_TYPE ogs5 **st** bloc sub key word.
+#' @param PRIMARY_VARIABLE ogs5 **st** bloc sub key word.
+#' @param TIME_INTERPOLATION ogs5 **st** bloc sub key word.
+#' @param TIM_TYPE ogs5 **st** bloc sub key word.
 #'
 #' @return Updated *ogs5* object.
 #' @export
 #' @examples
+#' tmp <- tempdir()
+#' ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+#'                         sim_path = paste0(tmp, "/ex1"))
+#'
 #' ogs5_obj <- input_add_st_bloc(ogs5_obj, st_name = "SOURCE_TERM1",
 #'                               PCS_TYPE = "GROUNDWATER_FLOW",
 #'                               PRIMARY_VARIABLE = "HEAD",

@@ -24,7 +24,7 @@ input_add_num_bloc(
   NON_LINEAR_SOLVER = NULL,
   NON_LINEAR_UPDATE_VELOCITY = NULL,
   OVERALL_COUPLING = NULL,
-  PCS_TYPE = NUNULL,
+  PCS_TYPE = NULL,
   PLASTICITY_TOLERANCE = NULL,
   RENUMBER = NULL,
   TIME_STEPS = NULL
@@ -35,7 +35,47 @@ input_add_num_bloc(
 
 \item{num_name}{Name of the sub-bloc.}
 
-\item{TIME_STEPS}{}
+\item{COUPLED_PROCESS}{ogs5 \strong{num} bloc sub key word.}
+
+\item{COUPLING_CONTROL}{ogs5 \strong{num} bloc sub key word.}
+
+\item{COUPLING_ITERATIONS}{ogs5 \strong{num} bloc sub key word.}
+
+\item{DYNAMIC_DAMPING}{ogs5 \strong{num} bloc sub key word.}
+
+\item{ELE_GAUSS_POINTS}{ogs5 \strong{num} bloc sub key word.}
+
+\item{ELE_MASS_LUMPING}{ogs5 \strong{num} bloc sub key word.}
+
+\item{ELE_SUPG}{ogs5 \strong{num} bloc sub key word.}
+
+\item{ELE_UPWINDING}{ogs5 \strong{num} bloc sub key word.}
+
+\item{EXTERNAL_SOLVER_OPTION}{ogs5 \strong{num} bloc sub key word.}
+
+\item{FEM_FCT}{ogs5 \strong{num} bloc sub key word.}
+
+\item{GRAVITY_PROFILE}{ogs5 \strong{num} bloc sub key word.}
+
+\item{LINEAR_SOLVER}{ogs5 \strong{num} bloc sub key word.}
+
+\item{LOCAL_PICARD1}{ogs5 \strong{num} bloc sub key word.}
+
+\item{NON_LINEAR_ITERATION}{ogs5 \strong{num} bloc sub key word.}
+
+\item{NON_LINEAR_SOLVER}{ogs5 \strong{num} bloc sub key word.}
+
+\item{NON_LINEAR_UPDATE_VELOCITY}{ogs5 \strong{num} bloc sub key word.}
+
+\item{OVERALL_COUPLING}{ogs5 \strong{num} bloc sub key word.}
+
+\item{PCS_TYPE}{ogs5 \strong{num} bloc sub key word.}
+
+\item{PLASTICITY_TOLERANCE}{ogs5 \strong{num} bloc sub key word.}
+
+\item{RENUMBER}{ogs5 \strong{num} bloc sub key word.}
+
+\item{TIME_STEPS}{ogs5 \strong{num} bloc sub key word.}
 }
 \value{
 Updated \emph{ogs5} object.
@@ -48,6 +88,10 @@ or have a look at the input scripts from the \href{https://gitlab.opengeosys.org
 All arguments except \strong{x} have to be of class \emph{character}.
 }
 \examples{
+tmp <- tempdir()
+ogs5_obj <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                        sim_path = paste0(tmp, "/ex1"))
+
 ogs5_obj <- input_add_num_bloc(ogs5_obj, num_name = "NUMERICS1",
                                PCS_TYPE = "GROUNDWATER_FLOW",
                                ELE_GAUSS_POINTS = "3",
