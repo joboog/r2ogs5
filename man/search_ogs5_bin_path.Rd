@@ -16,5 +16,6 @@ binary instead of the bin folder path.}
 \emph{character} of path to ogs5 bin folder or ogs5 binary
 }
 \description{
-Search path to ogs5 binary or ogs5 bin folder.
+Search paths to ogs5 binary or ogs5 bin folder. Includes
+'PATH' environment variable. Returns first match of provided 'ogs_exe'.
 }
