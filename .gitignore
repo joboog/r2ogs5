@@ -15,7 +15,7 @@
 *.png
 *.lay
 *.rfe
-
+config.yml
 
 packrat/lib/*
 
