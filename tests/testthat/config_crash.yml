@@ -1,0 +1,3 @@
+default:
+  8  r2ogs5.default_sim_path : "/home/boog/ufz/11_r2ogs/r2ogs/tmp/"
+    r2ogs5.use_python  "/home/boog/software/miniconda3/envs/py37_r2ogs/bin/python"
