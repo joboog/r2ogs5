@@ -25,6 +25,11 @@
 #'   and `exp_data`.
 #' @param ensemble_path *character* path where ensemble for initial parameters
 #' should be written and run.
+#' @param ensemble_cores *numeric* integer number for the number of cores used
+#' during the initial ensemble run.
+#' @param ensemble_name *character* name for the ensemble run to distinguish from
+#' other (potentially running) ensembles. The name will appear in numbered folders
+#' for every run of the ensemble.
 #' @param scale_which (optional) *character* that identifies the parameters in
 #' `par_init` that should be scaled. Default is *NULL*, then all parameters
 #' will be scaled according to *scale_fun*.
@@ -32,7 +37,7 @@
 #' distribution, e.g. `scale_fun = log10` if the values are on a *log* scale.
 #'  Default is `I()` i.e. no transformation.
 #' @param unscale_fun (optional) *function* inverse of the prev`ious function
-#' (i.e. `unscale_fun = function(x) 10**x`to transform parameters back after
+#' (i.e. `unscale_fun = function(x) 10**x`) to transform parameters back after
 #'  sampling. Default is `I()` as well.
 #' @param BO_init (optional) object of class *BO* from a previous run to continue
 #' optimization. No further arguments except `kappa`, `max_it`, `ogs_exe` and
@@ -115,7 +120,7 @@
 #'
 #' @export
 #'
-#' @examples r2ogs/examples/bayesOpt_example.R
+#' @examples \dontrun{link to vignette}
 #'
 cal_bayesOpt <- function(par_init,
                           max_it,
@@ -275,7 +280,7 @@ cal_bayesOpt <- function(par_init,
         xmin_optim <- xmin_sampled
         # inner multistart optim loop
         for (p_i in 1:nrow(xmin_sampled)) {
-            op <- optim(par = xmin_sampled[p_i, ],
+            op <- stats::optim(par = xmin_sampled[p_i, ],
                         fn = gp_lcb,
                         method = "L-BFGS-B",
                         lower = rep(0, d),
@@ -348,8 +353,8 @@ cal_bayesOpt <- function(par_init,
 #'
 #' @param par_df *tibble* such as explained in [cal_bayesOpt()] with original values
 #' @param scale_which *character* (optional) that identifies the parameters to be scaled
-#' @param scale_fun *function* (optional) to scale the values, e.g. [log10()]
-#' @param unscale_fun *function* (optional) inverse of `scale_fun`, e.g. [10**x]
+#' @param scale_fun *function* (optional) to scale the values, e.g. `log10()`
+#' @param unscale_fun *function* (optional) inverse of `scale_fun`, e.g. `10**x``
 #'
 #' @return *tibble* with parameter specification and transformed values in the unit interval
 #'
@@ -368,7 +373,7 @@ to01 <- function(par_df, scale_which = NULL, scale_fun = I, unscale_fun = I) {
 
             unlist %>%
             scale_fun %>% # e.g. log10()
-            punif(min = scale_fun(par_df[[k, "min"]]),
+            stats::punif(min = scale_fun(par_df[[k, "min"]]),
                   max = scale_fun(par_df[[k, "max"]])) %>%
             t # tell tibble this is a row
     }
@@ -379,8 +384,8 @@ to01 <- function(par_df, scale_which = NULL, scale_fun = I, unscale_fun = I) {
 #'
 #' @param par_df *tibble* such as explained in [cal_bayesOpt()] with values in the unit interval
 #' @param scale_which *character* (optional) that identifies the parameters to be scaled
-#' @param scale_fun *function* (optional) to scale the values, e.g. [log10()]
-#' @param unscale_fun *function* (optional) inverse of `scale_fun`, e.g. [10**x]
+#' @param scale_fun *function* (optional) to scale the values, e.g. `log10()`
+#' @param unscale_fun *function* (optional) inverse of `scale_fun`, e.g. `10**x``
 #'
 #' @return *tibble* with parameter specification and transformed values in the actual parameter space
 #'
@@ -398,7 +403,7 @@ from01 <- function(par_df, scale_which = NULL, scale_fun = I, unscale_fun = I) {
         par_df[k, -c(1:6)] <- par_df[k, -c(1:6)] %>%
 
             unlist %>%
-            qunif(min = scale_fun(par_df[[k, "min"]]),
+            stats::qunif(min = scale_fun(par_df[[k, "min"]]),
                   max = scale_fun(par_df[[k, "max"]])) %>%
             unscale_fun %>%  # e.g. 10**x
             t # tell tibble this is a row

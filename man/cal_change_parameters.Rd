@@ -18,6 +18,9 @@ cal_change_parameters(
 
 \item{ensemble_path}{\emph{character} path where ensemble for several parameters
 should be written and run.}
+
+\item{ensemble_name}{\emph{character} name of the ensemble folder.
+The name will appear in numbered folders for every run of the ensemble.}
 }
 \value{
 An \emph{ogs5} or \emph{ens} object with changed input parameters.

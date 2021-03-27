@@ -32,7 +32,8 @@ if the values are on a \emph{log} scale. Default is \code{I()} i.e. no transform
 parameters back after sampling. Default is \code{I()} as well.}
 }
 \value{
-
+\emph{tibble} with as many rows as parameters, 6 columns for parameter keys
+and the remaining \code{n_samples} columns containing sampled parameter values.
 }
 \description{
 LHD samples are drawn from a uniform (0, 1) distribution via

@@ -52,6 +52,13 @@ and \code{exp_data}.}
 \item{ensemble_path}{\emph{character} path where ensemble for initial parameters
 should be written and run.}
 
+\item{ensemble_cores}{\emph{numeric} integer number for the number of cores used
+during the initial ensemble run.}
+
+\item{ensemble_name}{\emph{character} name for the ensemble run to distinguish from
+other (potentially running) ensembles. The name will appear in numbered folders
+for every run of the ensemble.}
+
 \item{scale_which}{(optional) \emph{character} that identifies the parameters in
 \code{par_init} that should be scaled. Default is \emph{NULL}, then all parameters
 will be scaled according to \emph{scale_fun}.}
@@ -60,7 +67,7 @@ will be scaled according to \emph{scale_fun}.}
 distribution, e.g. \code{scale_fun = log10} if the values are on a \emph{log} scale.
 Default is \code{I()} i.e. no transformation.}
 
-\item{unscale_fun}{(optional) \emph{function} inverse of the prev\verb{ious function (i.e. }unscale_fun = function(x) 10**x\verb{to transform parameters back after sampling. Default is }I()` as well.}
+\item{unscale_fun}{(optional) \emph{function} inverse of the prev\verb{ious function (i.e. }unscale_fun = function(x) 10**x\verb{) to transform parameters back after sampling. Default is }I()` as well.}
 
 \item{BO_init}{(optional) object of class \emph{BO} from a previous run to continue
 optimization. No further arguments except \code{kappa}, \code{max_it}, \code{ogs_exe} and
@@ -129,7 +136,7 @@ but it can also left blank. Following, \emph{min} and \emph{max} should be indic
 and thereafter  the starting values for the parameter.
 }
 \examples{
-r2ogs/examples/bayesOpt_example.R
+\dontrun{link to vignette}
 
 }
 \references{

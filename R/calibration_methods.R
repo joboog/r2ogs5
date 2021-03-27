@@ -4,10 +4,10 @@
 #' @description Helper function for [cal_bayesOpt()] that evaluates one or
 #' several parameters values by modifying the *ogs5* input slot, writing input
 #' files and running simulations. The output is retrieved via
-#' \code{\link{ogs5_get_output_specific}} and fed into the user-specified
+#' [ogs5_get_output_specific()] and fed into the user-specified
 #' `target_function` to calculate the simulation error.
 #'
-#' @param par_df *tibble* with parameters such as described in \code{\link{cal_bayesOpt}}
+#' @param par_df *tibble* with parameters such as described in [cal_bayesOpt()]
 #' @param exp_data experimental data
 #' @param ogs5_obj *ogs5*
 #' @param outbloc_names *character vector* names of the blocs specified in the
@@ -15,19 +15,26 @@
 #'  to the function \code{\link{ogs5_get_output_specific}}.
 #' @param ogs_exe *character* path to the ogs executable
 #' @param log_output *logical* Should a log file be written?
-#' @param log_path *character* path of directory to write log file, default is `run_path`.
+#' @param log_path *character* path of directory to write log file, default is
+#' `run_path`.
 #' @param run_path *character* path where the simulation should be run, default is
 #' *sim_path* from the `ogs5_obj`.
 #' @param target_function *function* specified by the user that should exist in
-#' the global environment and be of the form ```f <- function(ogs_obj, exp_data) { ... return(sim_error) }```.
+#' the global environment and be of the form
+#'  ```f <- function(ogs_obj, exp_data) { ... return(sim_error) }```.
 #' @param ensemble_path *character* path where ensemble for initial parameters
 #' should be written and run.
+#' @param ensemble_cores *numeric* integer number for the number of cores used
+#' during the initial ensemble run.
+#' @param ensemble_name *character* name for the ensemble run to distinguish from
+#' other (potentially running) ensembles. The name will appear in numbered folders
+#' for every run of the ensemble.
 #'
 #' @return An *ogs5* or *ens* class object depending if one set of parameters or
 #' several were run.
 #' @export
 #'
-#' @examples r2ogs/examples/bayesOpt_example.R
+#' @examples \dontrun{link to vignette}
 cal_simulation_error <- function(par_df,
                                   exp_data,
                                   ogs5_obj,
@@ -76,11 +83,11 @@ cal_simulation_error <- function(par_df,
                                   type = "all",
                                   folderpath = attributes(ens1[[i]])$sim_path)
             # Run
-            r2ogs::ogs5_run(ens1[[i]],
-                            ogs_exe = ogs_exe,
-                            log_output = TRUE,
-                            log_path = attributes(ens1[[i]])$sim_path,
-                            wait = TRUE)
+            r2ogs5::ogs5_run(ens1[[i]],
+                        ogs_exe = ogs_exe,
+                        log_output = TRUE,
+                        log_path = attributes(ens1[[i]])$sim_path,
+                        wait = TRUE)
         }
         parallel::stopCluster(cl)
 
@@ -142,6 +149,8 @@ cal_simulation_error <- function(par_df,
 #' @param par_df *tibble* with parameters such as described in \code{\link{cal_bayesOpt}}
 #' @param ensemble_path *character* path where ensemble for several parameters
 #' should be written and run.
+#' @param ensemble_name *character* name of the ensemble folder.
+#' The name will appear in numbered folders for every run of the ensemble.
 #'
 #' @return An *ogs5* or *ens* object with changed input parameters.
 #' @export
@@ -300,7 +309,8 @@ cal_create_calibration_set <- function(...) {
 #' @param unscale_fun *function* inverse of the previous function to transform
 #' parameters back after sampling. Default is `I()` as well.
 #'
-#' @return
+#' @return *tibble* with as many rows as parameters, 6 columns for parameter keys
+#' and the remaining `n_samples` columns containing sampled parameter values.
 #' @export
 #'
 #' @examples \dontrun{
@@ -341,66 +351,4 @@ cal_sample_parameters <- function(calibration_set,
                       unscale_fun = unscale_fun))
     }
 
-}
-
-
-
-# optim on ogst5_run_seq --------------------------------------------------
-
-#' Helper function to calibrate with optim
-#'
-#' @description A very simple function that takes a vector of parameter values and
-#' other argumets to [cal_simulation_error()] and returns the simulation error.
-#' The idea is use this function inside optim as demostrated in the examples.
-#'
-#' @param param *numeric* vector of starting parameter values (without other parameter specifications)
-#' @param exp_data *data.frame* experimental data compatible with the
-#' user defined `target_function`
-#' @param ogs5_obj *ogs5* object of the simulation to calibrate
-#' @param ogs_exe *character* path to the ogs5 executable
-#' @param calibration_set *tibble* with parameter keys, min and max values such as specified
-#'  in [cal_bayes_opt()]
-#' @param outbloc_names *character* vector with names of the blocs specified in the
-#'  **.out* file that should be used for calibration. The argument will be passed
-#'  to the function \code{\link{ogs5_get_output_specific}}.
-#' @param target_function
-#'
-#' @return *numeric* simulation error as specified in the user-defined `target_function`,
-#'  for the parameters specified in `param`
-#' @export
-#'
-#' @examples \dontrun{
-#' op <- optim(par = init$sample_1, # single vector of parameters
-#'     fn = cal_optim_ogs, # this function
-#'
-#'      # all the following are arguments for cal_simulation_error()
-#'     method = "L-BFGS-B",
-#'     lower = init$min, upper = init$max,
-#'     calibration_set = calibration_set,
-#'     exp_data = groundwater,
-#'     ogs5_obj = gwf3,
-#'     ogs_exe =  "path/to/ogs",
-#'     outbloc_names = out_names,
-#'     target_function = f)
-#' }
-cal_optim_ogs <- function(param,
-                          exp_data,
-                          ogs5_obj,
-                          ogs_exe,
-                          calibration_set,
-                          outbloc_names,
-                          target_function
-                      ) {
-
-    # parameters need to be in the same order as listed in the calibration_set
-    df  <- from01(cbind(calibration_set, v = param))
-
-    error <- cal_simulation_error(par_df = df,
-                                   exp_data = exp_data,
-                                   ogs5_obj = ogs5_obj,
-                                   ogs_exe = ogs_exe,
-                                   outbloc_names = outbloc_names,
-                                   target_function = target_function
-                                  )
-    return(error)
 }

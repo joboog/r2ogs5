@@ -20,7 +20,7 @@ cal_simulation_error(
 )
 }
 \arguments{
-\item{par_df}{\emph{tibble} with parameters such as described in \code{\link{cal_bayesOpt}}}
+\item{par_df}{\emph{tibble} with parameters such as described in \code{\link[=cal_bayesOpt]{cal_bayesOpt()}}}
 
 \item{exp_data}{experimental data}
 
@@ -34,16 +34,25 @@ to the function \code{\link{ogs5_get_output_specific}}.}
 
 \item{log_output}{\emph{logical} Should a log file be written?}
 
-\item{log_path}{\emph{character} path of directory to write log file, default is \code{run_path}.}
+\item{log_path}{\emph{character} path of directory to write log file, default is
+\code{run_path}.}
 
 \item{run_path}{\emph{character} path where the simulation should be run, default is
 \emph{sim_path} from the \code{ogs5_obj}.}
 
 \item{target_function}{\emph{function} specified by the user that should exist in
-the global environment and be of the form \verb{f <- function(ogs_obj, exp_data) \{ ... return(sim_error) \}}.}
+the global environment and be of the form
+\verb{f <- function(ogs_obj, exp_data) \{ ... return(sim_error) \}}.}
 
 \item{ensemble_path}{\emph{character} path where ensemble for initial parameters
 should be written and run.}
+
+\item{ensemble_cores}{\emph{numeric} integer number for the number of cores used
+during the initial ensemble run.}
+
+\item{ensemble_name}{\emph{character} name for the ensemble run to distinguish from
+other (potentially running) ensembles. The name will appear in numbered folders
+for every run of the ensemble.}
 }
 \value{
 An \emph{ogs5} or \emph{ens} class object depending if one set of parameters or
@@ -53,9 +62,9 @@ several were run.
 Helper function for \code{\link[=cal_bayesOpt]{cal_bayesOpt()}} that evaluates one or
 several parameters values by modifying the \emph{ogs5} input slot, writing input
 files and running simulations. The output is retrieved via
-\code{\link{ogs5_get_output_specific}} and fed into the user-specified
+\code{\link[=ogs5_get_output_specific]{ogs5_get_output_specific()}} and fed into the user-specified
 \code{target_function} to calculate the simulation error.
 }
 \examples{
-r2ogs/examples/bayesOpt_example.R
+\dontrun{link to vignette}
 }

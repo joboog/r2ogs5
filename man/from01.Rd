@@ -11,9 +11,9 @@ from01(par_df, scale_which = NULL, scale_fun = I, unscale_fun = I)
 
 \item{scale_which}{\emph{character} (optional) that identifies the parameters to be scaled}
 
-\item{scale_fun}{\emph{function} (optional) to scale the values, e.g. \code{\link[=log10]{log10()}}}
+\item{scale_fun}{\emph{function} (optional) to scale the values, e.g. \code{log10()}}
 
-\item{unscale_fun}{\emph{function} (optional) inverse of \code{scale_fun}, e.g. \link{10**x}}
+\item{unscale_fun}{\emph{function} (optional) inverse of \code{scale_fun}, e.g. `10**x``}
 }
 \value{
 \emph{tibble} with parameter specification and transformed values in the actual parameter space
