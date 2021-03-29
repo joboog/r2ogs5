@@ -270,7 +270,8 @@ cal_bayesOpt <- function(par_init,
                                         ensemble_path = ensemble_path,
                                         ensemble_cores = ensemble_cores,
                                         ensemble_name = ensemble_name)
-            # add to previous errors
+
+            # Update data
             errs <- c(errs, err)
 
             #=== fit meta model and select next parameters ====

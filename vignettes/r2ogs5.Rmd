@@ -3,7 +3,7 @@ title: "Simple Example for r2ogs5"
 author: Philipp Schad
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{simple_example_vingette}
+  %\VignetteIndexEntry{Simple Example for r2ogs5}
   %\VignetteKeyword{HTML}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
@@ -14,15 +14,16 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(tibble.print_min = 4L, tibble.print_max = 4L)
 ```
 
 ```{r setup}
-library(r2ogs)
+library(r2ogs5)
 ```
 
 ## Table of contents
 
-1. [Installation](#inst)
+1. [Installation](#inst)    
 2. [Setting up a simulation manually](#sim1)
 3. [Modifying a simulation object and writing input files](#mod) 
 4. [Settining up a simulation from input files](#sim2)
@@ -199,10 +200,10 @@ ex1 <- input_add_gli_points(x = ex1,
                                                          z = c(0,0),
                                                          name = c("point0", "point1")))
 # ad msh bloc
-mesh_lst <- r2ogs:::create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
+mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
                           NODES = mesh_lst$NODES,
-                          ELEMENTS = list(nodes = mesh_lst$ELEMENTS)) #TODO: change after bugfix!
+                          ELEMENTS = mesh_lst$ELEMENTS) 
 ```
 The names of the points are also used in the boundary condition blocs (`bc`), which
 have been added before and can be looked up via 
@@ -289,7 +290,7 @@ ex2 <- input_add_blocs_from_file(ex2,
 If the simulation object is ready and written to a directory, the simulation can finally be handed over to *OGS5* via a wrapper function, as shown below with all arguments set to default. 
 ```{r, eval=TRUE}
 ogs5_run(ex1,
-         ogs_exe = "../inst/ogs/ogs", 
+         ogs_exe = "../inst/ogs/ogs_fem", 
          run_path = attributes(ex1)$sim_path,
          log_output = TRUE,
          log_path = paste0(attributes(ex1)$sim_path, "/log"), 

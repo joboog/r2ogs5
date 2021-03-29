@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(tibble.print_min = 4L, tibble.print_max = 4L)
 ```
 
 An ensemble refers to several simulations of the same type with different input parameters. Here a set of helper functions are presented in order to set up and run an ensemble. 
@@ -39,8 +40,7 @@ R --slave -e 'devtools::install("local/repo/path")'
 and an appropriate **OGS5** executable has to be compiled the `exe_path` set as explained in the \link{simple_example.html} vignette.
 
 ```{r}
-# library(r2ogs)
-devtools::load_all("/home/phit0/Public/r2ogs")
+library(r2ogs5)
 ```
 
 Before setting up the ensemble, a base *ogs5* simulation has to be defined.
@@ -112,14 +112,14 @@ ex1 <- input_add_rfd_bloc(x = ex1, rfd_name = "tracer", mkey = "CURVES",
                                           conc=c(1,1,0,0,0)))
 
 ex1 <- input_add_gli_points(x = ex1,
-                        ogs5_points = tibble::tibble(x = c(0, 4.7), y = c(0,0),
-                                                 z = c(0,0),
-                                                 name = c("point0", "point1")))
-
-mesh_lst <- r2ogs:::create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
+                            ogs5_points = tibble::tibble(x = c(0, 4.7),
+                                                         y = c(0,0),
+                                                         z = c(0,0),
+                                                         name = c("point0", "point1")))
+mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
-                          NODES = mesh_lst[[1]],
-                          ELEMENTS = list(nodes = mesh_lst[[2]]))
+                          NODES = mesh_lst$NODES,
+                          ELEMENTS = mesh_lst$ELEMENTS) 
 ```
 
 
@@ -127,8 +127,8 @@ ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
 
 Define a parameter table for the ensemble for two parameters that will be arranged on a grid. Here, every combination of 10 mass dispersion and 5 tracer input concentrations  is a point on the grid thus resulting in 50 points/rows in the table. This can be easily extended to more parameters, but it has to be kept in mind that the number of points is the product of the parameter sequences every point corresponds to a simulation run.
 ```{r results = "markup"}
-para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 10),
-                       tracer_input_concentration = seq(0.1, 1, length.out = 5)) %>% 
+para_df <- expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 3),
+                       tracer_input_concentration = seq(0.1, 1, length.out = 2)) %>% 
             tibble::as_tibble()
 
 head(para_df)
@@ -172,7 +172,7 @@ ensemble_path/
     | - ...  
 
 ```{r}
-# ens_write_inputfiles(ens1)
+ens_write_inputfiles(ens1)
 ```
 
 
@@ -181,10 +181,10 @@ ensemble_path/
 
 Execute simulations.
 ```{r, results='hide'}
-# ens_run(ens1,
-#         ogs_exe = "../inst/ogs/ogs",
-#         log_output = TRUE,
-#         wait = FALSE)
+ens_run(ens1,
+        ogs_exe = "../inst/ogs/ogs_fem",
+        log_output = TRUE,
+        wait = TRUE)
 
 ```
 
@@ -226,18 +226,18 @@ tracer_out_df <-
 ```{r, fig.asp=0.5, fig.width=8}
 library("ggridges")
 
-tracer_out_df %>% 
-  dplyr::filter(X == 4.7) %>% 
-  
-  ggplot2::ggplot(ggplot2::aes(x = TIME, y = mass_dispersion, 
+tracer_out_df %>%
+  dplyr::filter(X == 4.7) %>%
+
+  ggplot2::ggplot(ggplot2::aes(x = TIME, y = mass_dispersion,
              height= (Tracer), group = mass_dispersion,
              fill = Tracer))+
-    ggridges::geom_density_ridges_gradient(stat = "identity", 
+    ggridges::geom_density_ridges_gradient(stat = "identity",
                                            rel_min_height = 0.01,
                                            panel_scaling = TRUE)+
-    
+
     ggplot2::facet_grid(.~tracer_input_concentration)+
-  
+
     ggridges::theme_ridges()+
     ggplot2::theme(axis.text.x.bottom = ggplot2::element_text(angle = 30) )+
     ggplot2::labs(x = "time (days)",
