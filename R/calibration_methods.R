@@ -5,7 +5,7 @@
 #' several parameters values by modifying the *ogs5* input slot, writing input
 #' files and running simulations. The output is retrieved via
 #' [ogs5_get_output_specific()] and fed into the user-specified
-#' `target_function` to calculate the simulation error.
+#' `objective_function` to calculate the simulation error.
 #'
 #' @param par_df *tibble* with parameters such as described in [cal_bayesOpt()]
 #' @param exp_data experimental data
@@ -19,7 +19,7 @@
 #' `run_path`.
 #' @param run_path *character* path where the simulation should be run, default is
 #' *sim_path* from the `ogs5_obj`.
-#' @param target_function *function* specified by the user that should exist in
+#' @param objective_function *function* specified by the user that should exist in
 #' the global environment and be of the form
 #'  ```f <- function(ogs_obj, exp_data) { ... return(sim_error) }```.
 #' @param ensemble_path *character* path where ensemble for initial parameters
@@ -43,7 +43,7 @@ cal_simulation_error <- function(par_df,
                                   log_output = TRUE,
                                   log_path = NULL,
                                   run_path = attributes(ogs5_obj)$sim_path,
-                                  target_function,
+                                  objective_function,
                                   ensemble_path = NULL,
                                   ensemble_cores,
                                   ensemble_name) {
@@ -105,7 +105,7 @@ cal_simulation_error <- function(par_df,
             )
 
             # call f
-            error[i] <- target_function(ens1[[i]], exp_data)
+            error[i] <- objective_function(ens1[[i]], exp_data)
         }
 
     } else {
@@ -137,7 +137,7 @@ cal_simulation_error <- function(par_df,
         )
         # === call f ===
         # user specified function
-        error <- target_function(ogs5_obj, exp_data)
+        error <- objective_function(ogs5_obj = ogs5_obj, exp_data = exp_data)
     }
 
     return(error)
@@ -274,7 +274,7 @@ cal_create_calibration_set <- function(...) {
         l <- ...elt(i)
 
         if (!(is.vector(l) & length(l) == 4)) {
-            stop(paste0("Argument", i, "should be a a vector of length 4"))
+            stop(paste0("Argument ", i, " should be a a vector of length 4"))
         }
 
         keys <- l[[1]] %>%
@@ -350,5 +350,82 @@ cal_sample_parameters <- function(calibration_set,
                       scale_fun = scale_fun,
                       unscale_fun = unscale_fun))
     }
+}
+
+#' Diagnostic plots for BO objects
+#'
+#' @param bo *BO* object obtained from a previous run of [cal_bayesOpt()].
+#'
+#' @details The plot Method when applied to an object of class *BO* returns 4
+#' plots of the development of different measures (y-axis) through the
+#' iterations/target function call. The measures are:
+#' 1. Current minimum of the target function found by the algorithm.
+#' 2. For the current queried point in the parameter space of the simulation model,
+#' the prediction and its respective evaluation by the simulation model or target
+#' function. Also, the confidence region, whose lower bound is used as acquisition
+#'  function in the algorithm (\eqn{lcb = ŷ - \kappa ŝ}), is drawn.
+#' 3. The so called regret calculated as \eqn{ŷ - y}.
+#' 4. The normalized regret \eqn{(ŷ - y) / ŝ}, where ŷ is the prediction by the
+#' meta model, y is the true target function value (both displayed in plot 2)
+#'  and ŝ the mean squared error of prediction for the queried point.
+#'
+#' More on the Bayesian Optimization algorithm can be found in
+#' `vignette(cal_bayesOpt)`.
+#'
+#' @export
+#'
+#' @examples \dontrun{plot(bo)}
+plot.BO <- function(bo) {
+
+    n_init <- length(bo$sim_errors) - length(bo$pred_mu)
+    df <- dplyr::tibble(
+        iteration = 1:length(bo$pred_mu),
+        errs = bo$sim_errors[(n_init + 1):length(bo$sim_errors)],
+        pred = bo$pred_mu,
+        pred_s = bo$pred_sigma,
+        kappa = bo$kappa
+    )
+    df$reg <- df$pred - df$errs
+    df$norm_reg <- df$reg / df$pred_s
+    df$curMin <- 0
+    for (i in 1:nrow(df)) {
+        df$curMin[i] <- min(df$errs[1:i])
+    }
+
+    ggplot2::theme_set(ggplot2::theme_minimal())
+    cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+                    "#0072B2", "#D55E00", "#CC79A7")
+
+   g1 <-  ggplot2::ggplot(df, ggplot2::aes(iteration, curMin)) +
+        ggplot2::geom_line(color = cbPalette[6]) +
+        ggplot2::labs(y = "objective funtion",
+                      title = "Minimum by iteration")
+
+   g2 <-  ggplot2::ggplot(df,
+        ggplot2::aes(iteration, pred)) +
+        ggplot2::geom_line(ggplot2::aes(color = "prediction")) +
+        ggplot2::geom_line(ggplot2::aes(y = errs,
+                                        color = "simulation")) +
+        ggplot2::geom_ribbon(ggplot2::aes(ymin = pred - pred_s * kappa,
+                                          ymax = pred + pred_s * kappa),
+                             alpha = 0.2, linetype = 2, size = 0.3,
+                             show.legend = FALSE,
+                             color = cbPalette[4]) +
+        ggplot2::labs(y = "objective function", color = "",
+                      title = "Prediction accuracy") +
+        ggplot2::scale_color_manual(values = c(cbPalette[4], "black")) +
+        ggplot2::theme(legend.position = c(0.8, 0.9))
+
+   g3 <- ggplot2::ggplot(df, ggplot2::aes(iteration, reg)) +
+        ggplot2::geom_point() +
+        ggplot2::labs(y = expression(hat(y) - y),
+                      title = "Prediction error")
+
+    g4 <- ggplot2::ggplot(df, ggplot2::aes(iteration, norm_reg)) +
+        ggplot2::geom_point() +
+        ggplot2::labs(y = expression((hat(y) - y) / MSE),
+                      title = "Normalized prediction error")
+
+    gridExtra::grid.arrange(ncol = 2, g1, g2, g3, g4)
 
 }

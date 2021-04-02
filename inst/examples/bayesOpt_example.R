@@ -7,11 +7,11 @@ ogs5_obj <- create_ogs5(sim_name = "Ashi",
 ogs5_obj <- input_add_blocs_from_file(ogs5_obj = ogs5_obj,
                                       sim_basename = "Ashi",
                                       filename = "all",
-                                      file_dir = "examples/groundwater")
+                                      file_dir = "inst/examples/groundwater")
 
 ogs5_write_inputfiles(ogs5_obj, type = "all")
 # run simulation
-ogs5_run(ogs5_obj, ogs_exe = "inst/ogs/ogs_5.76")
+ogs5_run(ogs5_obj, ogs_exe = "inst/ogs/ogs_fem")
 
 out_names <- paste0("OUTPUT", c(2:11, 13:16))
 # fetch output
@@ -45,7 +45,7 @@ f <- function(ogs5_obj, exp_data) {
 }
 
 # check if function works
-f(ogs5_obj, groundwater) # should yield a single number
+f(ogs5_obj, groundwater_exp) # should yield a single number
 
 # === declare parameters to calibrate ========
 
@@ -66,21 +66,33 @@ init <- cal_sample_parameters(calibration_set,
                               unscale_fun = function(x) 10**x,
                               )
 
+options(r2ogs5.default_ogs5_bin = "inst/ogs/ogs_fem")
 # === perform Bayesian Optimization ===========
-debug(cal_bayesOpt)
 bo <- cal_bayesOpt(par_init = init,
-                    kappa = "cooling",
+                    kappa = "log_t",
                     max_it = 10,
-                    exp_data = groundwater,
+                    exp_data = groundwater_exp,
                     ogs5_obj = ogs5_obj,
                     outbloc_names = out_names,
-                    ogs_exe = "inst/ogs/ogs",
-                    target_function = f,
+                    ogs_exe = NULL,
+                    objective_function = f,
                     ensemble_path = "examples/groundwater/ensembles",
                     ensemble_cores = 2,
                     ensemble_name = "test",
                     scale_fun = log10,
                     unscale_fun = function(x) 10**x)
 
-bo
-which.min(bo$sim_errors)
+
+# === reintroduce output object to continue Optimization ===========
+
+bo2 <- cal_bayesOpt(BO_init = bo,
+                    kappa = "log_t",
+                    max_it = 20,
+                    ogs_exe = "inst/ogs/ogs_fem",
+                    scale_fun = log10,
+                    unscale_fun = function(x) 10**x)
+
+bo$kappa
+plot(bo)
+plot(bo2)
+which.min(bo2$sim_errors)

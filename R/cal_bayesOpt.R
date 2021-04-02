@@ -18,7 +18,7 @@
 #'  **.out* file that should be used for calibration. The argument will be passed
 #'  to the function [ogs5_get_output_specific()].
 #' @param ogs_exe *character* path to the ogs executable.
-#' @param target_function *function* specified by the user that should exist in
+#' @param objective_function *function* specified by the user that should exist in
 #' the global environment and be of the form
 #' ```f <- function(ogs_obj, exp_data) { ... return(sim_error) }``` and return a
 #'  single *numeric* value that represents the error from the current `ogs_obj`
@@ -128,8 +128,8 @@ cal_bayesOpt <- function(par_init,
                           exp_data,
                           ogs5_obj,
                           outbloc_names,
-                          ogs_exe,
-                          target_function,
+                          ogs_exe = NULL,
+                          objective_function = NULL,
                           ensemble_path,
                           ensemble_cores,
                           ensemble_name,
@@ -178,11 +178,12 @@ cal_bayesOpt <- function(par_init,
         errs <- BO_init$sim_errors
         pred_mu <- BO_init$pred_mu
         pred_sigma <- BO_init$pred_sigma
+        kp <- BO_init$kp
         ogs5_obj = attributes(BO_init)$sim_data$ogs5_obj
         exp_data = attributes(BO_init)$sim_data$exp_data
         ogs5_obj = attributes(BO_init)$sim_data$ogs5_obj
         outbloc_names = attributes(BO_init)$sim_data$outbloc_names
-        target_function = attributes(BO_init)$sim_data$target_function
+        objective_function = attributes(BO_init)$sim_data$objective_function
 
     } else {
         # check if par_df is already in the unit intervall
@@ -190,9 +191,15 @@ cal_bayesOpt <- function(par_init,
                      scale_which, scale_fun, unscale_fun)[, -c(1:6)] == 1)) {
             stop("par_init seems to be transformed to the unit interval already")
         }
+        # sanity checks on user functions
+        if (!all(c("ogs5_obj", "exp_data") %in% formalArgs(objective_function))) {
+            stop("objective_function must have two arguments named
+                \"ogs5_obj\" and \"exp_data\".")
+        }
         X <- NULL
         pred_mu <- NULL
         pred_sigma <- NULL
+        kp <- NULL
         errs <- NULL
     }
 
@@ -214,7 +221,7 @@ cal_bayesOpt <- function(par_init,
                                         ogs5_obj = ogs5_obj,
                                         outbloc_names = outbloc_names,
                                         ogs_exe = ogs_exe,
-                                        target_function = target_function,
+                                        objective_function = objective_function,
                                         ensemble_path = ensemble_path,
                                         ensemble_cores = ensemble_cores,
                                         ensemble_name = ensemble_name)
@@ -302,7 +309,8 @@ cal_bayesOpt <- function(par_init,
         pred <- GPfit::predict.GP(meta, xnew = x_star)
         pred_mu <- c(pred_mu, pred$Y_hat)
         pred_sigma <- c(pred_sigma, sqrt(pred$MSE))
-        # pred_sigma <- c(pred_sigma, sqrt(pred$MSE[which.min(lcb)]))
+        kp <- c(kp, k(d, i))
+
         if (i > 1) {
             message(paste0("Iteration: ", i, ", error: ", round(err, 3),
                            " optim iterations: ", p_i,
@@ -316,7 +324,7 @@ cal_bayesOpt <- function(par_init,
                          ogs5_obj = ogs5_obj,
                          outbloc_names = outbloc_names,
                          ogs_exe = ogs_exe,
-                         target_function = target_function,
+                         objective_function = objective_function,
                          ensemble_path = ensemble_path,
                          ensemble_cores = ensemble_cores,
                          ensemble_name = ensemble_name))
@@ -333,7 +341,8 @@ cal_bayesOpt <- function(par_init,
         sim_errors = errs,
         min = mn,
         pred_mu = pred_mu,
-        pred_sigma = pred_sigma
+        pred_sigma = pred_sigma,
+        kappa = kp
     )
 
     return(structure(output,
@@ -344,7 +353,7 @@ cal_bayesOpt <- function(par_init,
                          exp_data = exp_data,
                          ogs5_obj = ogs5_obj,
                          outbloc_names = outbloc_names,
-                         target_function = target_function
+                         objective_function = objective_function
                      )))
 }
 
