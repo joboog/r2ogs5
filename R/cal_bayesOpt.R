@@ -173,12 +173,13 @@ cal_bayesOpt <- function(par_init,
         if (!class(BO_init) == "BO") stop("BO_init must be of class BO")
         # extract variables from previous run
         meta <- BO_init$gp_model
+        beta <- meta$beta
         par_init <- BO_init$min
         X <- BO_init$values
         errs <- BO_init$sim_errors
         pred_mu <- BO_init$pred_mu
         pred_sigma <- BO_init$pred_sigma
-        kp <- BO_init$kp
+        kp <- BO_init$kappa
         ogs5_obj = attributes(BO_init)$sim_data$ogs5_obj
         exp_data = attributes(BO_init)$sim_data$exp_data
         ogs5_obj = attributes(BO_init)$sim_data$ogs5_obj
@@ -207,7 +208,6 @@ cal_bayesOpt <- function(par_init,
     i <- 1
     d <- nrow(par_init)
     err <- NULL
-    regret <- NULL
     par_df <- par_init
 
     while(i <= max_it) {
@@ -225,10 +225,9 @@ cal_bayesOpt <- function(par_init,
                                         ensemble_path = ensemble_path,
                                         ensemble_cores = ensemble_cores,
                                         ensemble_name = ensemble_name)
-            # add to previous errors
-            errs <- c(errs, err)
 
-            #=== fit meta model and select next parameters ====
+            # Update data
+            errs <- c(errs, err)
 
             # transform values into 0, 1 interval and transpose
             X <- rbind(X,
@@ -238,23 +237,24 @@ cal_bayesOpt <- function(par_init,
                                 scale_fun,
                                 unscale_fun)[7:ncol(par_df)])))
 
-            if (i > 1) {
-                t0 <- Sys.time()
-                # Warm start with previous values
-                meta <- GPfit::GP_fit(X = X,
-                                      Y = errs,
-                                      corr = list(type = "exponential",
-                                                  power = 1.95),
-                                      # LHD, best points, clusters (minimum 2)
-                                      control = c(d * 10, d * 5,
-                                                  max(2, ceiling(0.25*d))),
-                                      optim_start = beta)
-            } else {
-                meta <- GPfit::GP_fit(X = X,
-                                      Y = errs,
-                                      corr = list(type = "exponential",
-                                                  power = 1.95))
-            }
+        }
+        if (i > 1 | !is.null(BO_init)) {
+            # Warm start with previous values
+            meta <- GPfit::GP_fit(X = X,
+                                  Y = errs,
+                                  corr = list(type = "exponential",
+                                              power = 1.95),
+                                  # LHD, best points, clusters (minimum 2)
+                                  control = c(d * 10, d * 5,
+                                              max(2, ceiling(0.25*d))),
+                                  optim_start = beta)
+
+        } else {
+            # initial GP fitting
+            meta <- GPfit::GP_fit(X = X,
+                                  Y = errs,
+                                  corr = list(type = "exponential",
+                                              power = 1.95))
         }
 
         # save parameters as starting values next model fitting
@@ -329,11 +329,11 @@ cal_bayesOpt <- function(par_init,
                          ensemble_cores = ensemble_cores,
                          ensemble_name = ensemble_name))
 
+    X <- rbind(X, x_star)
+
     mn <- from01(cbind(par_init[, c(1:6)],
                        best = t(X[which.min(errs), ])),
                  scale_which, scale_fun, unscale_fun)
-
-    X <- rbind(X, x_star)
 
     output <- list(
         gp_model = meta,

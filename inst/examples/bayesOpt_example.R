@@ -87,7 +87,7 @@ bo <- cal_bayesOpt(par_init = init,
 
 bo2 <- cal_bayesOpt(BO_init = bo,
                     kappa = "log_t",
-                    max_it = 20,
+                    max_it = 10,
                     ogs_exe = "inst/ogs/ogs_fem",
                     scale_fun = log10,
                     unscale_fun = function(x) 10**x)
@@ -95,4 +95,4 @@ bo2 <- cal_bayesOpt(BO_init = bo,
 bo$kappa
 plot(bo)
 plot(bo2)
-which.min(bo2$sim_errors)
+which.min(bo$sim_errors)
