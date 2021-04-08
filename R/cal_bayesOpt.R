@@ -165,7 +165,16 @@ cal_bayesOpt <- function(par_init,
         }
     } else {
         # is already a user defined function
+        if(!all(c("d", "i") %in% formalArgs(kappa))) {
+            stop("kappa must be either one of \"log_t\" or \"cooling\",
+                a positive number or a function that accepts arguments d and i")
+        }
         k <- kappa
+    }
+    # sanity checks on user functions
+    if (!all(c("ogs5_obj", "exp_data") %in% formalArgs(target_function))) {
+        stop("target_function must have two arguments named
+                \"ogs5_obj\" and \"exp_data\".")
     }
 
     if (!is.null(BO_init)) {
@@ -202,6 +211,11 @@ cal_bayesOpt <- function(par_init,
         pred_sigma <- NULL
         kp <- NULL
         errs <- NULL
+    }
+    # check if scaling functions are inverses of each other
+    is_inverse <- all(unscale_fun(scale_fun(par_init$min)) == par_init$min)
+    if(!is_inverse) {
+        stop("scale_fun should be the inverse function of unscale_fun")
     }
 
     # initialize loop
@@ -281,7 +295,7 @@ cal_bayesOpt <- function(par_init,
             x <- t(x)
             stopifnot(all(dim(x) == c(1, d)))
             pred <- GPfit::predict.GP(meta, xnew = x)
-            lcb <- pred$Y_hat - sqrt(pred$MSE) * k(d, i)
+            lcb <- pred$Y_hat - sqrt(pred$MSE) * k(d = d, i = i)
             return(lcb)
         }
         xmin_optim <- xmin_sampled
@@ -309,12 +323,12 @@ cal_bayesOpt <- function(par_init,
         pred <- GPfit::predict.GP(meta, xnew = x_star)
         pred_mu <- c(pred_mu, pred$Y_hat)
         pred_sigma <- c(pred_sigma, sqrt(pred$MSE))
-        kp <- c(kp, k(d, i))
+        kp <- c(kp, k(d = d, i = i))
 
         if (i > 1) {
             message(paste0("Iteration: ", i, ", error: ", round(err, 3),
                            " optim iterations: ", p_i,
-                           " kappa: ", round(k(d, i))))
+                           " kappa: ", round(k(d = d, i = i), 2)))
         }
 
         i <- i + 1

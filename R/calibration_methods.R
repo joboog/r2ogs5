@@ -280,6 +280,7 @@ cal_create_calibration_set <- function(...) {
         keys <- l[[1]] %>%
             stringr::str_split("\\$") %>%
             unlist
+
         tb[i, c("file_ext", "mkey", "skey")] <- t(keys)
         tb[i, "spec"] <- l[2]
         tb[i, "min"] <- as.numeric(l[3])
