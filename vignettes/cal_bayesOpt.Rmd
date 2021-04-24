@@ -239,7 +239,7 @@ curves are displayed in Figure 1.
 ```{r, message=T}
 bo <- cal_bayesOpt(par_init = init,
                     kappa = "log_t",
-                    max_it = 2,
+                    max_it = 20,
                     exp_data = groundwater_exp,
                     ogs5_obj = ashi,
                     outbloc_names = out_names,
@@ -309,7 +309,7 @@ used.
 
 ```{r,results='hide', fig.width=8, fig.height=6}
 bo2 <- cal_bayesOpt(BO_init = bo, 
-             max_it = 3,
+             max_it = 30,
              kappa = "log_t",
              scale_fun = log10,
              unscale_fun = function(x) 10**x,
