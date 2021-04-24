@@ -1,5 +1,5 @@
 ---
-title: "Simple Example for r2ogs5"
+title: ""
 author: Philipp Schad
 output: rmarkdown::html_vignette
 vignette: >
@@ -7,6 +7,7 @@ vignette: >
   %\VignetteKeyword{HTML}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: vignettes_lib.bib
 ---
 
 ```{r, include = FALSE}
@@ -17,23 +18,27 @@ knitr::opts_chunk$set(
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 ```
 
-```{r setup}
+# Basic functions of r2ogs5
+
+```{r setup, message=FALSE}
 library(r2ogs5)
 ```
 
-## Table of contents
+In this vignette, the basic functions of *r2ogs5* are illustrated with a simple 
+conservative mass transport simulation. 
 
-1. [Installation](#inst)    
+1. [Installation](#inst)
 2. [Setting up a simulation manually](#sim1)
-3. [Modifying a simulation object and writing input files](#mod) 
-4. [Settining up a simulation from input files](#sim2)
-5. [Run simulations and retrieve output](#run)
+3. [Modifying a simulation object, and writing input files](#mod) 
+4. [Setting up a simulation from input files](#sim2)
+5. [Run simulations, and retrieve output](#run)
 
 ## Installation <a name="inst"></a>
 
 The first option for installation is directly from the online repository via
 ```{r, eval=FALSE}
-devtools::install_gitlab("online/repo/path")
+# devtools::install_gitlab("https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs")
+
 ```
 in your R console.  
 
@@ -45,39 +50,65 @@ and then installing from the local repository via
 ```{r, eval=FALSE}
 devtools::install("local/repo/path")
 ```
-in your R console  
+in your R console.
 
 Note that it is necessary to have git https://www.git-scm.com/
 and/or the R-package `devtools` installed on your system. 
   
+Finally, the actual simulation program, OpenGeoSys 5 needs to be available on the system.
+*r2ogs5* does not come with OGS5 executables, as they usually
+need to be compiled specifically for the machine run on. For this tutorial, the default compiled
+executables should be sufficient which can be downloaded from https://www.opengeosys.org/releases/ for Linux, macOS, and Windows.  
+The name (here ogs_fem), and location of the OGS5 executable have to be set accordingly via `options`. 
+
+```{r}
+options(r2ogs5.default_ogs5_bin = "/home/phit0/Public/r2ogs/inst/ogs/ogs_fem")
+```
+
+There are more options to set a default simulation directory, benchmark directory, and python environment (needed for some simulation output gathering functionalities). By preference, all options for a  *r2ogs5* project can be stored in a "config.yml" file in the corresponding working directory and updated via
+`update_options_from_config` (see `?update_options_from_config`).
 
 
 ## Setting up a simulation <a name="sim"></a>
 
-On the basis of a very simple hydraulic transport flow model, the basic functions
-to create input, run a simulation and retrieve output 
+On the basis of a very simple hydraulic transport flow model, the use of the central 
+package functions to create input, run a simulation, and retrieve output are demonstrated. 
 
-The functions to set up a simulation from scratch follow the pattern 
-`input_add_<file extension>bloc()` and can be used repeatedly to add new input 
-blocs to the simulation. Before staring to add blocs, a simulation object of 
-class *ogs5* has to be created, where this blocs are added. This is done using
-the assign operator ( `<-` ) and the function \code{\link[r2ogs::create_ogs5]{r2ogs::create_ogs5()}}. 
+A relative directory "tmp" to write OGS5 files in will be defined here, it can be replaced by the user with any path to a custom directory of choice. 
+```{r}
+temp_dir <- "tmp"
+```
+
+
+First, a simulation object of 
+class *ogs5* has to be created, where these blocs are added. This is done using
+the assign operator ( `<-` ), and the function `create_ogs5()`. 
 ```{r}
 ex1 <- create_ogs5(sim_name = "ex1",
                    sim_id = 1L,
-                   sim_path = "inst/examples/tmp/ex1")
+                   sim_path = temp_dir)
 ```
 
-Now, the first input bloc can be created. In this case a process-bloc for a waterflow process. 
+The created *ogs5* object contains two sections; one named `output`, where results can be stored after simulation, and another called `input`, to store the different input objects of specific classes that corresponding to OpenGeoSys5 input files. The different input classes contain one or more blocs of a specific class that define a simulation parameter.  
+
+The functions to set up a simulation with *r2ogs5* follow the pattern 
+`input_add_<file extension>bloc()`, and can be used repeatedly to add new input blocs to the simulation. First, a process-bloc, which is the
+central object for any OGS5 simulation, is defined for a liquid flow process.
 ```{r}
 ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
                           PRIMARY_VARIABLE = "PRESSURE1")
 ```
-Depending on the process, there are different arguments that need to be
-specified in the above function. In general, all uppercase arguments are
-equivalent to **ogs5** keywords and can be looked up on https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto.   
+The overall structure of *ogs5* objects are lists, therefore blocs can be extracted via the list operator `$`.
 
-In the following, more `pcs` blocs will be added to `ex1` and other blocs in 
+```{r}
+str(ex1)
+ex1$input$pcs$waterflow
+```
+Depending on the bloc class, and the process that is simulated, there are different arguments that need to be
+specified in the functions to create input blocs. In general, all uppercase arguments are
+equivalent to **ogs5** keywords, and can be looked up at https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto. A short overview of the input classes needed for this example, and their function is given in \Cref{tab:inputClass}.
+
+In the following, another `pcs` bloc for a mass transport process will be added to `ex1`, and other blocs in 
 the same fashion. 
 ```{r}
 ex1 <- input_add_pcs_bloc(x=ex1, pcs_name = "tracer",
@@ -178,27 +209,65 @@ ex1 <- input_add_tim_bloc(x = ex1,  tim_name = "tracer",
 
 ```
 
+\newpage
+```{r inputClass, echo=FALSE, results='markup'}
+
+df <- tibble::tibble("Input class" = c(
+  "pcs",
+  "gli",
+  "msh",
+  "num",
+  "tim",
+  "ic",
+  "bc",
+  "st",
+  "mcp",
+  "mfp",
+  "mmp",
+  "msp",
+  "out"),
+  Desctiption = c(
+    "Process definition", 
+    "Geometry",
+    "Finite element mesh",
+    "Numerical properties",
+    "Time discretization",
+    "Initial condition",
+    "Boundary condition",
+    "Source/Sink term",
+    "Component properties",
+    "Fluid properties",
+    "Medium properties",
+    "Solid properties",
+    "Output configuration")
+  )
+
+knitr::kable(df, caption = "Most important ogs5 input classes")
+```
+
 Next, an `rfd` bloc with a time series of tracer concentrations at one point 
 will be generated. 
 
 ```{r}
-# add rfd
-ex1 <- input_add_rfd_bloc(x = ex1, rfd_name = "tracer", mkey = "CURVES",
-                          data = tibble::tibble(time=c(0, 3600, 3600.1, 720, 36000000),
-                                                conc=c(1,1,0,0,0)))
+ex1 <- input_add_rfd_bloc(x = ex1, rfd_name = "tracer",
+                          mkey = "CURVES",
+                          data = tibble::tibble(
+                            time = c(0, 3600, 3600.1, 720, 36000000),
+                            conc = c(1,1,0,0,0)))
 ```
 
-Finally, two geometry blocs are created and added to the `ex1`. First, a `gli` 
-bloc with three dimensional coordinates $x, y, z$ for two points is added. Then a `msh` bloc is created 
-via two helper functions. Here, only a one dimensional mesh (on $x$) is created. In order to create a $3d$ mesh, for example, the arguments `ly`, `lz`, `ny` and `nz` have to be specified accordingly. For further options please refer to the function documentation. 
+Finally, two geometry blocs are created, and added to the `ex1`. First, a `gli` 
+bloc with three-dimensional coordinates $x, y, z$ for two points is added. Then a `msh` bloc is created 
+via two helper functions. Here, only a one-dimensional mesh (on $x$) is created. In order to create a $3d$ mesh, for example, the arguments `ly`, `lz`, `ny`, and `nz` have to be specified accordingly. For further options please refer to the function documentation. 
 
 ```{r}
-# add gli
+## add gli
 ex1 <- input_add_gli_points(x = ex1,
-                            ogs5_points = tibble::tibble(x = c(0, 4.7),
-                                                         y = c(0,0),
-                                                         z = c(0,0),
-                                                         name = c("point0", "point1")))
+                            ogs5_points = tibble::tibble(
+                              x = c(0, 4.7),
+                              y = c(0,0),
+                              z = c(0,0),
+                              name = c("point0", "point1")))
 # ad msh bloc
 mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
 ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
@@ -206,22 +275,21 @@ ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
                           ELEMENTS = mesh_lst$ELEMENTS) 
 ```
 The names of the points are also used in the boundary condition blocs (`bc`), which
-have been added before and can be looked up via 
+have been added before, and can be looked up via 
 ```{r}
 ex1$input$bc$tracer_in$GEO_TYPE
 ex1$input$bc$pressure_out$GEO_TYPE
 ```
 
-In order to review the simulation object, the function `str` might be helpful 
-(output not shown).
-```{r, eval = FALSE}
-str(ex1)
+The location of the points, lines, or surfaces on the finite element mesh, for which boundary conditions, sink/source terms, etc are defined in the `gli` section.
+```{r}
+ex1$input$gli
 ```
 
 
-## Modifying a simulation object and writing input files <a name="mod"></a> 
+## Modifying a simulation object, and writing input files <a name="mod"></a> 
 
-In order to overwrite an existing input bloc the entry has to be deleted first.
+In order to overwrite an existing input bloc, the entry has to be deleted first.
 Then a new bloc with the same name as before but different values can be added. 
 ```{r}
 ex1$input$msp <- NULL
@@ -230,76 +298,77 @@ ex1 <- input_add_msp_bloc(ex1,
                           DENSITY = "1 1.79e+3")
 ```
 Alternatively, an entry can also be changed directly by assigning a new character 
-string. Here, care has to be taken to include all necessary specifications and
-follow the format requirements such as whitespaces and line breaks. 
+string. Here, care has to be taken to include all necessary specifications, and
+follow the format requirements such as whitespaces, and line breaks. 
 ```{r}
 ex1$input$msp$gravel$DENSITY <- "1 1.8E+3"
 str(ex1$input$msp)
 ```
 
-The helper function [cal_change_parameters()] to use for calibration can also be used for this purpose. For more see `vignette("calibration"). 
+The helper function `cal_change_parameters` to use for calibration can also be used for this purpose. For more see `vignette("cal_bayesOpt"). 
 
-All blocs can be written out by setting `type = "all`, which is the default 
-or only a selection of bloc types. Note that r2ogs will always create directories
-where none exist and overwrite existing directories. 
+All blocs can be written out by setting `type = "all"`, (default)
+or only a selection of bloc types. Note that r2ogs5 will always create directories
+where none exist, and overwrite existing directories. 
 ```{r,eval=TRUE}
 ogs5_write_inputfiles(ex1, type = "all")
 
-ogs5_write_inputfiles(ex1, type = "bc", folderpath = "inst/examples/tmp/ex1")
+ogs5_write_inputfiles(ex1, type = "bc")
 
 ogs5_write_inputfiles(ex1, type = c("bc", "mmp"))
 ```
 If no `folderpath` is specified, the files will be written into the folder specified
-at initialization with `sim_path`. 
+at the initialization of `ex1` with `sim_path`. 
 
-## Settining up a simulation from input files <a name="sim2"></a>
+## Setting up a simulation from input files <a name="sim2"></a>
 
-The function `input_add_blocs_from_file()` can be used to create *ogs* 
+The function `input_add_blocs_from_file()` can be used to create *r2ogs5* 
 simulation objects directly from the input files in an automatized fashion. As
-before, an *ogs5*-object needs to bee initialized first.
+before, an *ogs5*-object needs to be initialized first.
 
-For example, all files from the directory *inst/examples/tmp/ex1* can be read in and *r2ogs* will print the reading progress.
-```{r, eval=TRUE, results="markup", echo=TRUE}
-ex2 <- create_ogs5(sim_name = "ex2",
-                   sim_id = 1L,
-                   sim_path = "inst/examples/tmp/ex2")
+For example, all files from the directory *temp/* can be read in, and *r2ogs* will print the reading progress.  
+```{r, eval=TRUE, results="hide", echo=TRUE}
+ex2 <- create_ogs5(
+  sim_name = "ex2",
+  sim_id = 1L,
+  sim_path = paste0(temp_dir, "/two")
+  )
 
-ex2 <- input_add_blocs_from_file(ex2,
-                                 sim_basename = "ex1",
-                                 filename = "all",
-                                 file_dir = "inst/examples/tmp/ex1"
-                                 )
+ex2 <- input_add_blocs_from_file(
+  ogs5_obj = ex2,
+  sim_basename = "ex1",
+  filename = "all",
+  file_dir = temp_dir
+  )
 ```
-The argument `sim_basename` should to correspond to the common file-basename in the directory. The function will automatically assign the blocs with the corresponding classes and place them into the correct location in `ex2`. 
-```{r}
-ex2$input$gli
-```
-Except of \*.tec, \*.vtk, \*.pvd all kinds of files that are in the directory are read in. Files that are not among the basic *OGS5* files are added into `input$additional`. 
-It is important to have 'clean' input files in the directory, best without any comments (\\\\). Furthermore, a single input file or a list of inputfiles can be specified explicitly, to avoid reading any unnecessary files from the directory.
-```{r}
-ex2 <- input_add_blocs_from_file(ex2,
-                                 sim_basename = "ex1",
-                                 filename = list("ex1.bc",
-                                                 "ex1.mmp"),
-                                 file_dir = "inst/examples/tmp/ex1"
-                                 )
+The argument `sim_basename` should correspond to the common file-basename in the directory. The function will automatically assign the blocs with the corresponding classes, and place them into the correct location in `ex2`.  
+
+Except for \*.tec, \*.vtk, \*.pvd all kinds of files that are in the directory are read in. Files that are not among the basic *OGS5* files are added into `input$additional`. 
+It is important to have 'clean' input files in the directory, best without any comments (e.g. \\\\). Furthermore, a single input file or a list of inputfiles can be specified explicitly, to avoid reading any unnecessary files from the directory.
+```{r, results='hide'}
+ex2 <- input_add_blocs_from_file(
+  ogs5_obj = ex2,
+  sim_basename = "ex1",
+  filename = list("ex1.bc", "ex1.mmp"),
+  file_dir = temp_dir
+  )
 ```
 
 ## Run simulations and retrieve output <a name="run"></a>  
 
-If the simulation object is ready and written to a directory, the simulation can finally be handed over to *OGS5* via a wrapper function, as shown below with all arguments set to default. 
+If the simulation object is ready, and written to a directory, the simulation can finally be handed over to *OGS5*, as shown below with all arguments set to default. 
 ```{r, eval=TRUE}
-ogs5_run(ex1,
-         ogs_exe = "../inst/ogs/ogs_fem", 
+ogs5_run(ogs5_obj = ex1,
+         ogs_exe = NULL, # default path
          run_path = attributes(ex1)$sim_path,
          log_output = TRUE,
          log_path = paste0(attributes(ex1)$sim_path, "/log"), 
          use_mpi = FALSE,
          wait = TRUE)
 ```
-In order to run, an appropriate *OGS5* executable should be provided. Depending on the type of simulation, special compiling options need to be set. For a download an compilation guide of *OGS5* refer to https://github.com/ufz/ogs5. 
-The argument `log_output` allows to write the *OGS5* output into a file specified under `log_path` or display the output in the console by setting `log_output` to `FALSE`. 
-For Parallelized simulation, `use_mpi` must be set to true, the `number_of_cores` specified and an appropriate *OGS5* executable provided, of course.
+In order to run, an appropriate *OGS5* executable should be provided, as explained at the beginning. Depending on the type of simulation, special compiling options need to be set. For a download and compilation guide of *OGS5* please refer to https://github.com/ufz/ogs5. 
+The argument `log_output` allows writing the *OGS5* output into a file specified under `log_path` or display the output in the console by setting `log_output` to `FALSE`. 
+For Parallelized simulation, `use_mpi` must be set to true, the `number_of_cores` specified, and an appropriate *OGS5* executable provided, of course.
 
 
 The output files specified in `input$out` are written into the same directory where
@@ -307,20 +376,20 @@ the input files lie.
 ```{r}
 str(ex1$input$out)
 ```
-Here we have two *"PVD"* and one "*TECPLOT*" as output files. The first stores every
-10th time step of the variable **Pressure**, the second of **Tracer** and the last 
-every time step of **Tracer** over the whole geometrical domain of the model. 
+Here we have two *"PVD"*, and one "*TECPLOT*" as output files. The first stores every
+10th time step of the variable `PRESSURE`, the second every 10th time step of `Tracer`, and the last 
+every time step of `Tracer` over the whole geometrical domain of the model. 
 
 The "tecplot" output can be added to the `ex1$output` via
 ```{r}
 ex1$output <- ogs5_read_many_tecplots(filepath = attributes(ex1)$sim_path,
                   geo_object = "domain")
-ex1$output
+ex1$output %>% dplyr::select(!filepath)
 ```
-which yields a regular *tibble* with the observed variable in time and space.
-depending on its dimensionality, results can then be easily plotted.
+which yields a regular *tibble* with the observed variable in time, and space.
+Depending on their dimensionality, results can then be easily plotted.
 
-```{r, message=FALSE, results='hide'}
+```{r, message=FALSE, warning=FALSE, results='hide', fig.width=5, fig.asp=0.6}
 library(dplyr)
 library(ggplot2)
 breakthrough <- ex1$output %>%
@@ -329,15 +398,19 @@ breakthrough <- ex1$output %>%
 
 ggplot(breakthrough, aes(x = TIME, y = Tracer)) +
   geom_point() +
-  labs(title = "Tracer concentration at the end of the model domain") +
-  theme_minimal()
-
-ggplot(ex1$output, aes(x = X, y = Tracer, color = log(TIME))) +
-  geom_point() + 
-  labs(title = "Change of tracer distribution on the model domain") +
-  theme_minimal()
+  labs(title = "End point") +
+  theme_classic()
+```
+```{r, message=FALSE, warning=FALSE, results='hide', fig.width=7, fig.asp=0.6}
+ggplot(ex1$output, aes(x = X, y = TIME, fill = Tracer)) +
+  geom_tile() +
+  labs(title = "Model domain") +
+  scale_fill_viridis_c(trans = "log") +
+  theme_classic()
   
 ```
-
-
+   
+   
+    
+   
 
