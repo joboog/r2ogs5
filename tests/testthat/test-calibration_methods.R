@@ -65,16 +65,17 @@ test_that("kappa input is checked", {
 
 test_that("check BO_init class", {
           expect_error(cal_bayesOpt(BO_init = list("a", 4),
-                            target_function = function(ogs5_obj, exp_data){}),
+                            objective_function = function(ogs5_obj, exp_data){}),
                        regexp = "BO_init must be of class BO")
     })
 
 test_that("user function sanity", {
-    expect_error(cal_bayesOpt(target_function = function(ogs5_obj, ex){NA}),
-                regexp = "target_function must have two arguments named
+    expect_error(cal_bayesOpt(par_init = df,
+                              objective_function = function(ogs5_obj, ex){NA}),
+                regexp = "objective_function must have two arguments named
                 \"ogs5_obj\" and \"exp_data\".")
     expect_error(cal_bayesOpt(par_init = df,
-                              target_function = function(ogs5_obj, exp_data){},
+                              objective_function = function(ogs5_obj, exp_data){},
                               scale_fun = log10,
                               unscale_fun = function(x){x**10}),
                  regexp = paste("scale_fun should be the inverse function",

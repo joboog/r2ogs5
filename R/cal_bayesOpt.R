@@ -12,7 +12,7 @@
 #' parameter that weights exploitation versus exploration depending on dimension
 #' and iteration (see details).
 #' @param max_it *numeric* maximum number of BO iterations.
-#' @param exp_data calibration data that will be used in the target function.
+#' @param exp_data calibration data that will be used in the objective function.
 #' @param ogs5_obj *ogs5* base simulation object.
 #' @param outbloc_names *character vector* names of the blocs specified in the
 #'  **.out* file that should be used for calibration. The argument will be passed
@@ -30,6 +30,9 @@
 #' @param ensemble_name *character* name for the ensemble run to distinguish from
 #' other (potentially running) ensembles. The name will appear in numbered folders
 #' for every run of the ensemble.
+#' @param gp_control A named *list* with settings for [GP_fit()]. Default values
+#' of `kernel`, `nug_thres` and `maxit` correspond to the default settings in
+#' `GP_fit`.
 #' @param scale_which (optional) *character* that identifies the parameters in
 #' `par_init` that should be scaled. Default is *NULL*, then all parameters
 #' will be scaled according to *scale_fun*.
@@ -43,6 +46,8 @@
 #' optimization. No further arguments except `kappa`, `max_it`, `ogs_exe` and
 #' the scaling functions (if necessary) have to be supplied, as everything else
 #' will be taken from the `BO_init` class attributes.
+#' @param quiet *locigal* to indicate if progress of the algorithm
+#' (iteration, queried objective function value, )
 #'
 #' @details Bayesian Optimization as proposed by *Mockus et al. (1978)* with the
 #' Lower Confidence Bound acquisition function to balance Exploration and
@@ -110,7 +115,7 @@
 #'    \item{sim_errors}{Simulation errors used as independent variable in *gp_model*}
 #'    \item{min}{Parameter where the smallest simulation error was found.}
 #'    \item{pred_mu}{Vector of predictions by the meta-model cast for every
-#'    element in `sim_errors` previous to the target function evaluation.}
+#'    element in `sim_errors` previous to the objective function evaluation.}
 #'    \item{pred_sigma}{Vector of prediction variance for every element in
 #'    `pred_mu`.}
 #'  }
@@ -120,7 +125,10 @@
 #'
 #' @export
 #'
-#' @examples \dontrun{link to vignette}
+#' @examples \dontrun{
+#' # For examples please refer to
+#' vignettes("cal_bayesOpt")
+#' }
 #'
 cal_bayesOpt <- function(par_init,
                           max_it,
@@ -133,10 +141,16 @@ cal_bayesOpt <- function(par_init,
                           ensemble_path,
                           ensemble_cores,
                           ensemble_name,
+                          gp_control = list(
+                              kernel = list(type = "exponential", power = 1.95),
+                              nug_thres = 20,
+                              maxit = 100
+                              ),
                           scale_which = NULL,
                           scale_fun = I,
                           unscale_fun = I,
-                          BO_init = NULL) {
+                          BO_init = NULL,
+                          quiet = FALSE) {
 
     # store call
     cl <- match.call()
@@ -145,7 +159,7 @@ cal_bayesOpt <- function(par_init,
         # not a function
         if (kappa == "log_t") {
             k <-  function (d, i) {
-                    beta_i <- 2 * log((d * pi**2 * i**2) / (6 * 0.1))
+                    beta_i <- 2 * log((d * pi**2 * (i + n0)**2) / (6 * 0.1))
                     return(sqrt(beta_i))
             }
         } else if (kappa == "cooling") {
@@ -171,11 +185,6 @@ cal_bayesOpt <- function(par_init,
         }
         k <- kappa
     }
-    # sanity checks on user functions
-    if (!all(c("ogs5_obj", "exp_data") %in% formalArgs(target_function))) {
-        stop("target_function must have two arguments named
-                \"ogs5_obj\" and \"exp_data\".")
-    }
 
     if (!is.null(BO_init)) {
         # An initial BO object is supplied, iterations are "continued"
@@ -183,17 +192,24 @@ cal_bayesOpt <- function(par_init,
         # extract variables from previous run
         meta <- BO_init$gp_model
         beta <- meta$beta
+        gp_control <- list(kernel = list(type = meta$correlation_param[[1]],
+                                         power = meta$correlation_param[[2]],
+                                         nu = meta$correlation_param[[2]]),
+                           nug_thres = meta$nugget_threshold_parameter,
+                           maxit = gp_control$maxit)
+
         par_init <- BO_init$min
         X <- BO_init$values
         errs <- BO_init$sim_errors
         pred_mu <- BO_init$pred_mu
         pred_sigma <- BO_init$pred_sigma
+        n0 <- length(errs)
         kp <- BO_init$kappa
         ogs5_obj = attributes(BO_init)$sim_data$ogs5_obj
         exp_data = attributes(BO_init)$sim_data$exp_data
-        ogs5_obj = attributes(BO_init)$sim_data$ogs5_obj
         outbloc_names = attributes(BO_init)$sim_data$outbloc_names
         objective_function = attributes(BO_init)$sim_data$objective_function
+
 
     } else {
         # check if par_df is already in the unit intervall
@@ -211,6 +227,12 @@ cal_bayesOpt <- function(par_init,
         pred_sigma <- NULL
         kp <- NULL
         errs <- NULL
+        n0 <- ncol(par_init[, -c(1:6)])
+    }
+    # sanity checks on user functions
+    if (!all(c("ogs5_obj", "exp_data") %in% formalArgs(objective_function))) {
+        stop("objective_function must have two arguments named
+                \"ogs5_obj\" and \"exp_data\".")
     }
     # check if scaling functions are inverses of each other
     is_inverse <- all(unscale_fun(scale_fun(par_init$min)) == par_init$min)
@@ -238,7 +260,8 @@ cal_bayesOpt <- function(par_init,
                                         objective_function = objective_function,
                                         ensemble_path = ensemble_path,
                                         ensemble_cores = ensemble_cores,
-                                        ensemble_name = ensemble_name)
+                                        ensemble_name = ensemble_name,
+                                        quiet = quiet)
 
             # Update data
             errs <- c(errs, err)
@@ -256,8 +279,9 @@ cal_bayesOpt <- function(par_init,
             # Warm start with previous values
             meta <- GPfit::GP_fit(X = X,
                                   Y = errs,
-                                  corr = list(type = "exponential",
-                                              power = 1.95),
+                                  corr = gp_control$kernel,
+                                  nug_thres = gp_control$nug_thres,
+                                  maxit = gp_control$maxit,
                                   # LHD, best points, clusters (minimum 2)
                                   control = c(d * 10, d * 5,
                                               max(2, ceiling(0.25*d))),
@@ -267,8 +291,9 @@ cal_bayesOpt <- function(par_init,
             # initial GP fitting
             meta <- GPfit::GP_fit(X = X,
                                   Y = errs,
-                                  corr = list(type = "exponential",
-                                              power = 1.95))
+                                  corr = gp_control$kernel,
+                                  nug_thres = gp_control$nug_thres,
+                                  maxit = gp_control$maxit)
         }
 
         # save parameters as starting values next model fitting
@@ -325,7 +350,7 @@ cal_bayesOpt <- function(par_init,
         pred_sigma <- c(pred_sigma, sqrt(pred$MSE))
         kp <- c(kp, k(d = d, i = i))
 
-        if (i > 1) {
+        if (i > 1 & !quiet) {
             message(paste0("Iteration: ", i, ", error: ", round(err, 3),
                            " optim iterations: ", p_i,
                            " kappa: ", round(k(d = d, i = i), 2)))

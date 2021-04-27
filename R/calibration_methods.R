@@ -46,7 +46,8 @@ cal_simulation_error <- function(par_df,
                                   objective_function,
                                   ensemble_path = NULL,
                                   ensemble_cores,
-                                  ensemble_name) {
+                                  ensemble_name,
+                                  quiet) {
 
     # general purpose function to sequentially call ogs5 runs
     # takes value(s) to evaluate by ogs, runs a simulation and calls
@@ -62,7 +63,8 @@ cal_simulation_error <- function(par_df,
 
     if (is_ens) {
         ens1 <- cal_change_parameters(ogs5_obj, par_df = par_df,
-                                      ensemble_path, ensemble_name)
+                                      ensemble_path, ensemble_name,
+                                      quiet = quiet)
     } else {
         ogs5_obj <- cal_change_parameters(ogs5_obj, par_df = par_df)
     }
@@ -159,7 +161,8 @@ cal_simulation_error <- function(par_df,
 cal_change_parameters <- function(ogs5_obj,
                                   par_df,
                                   ensemble_path = NULL,
-                                  ensemble_name = NULL) {
+                                  ensemble_name = NULL,
+                                  quiet) {
 
     n_samples <- ncol(par_df) - 6
     # check if ensemble
@@ -171,7 +174,10 @@ cal_change_parameters <- function(ogs5_obj,
                            parameter_tbl = par_df[, c(7:ncol(par_df))],
                            name = ensemble_name,
                            path = ensemble_path)
-        message(paste("Preparing ensemble run of", ncol(par_df) - 6))
+        if (!quiet) {
+            message(paste("Preparing ensemble run of", ncol(par_df) - 6))
+        }
+
     }
 
     dupl <- par_df[c("file_ext", "mkey", "skey")] %>% duplicated()
@@ -359,15 +365,15 @@ cal_sample_parameters <- function(calibration_set,
 #'
 #' @details The plot Method when applied to an object of class *BO* returns 4
 #' plots of the development of different measures (y-axis) through the
-#' iterations/target function call. The measures are:
-#' 1. Current minimum of the target function found by the algorithm.
+#' iterations/objective function call. The measures are:
+#' 1. Current minimum of the objective function found by the algorithm.
 #' 2. For the current queried point in the parameter space of the simulation model,
 #' the prediction and its respective evaluation by the simulation model or target
 #' function. Also, the confidence region, whose lower bound is used as acquisition
 #'  function in the algorithm (\eqn{lcb = ŷ - \kappa ŝ}), is drawn.
 #' 3. The so called regret calculated as \eqn{ŷ - y}.
 #' 4. The normalized regret \eqn{(ŷ - y) / ŝ}, where ŷ is the prediction by the
-#' meta model, y is the true target function value (both displayed in plot 2)
+#' meta model, y is the true objective function value (both displayed in plot 2)
 #'  and ŝ the mean squared error of prediction for the queried point.
 #'
 #' More on the Bayesian Optimization algorithm can be found in
