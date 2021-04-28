@@ -131,4 +131,5 @@ search_ogs5_bin_path <- function(ogs_exe="ogs", return_ogs5_bin=FALSE){
              return(paste0(search_path, ogs_exe)))
     }
   }
+  return(invisible(""))
 }
