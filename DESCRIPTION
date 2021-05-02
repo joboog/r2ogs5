@@ -28,7 +28,7 @@ Imports:
     tidyr,
     tibble,
     withr,
-    config
+    config,
     lhs,
     foreach,
     parallel,

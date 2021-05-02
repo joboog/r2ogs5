@@ -112,11 +112,11 @@
 #'  \describe{
 #'    \item{gp_model}{The final Gaussian-Process model object (library `GPfit`)}
 #'    \item{values}{Parameters from *(0, 1)* used as dependent variables in *gp_model*}
-#'    \item{sim_errors}{Simulation errors used as independent variable in *gp_model*}
+#'    \item{objective_values}{Simulation errors used as independent variable in *gp_model*}
 #'    \item{min}{Parameter where the smallest simulation error was found.}
 #'    \item{pred_mu}{Vector of predictions by the meta-model cast for every
-#'    element in `sim_errors` previous to the objective function evaluation.}
-#'    \item{pred_sigma}{Vector of prediction variance for every element in
+#'    element in `objective_values` previous to the objective function evaluation.}
+#'    \item{pred_mse}{Vector of prediction variance for every element in
 #'    `pred_mu`.}
 #'  }
 #'  The *BO*-class *attributes* include all the relevant further info and data
@@ -200,9 +200,9 @@ cal_bayesOpt <- function(par_init,
 
         par_init <- BO_init$min
         X <- BO_init$values
-        errs <- BO_init$sim_errors
+        errs <- BO_init$objective_values
         pred_mu <- BO_init$pred_mu
-        pred_sigma <- BO_init$pred_sigma
+        pred_mse <- BO_init$pred_mse
         n0 <- length(errs)
         kp <- BO_init$kappa
         ogs5_obj = attributes(BO_init)$sim_data$ogs5_obj
@@ -224,7 +224,7 @@ cal_bayesOpt <- function(par_init,
         }
         X <- NULL
         pred_mu <- NULL
-        pred_sigma <- NULL
+        pred_mse <- NULL
         kp <- NULL
         errs <- NULL
         n0 <- ncol(par_init[, -c(1:6)])
@@ -347,7 +347,7 @@ cal_bayesOpt <- function(par_init,
         # store current prediction for next iteration
         pred <- GPfit::predict.GP(meta, xnew = x_star)
         pred_mu <- c(pred_mu, pred$Y_hat)
-        pred_sigma <- c(pred_sigma, sqrt(pred$MSE))
+        pred_mse <- c(pred_mse, sqrt(pred$MSE))
         kp <- c(kp, k(d = d, i = i))
 
         if (i > 1 & !quiet) {
@@ -377,10 +377,10 @@ cal_bayesOpt <- function(par_init,
     output <- list(
         gp_model = meta,
         values = X,
-        sim_errors = errs,
+        objective_values = errs,
         min = mn,
         pred_mu = pred_mu,
-        pred_sigma = pred_sigma,
+        pred_mse = pred_mse,
         kappa = kp
     )
 

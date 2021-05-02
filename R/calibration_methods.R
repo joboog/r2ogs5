@@ -21,7 +21,7 @@
 #' *sim_path* from the `ogs5_obj`.
 #' @param objective_function *function* specified by the user that should exist in
 #' the global environment and be of the form
-#'  ```f <- function(ogs_obj, exp_data) { ... return(sim_error) }```.
+#'  ```f <- function(ogs_obj, exp_data) { ... return(objective_values) }```.
 #' @param ensemble_path *character* path where ensemble for initial parameters
 #' should be written and run.
 #' @param ensemble_cores *numeric* integer number for the number of cores used
@@ -384,12 +384,12 @@ cal_sample_parameters <- function(calibration_set,
 #' @examples \dontrun{plot(bo)}
 plot.BO <- function(bo) {
 
-    n_init <- length(bo$sim_errors) - length(bo$pred_mu)
+    n_init <- length(bo$objective_values) - length(bo$pred_mu)
     df <- dplyr::tibble(
         iteration = 1:length(bo$pred_mu),
-        errs = bo$sim_errors[(n_init + 1):length(bo$sim_errors)],
+        errs = bo$objective_values[(n_init + 1):length(bo$objective_values)],
         pred = bo$pred_mu,
-        pred_s = bo$pred_sigma,
+        pred_s = bo$pred_mse,
         kappa = bo$kappa
     )
     df$reg <- df$pred - df$errs
