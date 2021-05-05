@@ -23,6 +23,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 ```{r, results='hide', message=FALSE}
 library(r2ogs5)
@@ -80,9 +81,12 @@ groundwater_exp
 Next, the name (here ogs_fem) and location of the OGS5 executable have to be set accordingly
 via `options`. An installation guide of *r2ogs5* and dependencies is given in 
 `vignette("r2ogs5")`. 
-```{r}
-options(r2ogs5.default_ogs5_bin =
-          "/home/phit0/Public/r2ogs/inst/ogs/ogs_fem")
+```{r, echo = FALSE, eval=TRUE}
+options(r2ogs5.default_ogs5_bin = search_ogs5_bin_path(ogs_exe = "ogs_fem", return_ogs5_bin = TRUE))
+```
+
+```{r, eval=FALSE}
+options(r2ogs5.default_ogs5_bin = "/usr/local/bin/ogs_fem")
 ```
 
 A stationary groundwater model that balances groundwater recharge with
@@ -239,7 +243,7 @@ curves are displayed in Figure 1.
 ```{r, message=T}
 bo <- cal_bayesOpt(par_init = init,
                     kappa = "log_t",
-                    max_it = 20,
+                    max_it = 10,
                     exp_data = groundwater_exp,
                     ogs5_obj = ashi,
                     outbloc_names = out_names,
@@ -309,7 +313,7 @@ used.
 
 ```{r,results='hide', fig.width=8, fig.height=6}
 bo2 <- cal_bayesOpt(BO_init = bo, 
-             max_it = 30,
+             max_it = 20,
              kappa = "log_t",
              scale_fun = log10,
              unscale_fun = function(x) 10**x,

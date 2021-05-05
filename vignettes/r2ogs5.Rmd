@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 # Basic functions of r2ogs5
@@ -59,11 +60,22 @@ Finally, the actual simulation program, OpenGeoSys 5 needs to be available on th
 *r2ogs5* does not come with OGS5 executables, as they usually
 need to be compiled specifically for the machine run on. For this tutorial, the default compiled
 executables should be sufficient which can be downloaded from https://www.opengeosys.org/releases/ for Linux, macOS, and Windows.  
-The name (here ogs_fem), and location of the OGS5 executable have to be set accordingly via `options`. 
+An OGS5 executable needs to be available. A function to browse the OS "PATH" variable 
+is available, to search for an OGS5 executable by name. Alternatively, the name (here ogs_fem), and location of the OGS5 executable have to be set accordingly via `options`. 
 
-```{r}
-options(r2ogs5.default_ogs5_bin = "/home/phit0/Public/r2ogs/inst/ogs/ogs_fem")
+```{r, eval=TRUE}
+options(r2ogs5.default_ogs5_bin = search_ogs5_bin_path(ogs_exe = "ogs_fem", return_ogs5_bin = TRUE))
 ```
+
+```{r, eval=FALSE}
+options(r2ogs5.default_ogs5_bin = "/usr/local/bin/ogs_fem")
+```
+
+The current location of the executable can be shown by 
+```{r}
+getOption("r2ogs5.default_ogs5_bin")
+```
+
 
 There are more options to set a default simulation directory, benchmark directory, and python environment (needed for some simulation output gathering functionalities). By preference, all options for a  *r2ogs5* project can be stored in a "config.yml" file in the corresponding working directory and updated via
 `update_options_from_config` (see `?update_options_from_config`).
