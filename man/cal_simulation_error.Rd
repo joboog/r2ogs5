@@ -13,10 +13,11 @@ cal_simulation_error(
   log_output = TRUE,
   log_path = NULL,
   run_path = attributes(ogs5_obj)$sim_path,
-  target_function,
+  objective_function,
   ensemble_path = NULL,
   ensemble_cores,
-  ensemble_name
+  ensemble_name,
+  quiet
 )
 }
 \arguments{
@@ -40,9 +41,9 @@ to the function \code{\link{ogs5_get_output_specific}}.}
 \item{run_path}{\emph{character} path where the simulation should be run, default is
 \emph{sim_path} from the \code{ogs5_obj}.}
 
-\item{target_function}{\emph{function} specified by the user that should exist in
+\item{objective_function}{\emph{function} specified by the user that should exist in
 the global environment and be of the form
-\verb{f <- function(ogs_obj, exp_data) \{ ... return(sim_error) \}}.}
+\verb{f <- function(ogs_obj, exp_data) \{ ... return(objective_values) \}}.}
 
 \item{ensemble_path}{\emph{character} path where ensemble for initial parameters
 should be written and run.}
@@ -63,8 +64,8 @@ Helper function for \code{\link[=cal_bayesOpt]{cal_bayesOpt()}} that evaluates o
 several parameters values by modifying the \emph{ogs5} input slot, writing input
 files and running simulations. The output is retrieved via
 \code{\link[=ogs5_get_output_specific]{ogs5_get_output_specific()}} and fed into the user-specified
-\code{target_function} to calculate the simulation error.
+\code{objective_function} to calculate the simulation error.
 }
 \examples{
-\dontrun{link to vignette}
+\dontrun{# Please refer to vignettes("cal_bayesOpt")}
 }

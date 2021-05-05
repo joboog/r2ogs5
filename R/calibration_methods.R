@@ -34,7 +34,7 @@
 #' several were run.
 #' @export
 #'
-#' @examples \dontrun{link to vignette}
+#' @examples \dontrun{# Please refer to vignettes("cal_bayesOpt")}
 cal_simulation_error <- function(par_df,
                                   exp_data,
                                   ogs5_obj,
@@ -256,14 +256,14 @@ cal_change_parameters <- function(ogs5_obj,
 #' @return *data.frame* that can be handed over to [cal_sample_parameters()]
 #' @export
 #'
-#' @examples \dontrun{
+#' @examples
 #' calibration_set <- cal_create_calibration_set(
 #'     c("mmp$MEDIUM_PROPERTIES1$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-4, 1.0e-2),
 #'     c("mmp$MEDIUM_PROPERTIES2$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-9, 1.0e-4),
 #'     c("mmp$MEDIUM_PROPERTIES3$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3),
 #'     c("mmp$MEDIUM_PROPERTIES4$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3)
 #' )
-#' }
+#'
 cal_create_calibration_set <- function(...) {
 
     # creates a dataframe out of a list of vectors provided by the user.

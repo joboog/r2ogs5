@@ -11,15 +11,18 @@ cal_bayesOpt(
   exp_data,
   ogs5_obj,
   outbloc_names,
-  ogs_exe,
-  target_function,
+  ogs_exe = NULL,
+  objective_function = NULL,
   ensemble_path,
   ensemble_cores,
   ensemble_name,
+  gp_control = list(kernel = list(type = "exponential", power = 1.95), nug_thres = 20,
+    maxit = 100),
   scale_which = NULL,
   scale_fun = I,
   unscale_fun = I,
-  BO_init = NULL
+  BO_init = NULL,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -33,7 +36,7 @@ It needs to follow a strict format and is best created with the function
 parameter that weights exploitation versus exploration depending on dimension
 and iteration (see details).}
 
-\item{exp_data}{calibration data that will be used in the target function.}
+\item{exp_data}{calibration data that will be used in the objective function.}
 
 \item{ogs5_obj}{\emph{ogs5} base simulation object.}
 
@@ -43,7 +46,7 @@ to the function \code{\link[=ogs5_get_output_specific]{ogs5_get_output_specific(
 
 \item{ogs_exe}{\emph{character} path to the ogs executable.}
 
-\item{target_function}{\emph{function} specified by the user that should exist in
+\item{objective_function}{\emph{function} specified by the user that should exist in
 the global environment and be of the form
 \verb{f <- function(ogs_obj, exp_data) \{ ... return(sim_error) \}} and return a
 single \emph{numeric} value that represents the error from the current \code{ogs_obj}
@@ -59,6 +62,10 @@ during the initial ensemble run.}
 other (potentially running) ensembles. The name will appear in numbered folders
 for every run of the ensemble.}
 
+\item{gp_control}{A named \emph{list} with settings for \code{\link[=GP_fit]{GP_fit()}}. Default values
+of \code{kernel}, \code{nug_thres} and \code{maxit} correspond to the default settings in
+\code{GP_fit}.}
+
 \item{scale_which}{(optional) \emph{character} that identifies the parameters in
 \code{par_init} that should be scaled. Default is \emph{NULL}, then all parameters
 will be scaled according to \emph{scale_fun}.}
@@ -73,17 +80,20 @@ Default is \code{I()} i.e. no transformation.}
 optimization. No further arguments except \code{kappa}, \code{max_it}, \code{ogs_exe} and
 the scaling functions (if necessary) have to be supplied, as everything else
 will be taken from the \code{BO_init} class attributes.}
+
+\item{quiet}{\emph{locigal} to indicate if progress of the algorithm
+(iteration, queried objective function value, )}
 }
 \value{
 A \emph{list} with
 \describe{
 \item{gp_model}{The final Gaussian-Process model object (library \code{GPfit})}
 \item{values}{Parameters from \emph{(0, 1)} used as dependent variables in \emph{gp_model}}
-\item{sim_errors}{Simulation errors used as independent variable in \emph{gp_model}}
+\item{objective_values}{Simulation errors used as independent variable in \emph{gp_model}}
 \item{min}{Parameter where the smallest simulation error was found.}
 \item{pred_mu}{Vector of predictions by the meta-model cast for every
-element in \code{sim_errors} previous to the target function evaluation.}
-\item{pred_sigma}{Vector of prediction variance for every element in
+element in \code{objective_values} previous to the objective function evaluation.}
+\item{pred_mse}{Vector of prediction variance for every element in
 \code{pred_mu}.}
 }
 The \emph{BO}-class \emph{attributes} include all the relevant further info and data
@@ -136,7 +146,10 @@ but it can also left blank. Following, \emph{min} and \emph{max} should be indic
 and thereafter  the starting values for the parameter.
 }
 \examples{
-\dontrun{link to vignette}
+\dontrun{
+# For examples please refer to
+vignettes("cal_bayesOpt")
+}
 
 }
 \references{

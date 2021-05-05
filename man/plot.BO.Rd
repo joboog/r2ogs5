@@ -15,16 +15,16 @@ Diagnostic plots for BO objects
 \details{
 The plot Method when applied to an object of class \emph{BO} returns 4
 plots of the development of different measures (y-axis) through the
-iterations/target function call. The measures are:
+iterations/objective function call. The measures are:
 \enumerate{
-\item Current minimum of the target function found by the algorithm.
+\item Current minimum of the objective function found by the algorithm.
 \item For the current queried point in the parameter space of the simulation model,
 the prediction and its respective evaluation by the simulation model or target
 function. Also, the confidence region, whose lower bound is used as acquisition
 function in the algorithm (\eqn{lcb = ŷ - \kappa ŝ}), is drawn.
 \item The so called regret calculated as \eqn{ŷ - y}.
 \item The normalized regret \eqn{(ŷ - y) / ŝ}, where ŷ is the prediction by the
-meta model, y is the true target function value (both displayed in plot 2)
+meta model, y is the true objective function value (both displayed in plot 2)
 and ŝ the mean squared error of prediction for the queried point.
 }
 

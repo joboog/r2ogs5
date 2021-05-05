@@ -8,7 +8,8 @@ cal_change_parameters(
   ogs5_obj,
   par_df,
   ensemble_path = NULL,
-  ensemble_name = NULL
+  ensemble_name = NULL,
+  quiet
 )
 }
 \arguments{

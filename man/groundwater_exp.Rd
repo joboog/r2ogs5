@@ -20,4 +20,12 @@ The measurement points consist of hydraulic head (meters) in 14 drinking water
 wells and lie in the Ashi River basin in the Northeastern Chinese
 province Heilongjiang close to the city Acheng.
 }
+\details{
+Sachse, A., Nixdorf, E., Jang, E., Rink, K., Fischer, T., Xi, B., Beyer, C.,
+Bauer, S., Delfs, J.-O., Walther, M., Sun, Y., & Song, Y. (2016).
+\emph{OpenGeoSys Tutorial - Computational Hydrology II Groundwater Quality Modeling (Issue August).}
+https://www.opengeosys.org/books/computational-hydrology-ii/
+Springer International Publishing
+https://doi.org/10.1007/978-3-319-52809-0
+}
 \keyword{datasets}
