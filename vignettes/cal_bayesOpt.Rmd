@@ -1,0 +1,390 @@
+---
+title: ""
+output: 
+  rmarkdown::html_vignette:
+    fig_caption: yes
+
+vignette: >
+  %\VignetteIndexEntry{Bayesian Optimization to calibrate OGS5 models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: vignettes_lib.bib
+header-includes:
+  - \counterwithin{figure}{section}
+  - \counterwithin{table}{section}
+---
+
+# Bayesian Optimization to calibrate OGS5 models  
+
+This is a tutorial on the calibration of ogs5 process models with the Bayesian Optimization (BO) algorithm provided in the *r2ogs5* package. For the basic functions of *r2ogs5*, please refer to `vignette("r2ogs5")`.  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+```
+```{r, results='hide', message=FALSE}
+library(r2ogs5)
+set.seed(01123)
+```
+
+1. [Overview](#over)
+2. [Setup](#setup)
+3. [Objective function design](#design)
+4. [Sampling initial parameters](#sample)
+5. [Calibration](#cal)
+6. [Convergence assessment ](#converge)
+
+## Overview  <a name="over"></a>
+
+Simulation models can take very long to run. Therefore, a meta-model is often used to 
+approximate the simulation model. For calibration, the difference between simulation and 
+calibration data is the objective function that needs to be minimized. Therefore, a
+meta-model model is fitted on the squared difference between the simulation and the data,
+for a given sample of parameter values. 
+
+A sequential sampling algorithm known as Bayesian optimization described in Algorithm 1 is used. 
+The procedure uses information from the model fitted to the already 
+sampled values, to decide which values of the parameter need to be sampled next.
+The meta-model is a Gaussian process (GP) model, that  interpolates the points 
+evaluated by the objective function. The next point to be evaluated
+is chosen where the minimum of lower confidence bound (LCB) of the GP model is found.
+This way, the algorithm searches for the minimum (exploitation) and uncertainty (exploration) at the same time. 
+A tuning parameter $\kappa$ can be used to balance exploration and exploitation. 
+
+\newpage
+|**Algorithm 1** Bayesian Optimization (Adapted from @Shahriari2016) |
+|:-------------|
+| Set GP kernel $k_0$, initial parameters $x_0$ and search space $\mathcal{D}$ |
+|**while** t < N   |
+|\ \ \ \ evaluate objective function $f(x_{t-1})$ to obtain $y_{t-1}$ |
+|\ \ \ \ augment data $\mathbf{X_{0:t}} = \left\{\mathbf{X_{0:t-1}}, \mathbf{x_{t}} \right\}, \ \mathbf{y_{0:t}} = \left\{\mathbf{y_{0:t-1}}, y_{t} \right\}$ |
+|\ \ \ \ update meta-model $GP_t(\mu_t, k_t |y_{0:t},  X_{0:t})$ |
+|\ \ \ \ select new $x_{t}$ by optimizing acquisition function $LCB = \mu_t(x_i) - \kappa_t\sigma_t(x_i)$ |
+|\ \ \ \ $x_t=\underset{x \in \mathcal{D}}{argmin} \ LCB$|
+
+
+## Simulation Setup  <a name="setup"></a>
+
+First, we will load the package and attach the calibration data that comes with the 
+package to the working environment. 
+The data contain measurements of hydraulic head in 14 wells located in the Ashi
+River basin near the city Acheng in the northeastern province of Heilongjiang of
+China.
+```{r}
+data("groundwater_exp")
+groundwater_exp
+```
+
+Next, the name (here ogs_fem) and location of the OGS5 executable have to be set accordingly
+via `options`. An installation guide of *r2ogs5* and dependencies is given in 
+`vignette("r2ogs5")`. 
+```{r}
+options(r2ogs5.default_ogs5_bin =
+          "/home/phit0/Public/r2ogs/inst/ogs/ogs_fem")
+```
+
+A stationary groundwater model that balances groundwater recharge with
+groundwater pumping rates has been set up with OGS5for the study area (@Schulz2015)
+Here, we will make use of the functionality of *r2ogs5* to add existing input
+files into R. The input files can be found inside the library directory where the package *r2ogs5* is installed and there under examples/groundwater. The simulation will be carried out in a separate folder ("gw1"), so we can make changes to the input files while keeping the original simulation in "groundwater" unchanged.
+
+```{r, results='hide'}
+# please specify the correct path to the 'groundwater' folder
+# that can be found in r2ogs5/examples in your R-package library. 
+input_path <- system.file("examples/groundwater", package = "r2ogs5")
+temp_dir <- "tmp/gw1"
+
+ashi <- create_ogs5(sim_name = "Ashi",
+                        sim_id = 1L,
+                        sim_path = temp_dir)
+ashi <- input_add_blocs_from_file(ogs5_obj = ashi,
+                                      sim_basename = "Ashi",
+                                      filename = "all",
+                                      file_dir = input_path)
+```
+The input categories can be viewed as follows:
+```{r}
+names(ashi$input)
+ashi$input$pcs
+```
+The central piece of OGS5 simulations is the process object, here a single block
+is defined specifying a groundwater flow process. 
+
+
+## Design of the objective function  <a name="design"></a>
+
+The goal of calibration is to adjust some parameters of the simulation in
+`ashi$input`, in order to get a simulation that best represents the experimental
+data. As there are many possible forms of experimental data depending on the
+design of the experiment, the objective function that calculates the difference
+between simulation and experiment has to be entirely specified by the user. 
+The only requirements for the function are:  
+
+1. One argument called `ogs_obj` that accepts an object of class *ogs5*. For that
+argument, the updated *ogs5* object with the simulation results attached in `ashi$output` will be inserted in the objective function for every iteration of `cal_bayesOpt` (see `?cal_bayesOpt`). 
+2. A second argument called `exp_data` for the experimental data. 
+3. The output must be a single *numeric* value. 
+
+In this simulation, results for every well are stored in a separate *.tec-file, 
+that corresponds to an entry in `ashi$input$out`. For this specific
+case, we will define a function $f$ as our objective function.
+
+```{r}
+f <- function(ogs5_obj, exp_data) {
+   
+    ogs5_obj$output <- plyr::ldply(ogs5_obj$output,
+                                   function(tbl) {
+                                       return(tbl[[1]])
+                                   }) %>%
+        dplyr::filter(TIME == 1)
+
+    se <- sapply(seq_along(exp_data$well), function(i) {
+        ((exp_data$head[i] - ogs5_obj$output$HEAD[i])**2)
+    })
+    return(mean(se))
+}
+```
+
+The function `ogs5_get_output_specific` will load the results for every file as
+list elements into `ashi$output`. Therefore, the first step in our function is 
+to transform the output section into a single *tibble* by extracting and
+stacking the list elements with `ldply`. In the next line, only the last time
+point (1) is retained. Now, the `output` matches the experimental data
+(`exp_data`), which in this case is stored in `groundwater_exp`. The objective 
+function is a simple mean squared error, but this is up to the user. 
+
+Of course, it is recommendable to test the function before handing it over to 
+the algorithm. Therefore, a single simulation is run  
+```{r}
+ogs5_write_inputfiles(ashi)
+ogs5_run(ashi)
+```
+and the output is retrieved. In total, output from the whole model domain and 20 wells is returned. This could either be changed by modifying the `ashi$input$out` section prior to running the simulation or by selecting among the output with the function `ogs5_get_output_specific`. Here, the second option is demonstrated and only the output from wells 1 to 10 and 12 to 15 is retrieved according to the available experimental data. 
+```{r, include=FALSE}
+# sapply(ashi$input$out, function(x) x$GEO_TYPE)
+```
+
+```{r}
+out_names <- paste0("OUTPUT", c(2:11, 13:16))
+out_names
+ashi <- ogs5_get_output_specific(ashi, outbloc_names = out_names)
+```
+
+Now, the objective function can be tested and should yield an value of 122.3887.
+```{r}
+f(ashi, groundwater_exp)
+```
+## Initial Sample  <a name="sample"></a>
+
+A calibration set as detailed in `?cal_bayesOpt` has to be built, that 
+specifies the parameters and their limits that will be calibrated. Therefore,
+for each parameter, a vector has to be submitted to the function
+`cal_create_calibration_set` containing the parameter location as specified in
+the *ogs5*-object `ashi`, a character element to place before the parameter value
+can be specified if required. Here, the word "ISOTROPIC" needs to be included 
+that informs OGS5 that conductivities are assumed equal in all directions of the model
+domain. Then, lower and upper limits have to be specified as the last elements of each vector.
+Note that in the case of the groundwater flow process, the same parameter PERMEABILITY_TENSOR
+as in a liquid flow process is used, but here it really functions as conductivity.
+Documentation on OGS5 parameters/keys can be looked up here:
+https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto. 
+
+```{r}
+calibration_set <- cal_create_calibration_set(
+    c("mmp$MEDIUM_PROPERTIES1$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-4, 1.0e-2),
+    c("mmp$MEDIUM_PROPERTIES2$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-9, 1.0e-4),
+    c("mmp$MEDIUM_PROPERTIES3$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3),
+    c("mmp$MEDIUM_PROPERTIES4$PERMEABILITY_TENSOR", "ISOTROPIC", 1.0e-7, 1.0e-3)
+)
+```
+
+The calibration set can then be submitted to the function
+`cal_sample_parameters` to get an initial sample of parameters via the Latin 
+Hypercube technique. This sample will be simulated via an ensemble run
+(`vignette("Ensembles")`) and evaluated by the objective function (`f`) at the start
+of the algorithm.
+
+```{r}
+init <- cal_sample_parameters(calibration_set,
+                              n_samples = 4,
+                              interval_01 = FALSE,
+                              scale_fun = log10,
+                              unscale_fun = function(x) 10**x,
+                              )
+```
+It is recommended to use at least the same number of samples as there are 
+parameters in the calibration set, otherwise the Gaussian Process model will have
+trouble fitting to fewer observations than features during the first iterations. 
+
+Optionally, a scaling function (`scale_fun`) can be set that will transform the
+parameter boundaries before sampling and transform the sampled values back
+thereafter via `uncsale_fun`. Here, $log_{10}()$ and its inverse $10^x$ are
+provided because changes in conductivity are usually reported across orders of 
+magnitude. This way, the expected amount of samples is equal in intervals of
+orders of magnitude, for example between $(1e^{-4}, 1e^{-3}]$ and $(1e^{-3}, 1e^{-2}]$.
+
+## Calibration <a name="cal"></a>  
+
+Now, everything is setup to run the Bayesian Optimization algorithm on the 
+objective function, a summary of the algorithm is given in Algorithm \ref{tab:BO}.
+The initial sample is handed over to `cal_bayesOpt()` as first argument. Next, the
+uncertainty weight parameter `kappa` needs to be specified. This can be either a
+function depending on dimension `d` of the problem and the current iteration `i`, 
+that returns a positive scalar, a constant or one of "cooling" or "log_t" which 
+results in different available functions of the package. The respective function
+curves are displayed in Figure 1. 
+
+```{r, message=T}
+bo <- cal_bayesOpt(par_init = init,
+                    kappa = "log_t",
+                    max_it = 20,
+                    exp_data = groundwater_exp,
+                    ogs5_obj = ashi,
+                    outbloc_names = out_names,
+                    ogs_exe = NULL, # can be left NULL if default path is set
+                    objective_function = f,
+                    ensemble_path = temp_dir,
+                    ensemble_cores = 2,
+                    ensemble_name = "init",
+                    scale_fun = log10,
+                    unscale_fun = function(x) 10**x)
+
+class(bo)
+names(attributes(bo))
+```
+Further, the experimental data, the *ogs5*-object, the desired output block names,
+a path to the OGS5 executable, the objective function, a path where to run ensembles,
+ a unique name for the ensemble run, the number of cores used for the ensemble,
+and the optional scaling functions have to be indicated as function arguments.
+
+The function `cal_bayesOpt` returns an object of class *BO* that contains the 
+Gaussian process meta-model (`gp_model`), a vector of all queried parameter points
+(`values`),  their resulting objective function values (`objective_values`), the minimum
+found (`min`), the prediction mean and mean squared error
+(`pred_mu, pred_mse`) for all queried points except the initial sample and a 
+vector for all `kappa` values used for the acquisition function.
+
+![Figure 1: A) Function for the uncertainty parameter if `kappa = log_t` is chosen. B) Function for different numbers of maximum iterations if `cooling` is chosen.](./plots/kappa.jpg){width=100%}
+
+## Convergence assessment <a name="converge"></a>  
+The only available stopping criterion is the maximum number of iterations,
+as a sound generalized stopping criterion, i.e. determining when the global minimum
+of the objective function is found, is not yet implemented. The assessment of convergence 
+of the algorithm is therefore deliberately left to the judgment of the user.  
+
+A `plot` method is available to help with the diagnosis of convergence.
+It returns 4 figures of the development of different measures (y-axis) through
+the iterations/objective function calls (x-axis) when applied to an object of class
+\emph{BO}. The measures are:  
+\enumerate{
+\item Current minimum of the objective function found by the algorithm.
+\item For the current queried point in the parameter space of the simulation model,
+the prediction and its respective evaluation by the simulation model or objective
+function. Also, the confidence region, whose lower bound is used as an acquisition
+function in the algorithm ($lcb = \hat{y} - \kappa \hat{s}$), is drawn.
+\item The so-called regret calculated as $\hat{y} - y$.
+\item The normalized regret $(\hat{y} - y) / \hat{s}$, where $\hat{y}$ is the prediction by the
+meta-model, y is the true objective function value (both displayed in plot 2)
+and $\hat{s}$ the mean squared error of prediction for the queried point.
+}
+
+
+```{r, fig.width=8, fig.height=6}
+plot(bo)
+```
+It is difficult to judge beforehand what an appropriate number of iterations
+and thus number of (expensive) objective function calls would be for a specific calibration
+problem. 
+For convenience, it is possible to continue calibration after an initial run with
+a reasonable number of maximum iterations. By simply reintroducing the obtained
+*BO*-object in the main function, the algorithm continues from where it stopped
+conserving the meta-model fitted to the already evaluated points.
+All the relevant information is stored in the object either as list elements or 
+as attributes, therefore only the arguments as set below have to be provided. 
+Further specified arguments together with an initial *BO*-object will be overwritten,
+to ensure that e.g. the same objective function and experimental data is
+used. 
+
+```{r,results='hide', fig.width=8, fig.height=6}
+bo2 <- cal_bayesOpt(BO_init = bo, 
+             max_it = 30,
+             kappa = "log_t",
+             scale_fun = log10,
+             unscale_fun = function(x) 10**x,
+             quiet = TRUE)
+plot(bo2)
+```
+  
+If sufficient convergence is achieved in the eyes of the user, the results
+can be used to get a calibrated version of the simulation model. The parameters
+that were found to produce a minimum of the objective function are stored in 
+`bo2$min`, in the format as they are handled inside the algorithm. The 
+corresponding minimum value of the objective function can be found in `objective_values`.
+
+```{r}
+bo2$min
+min(bo2$objective_values)
+```
+
+This has the convenient feature, that a helper function can be used to change the 
+parameters inside the simulation object instead of manually changing them.
+
+```{r cal}
+ashi_cal <- cal_change_parameters(ogs5_obj = ashi, par_df = bo2$min)
+attributes(ashi_cal)$sim_path <- paste0(temp_dir, "/ashi_cal")
+```
+ The calibrated values are compared with the values that were set originally in the following Table.
+```{r, echo=FALSE}
+df <- cbind("calibrated conductivity"= sapply(ashi_cal$input$mmp, function(x) {
+ x$PERMEABILITY_TENSOR %>% stringr::str_remove("[:alpha:]+") 
+}),
+"old conductivity" = sapply(ashi$input$mmp, function(x) {
+  x$PERMEABILITY_TENSOR %>% stringr::str_remove("[:alpha:]+") 
+  })) %>% tibble::as_tibble() %>%
+  dplyr::mutate_all(.funs = as.double) %>% 
+  apply(MARGIN = 2, FUN = format, digits = 2)
+
+knitr::kable(df)
+
+```
+
+
+The calibrated simulation can now be run one more time and the results displayed.
+```{r, fig.width=5, fig.asp=0.8}
+# run simulation and retrieve output
+ogs5_write_inputfiles(ashi_cal)
+ogs5_run(ashi_cal)
+ashi_cal <- ogs5_get_output_specific(ashi_cal, outbloc_names = out_names) 
+# squash output into a tibble
+ashi_cal$output <- 
+  plyr::ldply(ashi_cal$output,
+              function(tbl) {
+                return(tbl[[1]])
+                }) %>%
+        dplyr::filter(TIME == 1)
+ashi_cal$output$well <- groundwater_exp$well
+# plot results 
+library(ggplot2)
+ggplot(ashi_cal$output, aes(x = well, y = HEAD)) + 
+  geom_point() +
+  labs(x = "well number", y = "head (m)")
+
+```
+
+Compared to the experimental data, we can see that only comparably small
+adjustments to the simulation output can be achieved calibrating conductivity 
+in this simple model. 
+
+```{r, fig.width=5, fig.asp=0.8}
+ggplot(ashi_cal$output, aes(x = well, y = HEAD, color = "simulation")) + 
+  geom_point()+
+  geom_point(data = groundwater_exp, aes(y = head, color = "experiment")) +
+  labs(x = "well number", y = "head (m)", color = "") +
+  scale_color_viridis_d(end = 0.8)
+
+```
+
+
+

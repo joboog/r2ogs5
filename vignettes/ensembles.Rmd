@@ -1,0 +1,209 @@
+---
+title: ""
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Ensembles}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+```
+# r2ogs5 ensembles
+
+An ensemble refers to several simulations of the same type with different input parameters. Here a set of helper functions are presented in order to set up and run an ensemble. 
+
+
+1. [Prerequisites](#inst)
+2. [Preprocessing](#preproc)
+3. [Simulation](#sim) 
+4. [Postprocessing](#post)
+5. [Visualization](#viz)
+
+
+## Prerequisites  <a name="inst"></a>
+
+Before being able to run any simulation, the package r2ogs needs to be installed 
+via 
+```{r, eval=FALSE}
+devtools::install_gitlab("online/repo/path")
+```
+or 
+```{bash, eval=FALSE}
+git clone online/repo/path
+R --slave -e 'devtools::install("local/repo/path")'
+```
+An appropriate *OGS5* executable has to be compiled or downloaded and the name
+(here ogs_fem) and location of the OGS5 executable have to be set accordingly
+via `options`.
+
+```{r}
+library(r2ogs5)
+options(r2ogs5.default_ogs5_bin =
+          "/home/phit0/Public/r2ogs/inst/ogs/ogs_fem")
+```
+
+Before setting up the ensemble, a base *ogs5* simulation has to be defined.
+The input files will be read in from an already set up simulation, whose input files should be in the directory specified in `temp_dir`. The same 
+hydraulic transport model is utilized as in `vignette("r2ogs5")`, for the creation of the
+input files used here please refer to this vignette. 
+```{r, results='hide'}
+temp_dir <- "tmp"
+ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                   sim_path = temp_dir)
+
+ex1 <- input_add_blocs_from_file(
+  ogs5_obj = ex1, 
+  sim_basename = "ex1",
+  filename = "all",
+  file_dir = temp_dir # the directory where input files were written to in 
+                      # vignette("r2ogs5")
+  )
+```
+
+
+## Preprocessing  <a name="preproc"></a>
+
+Define a parameter table for the ensemble for two parameters that will be arranged on a grid. Here, every combination of 10 mass dispersion and 5 tracer input concentrations  is a point on the grid thus resulting in 50 points/rows in the table. This can be easily extended to more parameters, but it has to be kept in mind that the number of points is the product of the parameter sequences every point corresponds to a simulation run.
+```{r results = "markup"}
+para_df <-
+  expand.grid(mass_dispersion = seq(0.1, 2.5, length.out = 3),
+              tracer_input_concentration = seq(0.1, 1, length.out = 3)) %>% 
+            tibble::as_tibble()
+
+head(para_df)
+```
+Next, an ensemble object of class *ens* is created, where all the information is stored and a path to the directory where ensemble files should be written. 
+```{r}
+ens1 = create_ens(base_sim = ex1, parameter_tbl = para_df,
+                  name = "tracersim",
+                  path = temp_dir)
+names(attributes(ens1))
+
+```
+
+In a simple loop, each parameter combination can be changed in the base simulation and then added to the ensemble with the helper function `ens_add_ogs5`. 
+
+```{r}
+# ensemble_add_sims <- functoin(ensemble = list())
+# add sims
+for (i in 1:dim(attributes(ens1)$sim_plan)[1]) {
+  # define new ogs5 obj based on attributes(ens1)$base_sim
+  tmp_ogs5 <- attributes(ens1)$base_sim
+  
+  # set parameters
+  tmp_ogs5$input$mmp$gravel$MASS_DISPERSION <- paste(
+    "1 ",
+    round(attributes(ens1)$sim_plan[i, "mass_dispersion"], 2)
+    )
+  
+  tmp_ogs5$input$bc$tracer_in$DIS_TYPE <- paste(
+    "CONSTANT",
+    attributes(ens1)$sim_plan[i, "tracer_input_concentration"]
+    )
+  
+  # add to ens1
+  ens1 <- ens_add_ogs5(x = ens1, ogs5_obj = tmp_ogs5)
+}
+```
+
+With another helper function, a new folder "tracersim" will be created in "tmp" and input files will be written into corresponding numbered sub-folders in the specified ensemble path. The general folder structure is:  
+
+ensemble_path/  
+\ \ \ \ - ensemble_name/  
+\ \ \ \ \ \ \ \ - ensemble_name1  
+\ \ \ \ \ \ \ \ - ensemble_name2  
+\ \ \ \ \ \ \ \ - ...  
+
+```{r}
+ens_write_inputfiles(ens1)
+```
+
+
+
+## Simulate  <a name="sim"></a>
+
+Execute simulation with the wrapper function `ens_run` that calls the function 
+`ogs5_run`. Documentation is available under `?ogs5_run`.
+```{r, results='hide'}
+ens_run(ens1,
+        ogs_exe = NULL, # default path will be used
+        log_output = TRUE,
+        wait = TRUE)
+
+```
+
+The output defined in the third output block is read in next.
+```{r, results='hide', message=FALSE, warning=FALSE}
+ens1 <- ens_get_output(ens1, type = "specific", list("OUTPUT3"))
+```
+```{r}
+ens1$sim1$output$OUTPUT3[[1]] %>% head
+```
+
+## Postprocessing  <a name="post"></a>  
+For every element of the ensemble, there is now placed as a single  *tibble* in `$output`, with the code below. 
+
+```{r}
+# create tibble of all outputted *.tec files
+tracer_out_df <- tibble::tibble()
+
+for (i in 1:length(ens1)){
+  tracer_out_df <-
+    tracer_out_df %>% 
+    dplyr::bind_rows(
+      ens1[[i]]$output$OUTPUT3[[1]] %>%
+        dplyr::mutate(sim_name = attributes(ens1[[i]])$sim_name)
+      )   
+}
+```
+
+Next, the parameter table, for which simulations were run is matched with the respective simulation output by the column `sim_name`. 
+
+```{r}
+tracer_out_df <-
+  tracer_out_df %>% 
+                  dplyr::filter(X == 4.7) %>% 
+                  dplyr::left_join(attributes(ens1)$sim_plan,
+                                   by= "sim_name") %>% 
+                  dplyr::mutate(TIME = TIME/(3600*24))
+```
+
+
+## Visualization  <a name="viz"></a>
+
+An overview of the effect on the simulation of the different parameters can be achieved by plotting, at least if only a few varied parameters. Here, the Tracer concentration at the last point (`x = 4.7`) is plotted over time as so-called breakthrough curves. It can be observed that both increasing tracer input concentration and result in slightly fatter tails of the curve.
+```{r, fig.asp=0.5, fig.width=8}
+
+tracer_out_df %>%
+  dplyr::filter(X == 4.7) %>%
+
+  ggplot2::ggplot(ggplot2::aes(
+    x = TIME, 
+    y = mass_dispersion,
+    height = Tracer,
+    group = mass_dispersion,
+    fill = Tracer
+    ))+
+    ggridges::geom_density_ridges_gradient(stat = "identity",
+                                           rel_min_height = 0.01,
+                                           panel_scaling = TRUE)+
+
+    ggplot2::facet_grid(.~tracer_input_concentration)+
+
+    ggridges::theme_ridges()+
+    ggplot2::theme(
+      axis.text.x.bottom = ggplot2::element_text(angle = 30)
+      )+
+    ggplot2::labs(x = "time (days)",
+        subtitle = expression(input~c[Tracer]~(mg~L^{-1})),
+        y = expression(Dispersion~Length~(m)),
+        fill = expression(c[Tracer]~(mg~L^{-1}))
+    )
+```
+

@@ -23,3 +23,6 @@ packrat/lib*/
 packrat/src/
 
 inst/ogs/
+doc
+Meta
+inst/doc
