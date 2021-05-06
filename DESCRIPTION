@@ -21,7 +21,6 @@ Imports:
     plyr,
     dplyr,
     purrr,
-    RCurl,
     readr,
     rlang,
     stringr,
@@ -33,6 +32,8 @@ Imports:
     foreach,
     parallel,
     doParallel,
+    ggplot2,
+    gridExtra,
     GPfit
 Depends: 
     R (>= 2.10)

@@ -260,7 +260,7 @@ ens_write_inputfiles(ens1)
 
 Execute simulation with the wrapper function `ens_run` that calls the function 
 `ogs5_run`. Documentation is available under `?ogs5_run`.
-```{r, results='hide'}
+```{r, results='hide', warning=FALSE, message=FALSE}
 ens_run(ens1,
         ogs_exe = NULL, # default path will be used
         log_output = TRUE,
@@ -308,9 +308,9 @@ tracer_out_df <-
 ## Visualization  <a name="viz"></a>
 
 An overview of the effect on the simulation of the different parameters can be achieved by plotting, at least if only a few varied parameters. Here, the Tracer concentration at the last point (`x = 4.7`) is plotted over time as so-called breakthrough curves. It can be observed that both increasing tracer input concentration and result in slightly fatter tails of the curve.
-```{r, fig.asp=0.5, fig.width=8}
+```{r, eval=FALSE, fig.asp=0.5, fig.width=8}
 
-tracer_out_df %>%
+g <- tracer_out_df %>%
   dplyr::filter(X == 4.7) %>%
 
   ggplot2::ggplot(ggplot2::aes(
@@ -326,7 +326,6 @@ tracer_out_df %>%
 
     ggplot2::facet_grid(.~tracer_input_concentration)+
 
-    ggridges::theme_ridges()+
     ggplot2::theme(
       axis.text.x.bottom = ggplot2::element_text(angle = 30)
       )+
@@ -336,4 +335,5 @@ tracer_out_df %>%
         fill = expression(c[Tracer]~(mg~L^{-1}))
     )
 ```
+![](plots/ens_grid.jpg)
 
