@@ -74,3 +74,8 @@ For using the package please consider the vignettes:
 
 * please report bugs via opening an issue
 * or ask question on our [OGS Q&A page](https://discourse.opengeosys.org/)
+
+
+## Contribute
+
+If you want to contribute to *r2ogs5* look [here](CONTRIBUTING.md), please.
