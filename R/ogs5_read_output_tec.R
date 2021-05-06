@@ -2,17 +2,16 @@
 
 #' Check if url is available
 #' @description Base R solution to check url to avoid dependency RCurl
-#' @param url_in
-#' @param t
+#' @param url_in An url or file path
 #'
 #' @return *logical* if url can be accessed
 #'
 #' @examples
-valid_url <- function(url_in,t=2) {
+valid_url <- function(url_in) {
   if (stringr::str_starts(url_in, "https://|http://")) {
   con <- url(url_in)
   check <- suppressWarnings(try(
-    open.connection(con, open="rt",timeout=t),silent=T)[1])
+    open.connection(con, open="rt",timeout=2),silent=T)[1])
   suppressWarnings(try(
     close.connection(con),silent=T))
 

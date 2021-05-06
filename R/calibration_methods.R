@@ -29,6 +29,8 @@
 #' @param ensemble_name *character* name for the ensemble run to distinguish from
 #' other (potentially running) ensembles. The name will appear in numbered folders
 #' for every run of the ensemble.
+#' @param quiet *logical* if ensemble startup message should be printed
+#'
 #'
 #' @return An *ogs5* or *ens* class object depending if one set of parameters or
 #' several were run.
@@ -153,6 +155,7 @@ cal_simulation_error <- function(par_df,
 #' should be written and run.
 #' @param ensemble_name *character* name of the ensemble folder.
 #' The name will appear in numbered folders for every run of the ensemble.
+#' @param quiet *logical* if ensemble startup message should be printed
 #'
 #' @return An *ogs5* or *ens* object with changed input parameters.
 #' @export

@@ -54,6 +54,8 @@ during the initial ensemble run.}
 \item{ensemble_name}{\emph{character} name for the ensemble run to distinguish from
 other (potentially running) ensembles. The name will appear in numbered folders
 for every run of the ensemble.}
+
+\item{quiet}{\emph{logical} if ensemble startup message should be printed}
 }
 \value{
 An \emph{ogs5} or \emph{ens} class object depending if one set of parameters or
