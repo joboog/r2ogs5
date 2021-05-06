@@ -1,13 +1,19 @@
 Package: r2ogs5
-Title: An API to the OpenGeoSys Multiphysics Simulator
-Version: 0.0.0.9000
-Authors@R: 
-    person(given = "Johannes",
+Title: An API to the OpenGeoSys-5 Multiphysics Simulator
+Version: 0.1
+Authors@R:
+    c(person(given = "Johannes",
            family = "Boog",
            role = c("aut", "cre"),
            email = "johannesboog@yahoo.de",
            comment = structure("https://orcid.org/0000-0003-1094-9255",
-                                .Names = "ORCID"))
+                                .Names = "ORCID")),
+    person(given = "Philipp",
+           family = "Schad",
+           role = c("aut"),
+           email = "Philippschad93@hotmail.de"),
+    person(given = "Helmholtz Centre for Environmental Research - UFZ",
+           role = c("cph", "fnd")))
 Description: Define and manage simulations using OpenGeoSys.
 License: GPL-3
 Encoding: UTF-8
