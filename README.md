@@ -17,12 +17,23 @@
 Before you install and load `r2ogs5` you need to set-up your python environment. 
 This is required to read in the `.vtu` and `.pvd` files produced by OpenGeoSys 5.
 You need a Python installation including the libraries `numpy` and `vtk`. 
-If you have an Anaconda installation on your system, setting up a Python environment with `numpy` and `vtk` will work. `r2ogs5` was tested with the following environment:
+If you have an [Anaconda](https://www.anaconda.com/products/individual) installation on your system, setting up a Python environment with `numpy` and `vtk` will work. `r2ogs5` was tested with the following environment:
 ```
-$ conda create -n r2ogs5 python=3.7
+$ conda create -n r2ogs5 python=3.8
+$ conda install -n r2ogs5 -c conda-forge vtk numpy
 $ conda activate r2ogs5
-$ conda install -c anaconda numpy, vtk==8.2.0
+``` 
+The configuration of avialable python environments on the system can be found via
+
 ```
+reticulate::conda_list()
+```
+In R, the path for the python environment needs to be indicated to the package `reticulate`. This can be achieved e.g. via:
+```
+Sys.setenv(RETICULATE_PYTHON = "C:/Users/admin/anaconda3/envs/r2ogs5/python.exe")
+```
+
+
 If you don't have any Python installation on your system, you can download the latest release of Python from [here](https://www.python.org/downloads/). Instructions on how to install `numpy` and `vtk` can be found [here](https://numpy.org/install/) and  [here](https://pypi.org/project/vtk/).
 
 
