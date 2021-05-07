@@ -12,6 +12,8 @@
 
 ## Installation
 
+Package installation was tested for Linux (Ubuntu 20.4) and Windows, package functionalites are only tested for Linux operating systems so far. 
+
 ### Set-Up your Environment
 
 Before you install and load `r2ogs5` you need to set-up your python environment. 
@@ -74,7 +76,7 @@ The name (here *ogs_fem*), and location of the OGS5 executable have to be set ac
 ```
 options(r2ogs5.default_ogs5_bin = "path/to/ogs_fem")
 ```
-
+Note: To install r2ogs5 including vignettes, the packages `knitr`, `rmarkdown` with `pandoc` need to be installed on the system. In addition, an ogs executable named "ogs_fem" needs to be provided in the search path of the OS e.g. in */usr/local/sbin*, */usr/local/bin* */usr/sbin*, */usr/bin*. This is currently only possible for Linux operating systems. 
 
 ## Usage
 
