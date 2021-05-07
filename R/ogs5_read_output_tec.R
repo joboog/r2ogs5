@@ -1,5 +1,26 @@
 # Functions to read and process outputted *.tec files
 
+#' Check if url is available
+#' @description Base R solution to check url to avoid dependency RCurl
+#' @param url_in An url or file path
+#'
+#' @return *logical* if url can be accessed
+#'
+#' @examples
+valid_url <- function(url_in) {
+  if (stringr::str_starts(url_in, "https://|http://")) {
+  con <- url(url_in)
+  check <- suppressWarnings(try(
+    open.connection(con, open="rt",timeout=2),silent=T)[1])
+  suppressWarnings(try(
+    close.connection(con),silent=T))
+
+  return(ifelse(is.null(check),TRUE,FALSE))
+  } else {
+    return(FALSE)
+  }
+}
+
 #' ogs5_read_tecplot
 #' @description Wrapper to read ***.tec** file. Calls
 #' [ogs5_read_tecplot_domain()], [ogs5_read_tecplot_polyline()],
@@ -44,8 +65,8 @@ ogs5_read_tecplot_domain<-function(filepath){
   # or url of raw file on github/gitlab repository
 
     # check filepath
-  if (file.exists(filepath) | (RCurl::url.exists(filepath))){
-  } else if (!(file.exists(filepath)) & (!(RCurl::url.exists(filepath)))){
+  if (file.exists(filepath) | (valid_url(filepath))){
+  } else if (!(file.exists(filepath)) & (!(valid_url(filepath)))){
     stop("'filepath' does not exist.", call = FALSE)
   }
 
@@ -215,8 +236,8 @@ ogs5_read_tecplot_point <- function(filepath){
   # filepath: path+name of *.tec file
   # or url of raw file on github/gitlab repository
 
-  if (file.exists(filepath) | (RCurl::url.exists(filepath))){
-  } else if (!(file.exists(filepath)) & (!(RCurl::url.exists(filepath)))){
+  if (file.exists(filepath) | (valid_url(filepath))){
+  } else if (!(file.exists(filepath)) & (!(valid_url(filepath)))){
     stop("'filepath' does not exist.", call = FALSE)
   }
 

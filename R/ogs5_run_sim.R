@@ -128,7 +128,7 @@ search_ogs5_bin_path <- function(ogs_exe="ogs", return_ogs5_bin=FALSE){
     if (any(ogs_exe %in% files)) {
       ifelse(return_ogs5_bin==FALSE,
              return(search_path),
-             return(paste0(search_path, ogs_exe)))
+             return(paste0(search_path, "/", ogs_exe)))
     }
   }
   return(invisible(""))

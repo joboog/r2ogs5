@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 options(tibble.print_min = 4L, tibble.print_max = 4L)
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 # r2ogs5 ensembles
 
@@ -31,23 +32,32 @@ An ensemble refers to several simulations of the same type with different input 
 Before being able to run any simulation, the package r2ogs needs to be installed 
 via 
 ```{r, eval=FALSE}
-devtools::install_gitlab("online/repo/path")
+devtools::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5")
+# alternatively:
+remotes::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5")
 ```
-or 
+in R or
 ```{bash, eval=FALSE}
-git clone online/repo/path
-R --slave -e 'devtools::install("local/repo/path")'
+git clone https://gitlab.opengeosys.org/ogs5/r2ogs5.git
+cd r2ogs5
+R --slave -e 'devtools::install(".")'
 ```
+from a terminal, requiring the package *devtools* being installed in the systems R library.
+
 An appropriate *OGS5* executable has to be compiled or downloaded and the name
 (here ogs_fem) and location of the OGS5 executable have to be set accordingly
 via `options`.
 
 ```{r}
 library(r2ogs5)
-options(r2ogs5.default_ogs5_bin =
-          "/home/phit0/Public/r2ogs/inst/ogs/ogs_fem")
+```
+```{r, echo= FALSE, eval=TRUE}
+options(r2ogs5.default_ogs5_bin = search_ogs5_bin_path(ogs_exe = "ogs_fem", return_ogs5_bin = TRUE))
 ```
 
+```{r, eval=FALSE}
+options(r2ogs5.default_ogs5_bin = "/usr/local/bin/ogs_fem")
+```
 Before setting up the ensemble, a base *ogs5* simulation has to be defined.
 The input files will be read in from an already set up simulation, whose input files should be in the directory specified in `temp_dir`. The same 
 hydraulic transport model is utilized as in `vignette("r2ogs5")`, for the creation of the
@@ -56,7 +66,132 @@ input files used here please refer to this vignette.
 temp_dir <- "tmp"
 ex1 <- create_ogs5(sim_name = "ex1", sim_id = 1L,
                    sim_path = temp_dir)
+```
 
+```{r, results='hide', eval = TRUE, echo=FALSE}
+ex <- create_ogs5(sim_name = "ex1", sim_id = 1L,
+                   sim_path = temp_dir)
+# this chunk is not visible in the vignette but ensures that the files exist in the
+# directory when the vignette is built.
+ex <- input_add_pcs_bloc(x=ex, pcs_name = "waterflow", PCS_TYPE = "LIQUID_FLOW",
+                          PRIMARY_VARIABLE = "PRESSURE1")
+ex <- input_add_pcs_bloc(x=ex, pcs_name = "tracer",
+                          PCS_TYPE = "MASS_TRANSPORT",
+                          PRIMARY_VARIABLE = "Tracer1",
+                          RELOAD = c("1", "1"))
+
+ex <- input_add_bc_bloc(x=ex, bc_name = "pressure_out",
+                         PRIMARY_VARIABLE = "PRESSURE1",
+                         DIS_TYPE = "CONSTANT 9810",
+                         PCS_TYPE = "LIQUID_FLOW",
+                         GEO_TYPE = "POINT point1")
+
+ex <- input_add_bc_bloc(x=ex, bc_name = "tracer_in",
+                         PRIMARY_VARIABLE = "Tracer",
+                         DIS_TYPE = "CONSTANT 1.19438",
+                         PCS_TYPE = "MASS_TRANSPORT",
+                         GEO_TYPE = "POINT point0",
+                         TIM_TYPE = "CURVE 1")
+
+ex <- input_add_ic_bloc(x = ex, ic_name = "pressure",
+                         PCS_TYPE = "LIQUID_FLOW",
+                         PRIMARY_VARIABLE = "PRESSURE1",
+                         GEO_TYPE = "DOMAIN",
+                         DIS_TYPE = "CONSTANT 9810")
+
+ex <- input_add_ic_bloc(x = ex, ic_name = "tracer",
+                         PCS_TYPE = "MASS_TRANSPORT",
+                         PRIMARY_VARIABLE = "Tracer",
+                         GEO_TYPE = "DOMAIN",
+                         DIS_TYPE = "CONSTANT 0.0")
+
+ex <- input_add_mcp_bloc(x = ex,
+                          NAME = "Tracer",
+                          MOBILE = 1)
+
+ex <- input_add_mfp_bloc(x = ex, FLUID_NAME = "water",
+                          FLUID_TYPE = "LIQUID",
+                          DENSITY = "1 1.0E+3",
+                          VISCOSITY = "1 1.0E-3")
+
+ex <- input_add_mmp_bloc(x = ex, GEOMETRY_DIMENSION = "1",
+                          GEOMETRY_AREA = "1.2",
+                          POROSITY = "1 0.38",
+                          PERMEABILITY_TENSOR = "ISOTROPIC 1.0E-8",
+                          MASS_DISPERSION = "1 1.0",
+                          TORTUOSITY = "1 1.0",
+                          NAME = "gravel")
+
+ex <- input_add_msp_bloc(x = ex, NAME = "gravel" ,
+                          DENSITY = "1 1.8E+3")
+
+ex <- input_add_num_bloc(x = ex, num_name = "waterflow",
+                          PCS_TYPE = "LIQUID_FLOW",
+                          LINEAR_SOLVER = "2 6 1.0E-14 100 1.0 100 4")
+
+ex <- input_add_num_bloc(x = ex, num_name = "tracer",
+                          PCS_TYPE = "MASS_TRANSPORT",
+                          LINEAR_SOLVER = "2 6 1.0E-14 100 1.0 100 4")
+
+ex <- input_add_out_bloc(x = ex, out_name = "waterflow",
+                          PCS_TYPE = "LIQUID_FLOW",
+                          NOD_VALUES = "PRESSURE1\n VELOCITY_X1",
+                          GEO_TYPE = "DOMAIN",
+                          DAT_TYPE = "PVD",
+                          TIM_TYPE = "STEPS 10")
+
+ex <- input_add_out_bloc(x = ex, out_name = "tracer",
+                          PCS_TYPE = "MASS_TRANSPORT",
+                          NOD_VALUES = "Tracer",
+                          GEO_TYPE = "DOMAIN",
+                          DAT_TYPE = "PVD",
+                          TIM_TYPE = "STEPS 10")
+
+ex <- input_add_out_bloc(x = ex, out_name = "tracer_tec",
+                          PCS_TYPE = "MASS_TRANSPORT",
+                          NOD_VALUES = "Tracer",
+                          GEO_TYPE = "DOMAIN",
+                          DAT_TYPE = "TECPLOT", TIM_TYPE = "STEPS 1")
+
+ex <- input_add_st_bloc(x = ex, st_name = "waterflow",
+                         PCS_TYPE = "LIQUID_FLOW",
+                         PRIMARY_VARIABLE = "PRESSURE1",
+                         GEO_TYPE = "POINT point0",
+                         DIS_TYPE = "CONSTANT_NEUMANN 7.8611E-06")
+
+ex <- input_add_tim_bloc(x = ex,  tim_name = "waterflow",
+                          PCS_TYPE = "LIQUID_FLOW",
+                          TIME_START = "0",
+                          TIME_END = "36000000",
+                          TIME_STEPS = "229 3600")
+
+ex <- input_add_tim_bloc(x = ex,  tim_name = "tracer",
+                          PCS_TYPE = "MASS_TRANSPORT",
+                          TIME_START = "0",
+                          TIME_END = "36000000",
+                          TIME_STEPS = "229 3600")
+
+ex <- input_add_rfd_bloc(x = ex, rfd_name = "tracer",
+                          mkey = "CURVES",
+                          data = tibble::tibble(
+                            time = c(0, 3600, 3600.1, 720, 36000000),
+                            conc = c(1,1,0,0,0)))
+ex <- input_add_gli_points(x = ex,
+                            ogs5_points = tibble::tibble(
+                              x = c(0, 4.7),
+                              y = c(0,0),
+                              z = c(0,0),
+                              name = c("point0", "point1")))
+# ad msh bloc
+mesh_lst <- create_structured_mesh_nodes_ele(lx = 4.7, nx = 94)
+ex <- input_add_msh_bloc(x = ex, msh_name = "base_mesh",
+                          NODES = mesh_lst$NODES,
+                          ELEMENTS = mesh_lst$ELEMENTS) 
+ogs5_write_inputfiles(ex, type = "all")
+```
+
+
+```{r, results='hide'}
 ex1 <- input_add_blocs_from_file(
   ogs5_obj = ex1, 
   sim_basename = "ex1",
@@ -130,7 +265,7 @@ ens_write_inputfiles(ens1)
 
 Execute simulation with the wrapper function `ens_run` that calls the function 
 `ogs5_run`. Documentation is available under `?ogs5_run`.
-```{r, results='hide'}
+```{r, results='hide', warning=FALSE, message=FALSE}
 ens_run(ens1,
         ogs_exe = NULL, # default path will be used
         log_output = TRUE,
@@ -178,9 +313,9 @@ tracer_out_df <-
 ## Visualization  <a name="viz"></a>
 
 An overview of the effect on the simulation of the different parameters can be achieved by plotting, at least if only a few varied parameters. Here, the Tracer concentration at the last point (`x = 4.7`) is plotted over time as so-called breakthrough curves. It can be observed that both increasing tracer input concentration and result in slightly fatter tails of the curve.
-```{r, fig.asp=0.5, fig.width=8}
+```{r, eval=FALSE, fig.asp=0.5, fig.width=8}
 
-tracer_out_df %>%
+g <- tracer_out_df %>%
   dplyr::filter(X == 4.7) %>%
 
   ggplot2::ggplot(ggplot2::aes(
@@ -196,7 +331,6 @@ tracer_out_df %>%
 
     ggplot2::facet_grid(.~tracer_input_concentration)+
 
-    ggridges::theme_ridges()+
     ggplot2::theme(
       axis.text.x.bottom = ggplot2::element_text(angle = 30)
       )+
@@ -206,4 +340,5 @@ tracer_out_df %>%
         fill = expression(c[Tracer]~(mg~L^{-1}))
     )
 ```
+![](plots/ens_grid.jpg)
 

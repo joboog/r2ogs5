@@ -230,7 +230,7 @@ cal_bayesOpt <- function(par_init,
         n0 <- ncol(par_init[, -c(1:6)])
     }
     # sanity checks on user functions
-    if (!all(c("ogs5_obj", "exp_data") %in% formalArgs(objective_function))) {
+    if (!all(c("ogs5_obj", "exp_data") %in% methods::formalArgs(objective_function))) {
         stop("objective_function must have two arguments named
                 \"ogs5_obj\" and \"exp_data\".")
     }
