@@ -20,29 +20,33 @@ You need a Python installation including the libraries `numpy` and `vtk`.
 If you have an Anaconda installation on your system, setting up a Python environment with `numpy` and `vtk` will work. `r2ogs5` was tested with the following environment:
 ```
 $ conda create -n r2ogs5 python=3.7
+$ conda activate r2ogs5
 $ conda install -c anaconda numpy, vtk==8.2.0
 ```
-
 If you don't have any Python installation on your system, you can download the latest release of Python from [here](https://www.python.org/downloads/). Instructions on how to install `numpy` and `vtk` can be found [here](https://numpy.org/install/) and  [here](https://pypi.org/project/vtk/).
+
+
+
 
 
 ### Install r2ogs5
 
 The first option for installation is directly from the online repository via
 ```
-devtools::install_gitlab("online/repo/path")
+devtools::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5")
+```
+or alternatively 
+```
+remotes::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5")
 ```
 in your R console.  
 
 The second option is first cloning the repository by typing in a terminal 
 ```
-git clone online/repo/path
+git clone https://gitlab.opengeosys.org/ogs5/r2ogs5.git
+cd r2ogs5
+R --slave -e 'devtools::install(".")'
 ```
-and then installing from the local repository via
-```
-devtools::install("local/repo/path")
-```
-in your R console.
 
 Note that it is necessary to have git https://www.git-scm.com/
 and/or the R-package `devtools` installed on your system. 
