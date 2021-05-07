@@ -83,7 +83,7 @@ Note: To install r2ogs5 including vignettes, the packages `knitr`, `rmarkdown` w
 For using the package please consider the vignettes:
 
 * [base package functionality](vignettes/r2ogs5.Rmd)
-* [define ensemble runs](ensembles/cal_bayesOpt.Rmd)
+* [define ensemble runs](vignettes/ensembles.Rmd)
 * [model calibration with Bayesian Optimization](vignettes/cal_bayesOpt.Rmd)
 
 
