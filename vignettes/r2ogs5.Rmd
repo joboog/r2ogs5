@@ -38,20 +38,22 @@ conservative mass transport simulation.
 
 The first option for installation is directly from the online repository via
 ```{r, eval=FALSE}
-# devtools::install_gitlab("https://gitlab.opengeosys.org/ag-hydinf/boog-group/r2ogs")
-
+devtools::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5")
 ```
+or 
+```{r, eval=FALSE}
+remotes::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5")
+```
+
 in your R console.  
 
 The second option is first cloning the repository by typing in a terminal 
-```{bash, eval = FALSE}
-git clone online/repo/path
+```{bash, eval=FALSE}
+git clone https://gitlab.opengeosys.org/ogs5/r2ogs5.git
+cd r2ogs5
+R --slave -e 'devtools::install(".")'
 ```
-and then installing from the local repository via
-```{r, eval=FALSE}
-devtools::install("local/repo/path")
-```
-in your R console.
+requiring the package *devtools* being installed in the systems R library.
 
 Note that it is necessary to have git https://www.git-scm.com/
 and/or the R-package `devtools` installed on your system. 

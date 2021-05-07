@@ -32,13 +32,18 @@ An ensemble refers to several simulations of the same type with different input 
 Before being able to run any simulation, the package r2ogs needs to be installed 
 via 
 ```{r, eval=FALSE}
-devtools::install_gitlab("online/repo/path")
+devtools::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5")
+# alternatively:
+remotes::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5")
 ```
-or 
+in R or
 ```{bash, eval=FALSE}
-git clone online/repo/path
-R --slave -e 'devtools::install("local/repo/path")'
+git clone https://gitlab.opengeosys.org/ogs5/r2ogs5.git
+cd r2ogs5
+R --slave -e 'devtools::install(".")'
 ```
+from a terminal, requiring the package *devtools* being installed in the systems R library.
+
 An appropriate *OGS5* executable has to be compiled or downloaded and the name
 (here ogs_fem) and location of the OGS5 executable have to be set accordingly
 via `options`.
