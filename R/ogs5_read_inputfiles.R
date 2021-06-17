@@ -131,7 +131,10 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
     while (!stringr::str_detect(chr[[i]], "END")) {
 
         # check if mkey
-        if (chr[[i]] %in% pqc_mkeys) {
+        if (chr[[i]] %>%
+            stringr::str_remove("[:digit:]+") %>%
+            stringr::str_squish() %in%
+            pqc_mkeys) {
             mkey_name <- chr[[i]]
             l[[paste0(mkey_name)]] <- list()
             # step to next line
@@ -139,7 +142,10 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
 
         } else {                               # add subkeys
             j <- 1                             # subkey list index
-            while(!chr[[i]] %in% pqc_mkeys) {
+            while(!chr[[i]] %>%
+                  stringr::str_remove("[:digit:]+") %>%
+                  stringr::str_squish() %in%
+                  pqc_mkeys) {
 
                 l[[paste0(mkey_name)]][j] <- chr[[i]]
                 j <- j + 1
