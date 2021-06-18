@@ -551,25 +551,24 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                             stringr::str_extract_all("\\w+") %>%
                             unlist()
                     data_key_ind <- which(tolower(clnme) == "data")
-
-                    if (length(clnme) != data_key_ind) {
-                        # columnames exist
-                        clnme <- clnme[(data_key_ind + 1):length(clnme)]
-
-                    } else {
-                        # assing default columnames
-                        clnme <- c("time", "value")
-                    }
+                    if (!is.null(clnme)) {
+                        # DATA key exists
+                        if (length(clnme) != data_key_ind) {
+                            # columnames exist
+                            clnme <- clnme[(data_key_ind + 1):length(clnme)]
+                        } else {
+                    # assing default columnames
+                    clnme <- c("time", "value")
+                    }}
 
                     # coerce to tibble
                     bloc <- bloc %>%
                            sapply(stringr::str_split, " ") %>%
                            unlist %>%
                            as.double() %>%
-                           matrix(nrow = length(bloc[[1]]), byrow = TRUE) %>%
-                           # assign column names
-                           'colnames<-' (clnme) %>%
-                           tibble::as_tibble()
+                           matrix(ncol = 2, byrow = TRUE) %>%
+                          tibble::as_tibble()
+                    colnames(bloc) <- clnme
 
                     bloc <- list(mkey = "CURVES", data = bloc)
 
