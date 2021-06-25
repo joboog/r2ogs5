@@ -405,7 +405,7 @@ ogs5_list_output.ogs5_gli <-
           stringr::str_detect(names(ogs5_sublist)[i], "SURFACE")) {
 
         ogs5_mkey = names(ogs5_sublist)[i] %>%
-                    stringr::str_extract("[:alpha:]+")
+                    stringr::str_remove("[:digit:]+")
 
         skey_str <- sapply(
           names(ogs5_sublist[[i]]),
@@ -435,7 +435,7 @@ ogs5_list_output.ogs5_krc <-
     # check ogs5_sublist
     stopifnot(class(ogs5_sublist) == "ogs5_krc")
 
-    mkeys <- names(ogs5_sublist) %>% stringr::str_extract("[:alpha:]+")
+    mkeys <- names(ogs5_sublist) %>% stringr::str_remove("[:digit:]+")
     # loop over sublists
     for (i in seq_along(mkeys)) {
         # check mkey
