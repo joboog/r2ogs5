@@ -45,7 +45,7 @@ ogs5_run <- function(ogs5_obj = list(),
 
     # check if provided ogs_exe exist in default path
     ogs_exe <- paste0(
-                unlist(options("r2ogs5.default_ogs5_bin_path")), ogs_exe)
+                unlist(options("r2ogs5.default_ogs5_bin_path")), "/", ogs_exe)
 
     if (!(file.exists(ogs_exe))){
       stop(paste0("The provided ogs executable does not exist. ",

@@ -131,7 +131,10 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
     while (!stringr::str_detect(chr[[i]], "END")) {
 
         # check if mkey
-        if (chr[[i]] %in% pqc_mkeys) {
+        if (chr[[i]] %>%
+            stringr::str_remove("[:digit:]+") %>%
+            stringr::str_squish() %in%
+            pqc_mkeys) {
             mkey_name <- chr[[i]]
             l[[paste0(mkey_name)]] <- list()
             # step to next line
@@ -139,7 +142,10 @@ ogs5_read_pqc_input_tolist <- function(filepath) {
 
         } else {                               # add subkeys
             j <- 1                             # subkey list index
-            while(!chr[[i]] %in% pqc_mkeys) {
+            while(!chr[[i]] %>%
+                  stringr::str_remove("[:digit:]+") %>%
+                  stringr::str_squish() %in%
+                  pqc_mkeys) {
 
                 l[[paste0(mkey_name)]][j] <- chr[[i]]
                 j <- j + 1
@@ -545,25 +551,24 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                             stringr::str_extract_all("\\w+") %>%
                             unlist()
                     data_key_ind <- which(tolower(clnme) == "data")
-
-                    if (length(clnme) != data_key_ind) {
-                        # columnames exist
-                        clnme <- clnme[(data_key_ind + 1):length(clnme)]
-
-                    } else {
-                        # assing default columnames
-                        clnme <- c("time", "value")
-                    }
+                    if (!is.null(clnme)) {
+                        # DATA key exists
+                        if (length(clnme) != data_key_ind) {
+                            # columnames exist
+                            clnme <- clnme[(data_key_ind + 1):length(clnme)]
+                        } else {
+                    # assing default columnames
+                    clnme <- c("time", "value")
+                    }}
 
                     # coerce to tibble
                     bloc <- bloc %>%
                            sapply(stringr::str_split, " ") %>%
                            unlist %>%
                            as.double() %>%
-                           matrix(nrow = length(bloc[[1]]), byrow = TRUE) %>%
-                           # assign column names
-                           'colnames<-' (clnme) %>%
-                           tibble::as_tibble()
+                           matrix(ncol = 2, byrow = TRUE) %>%
+                          tibble::as_tibble()
+                    colnames(bloc) <- clnme
 
                     bloc <- list(mkey = "CURVES", data = bloc)
 
