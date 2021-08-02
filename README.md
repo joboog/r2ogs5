@@ -87,6 +87,11 @@ For using the package please consider the vignettes:
 * [model calibration with Bayesian Optimization](vignettes/cal_bayesOpt.Rmd)
 
 
+## r2ogs5 Scripts for OpenGeoSys 5 Benchmark Input Files
+
+R scripts showing you how to recreate the official [OpenGeoSys 5 benchmarks](https://github.com/ufz/ogs5-benchmarks) with `r2ogs5` are available [here](https://gitlab.opengeosys.org/ogs5/r2ogs5-benchmarks).
+These scripts can be used in a similar fashion as desribed in [base package functionality](vignettes/r2ogs5.Rmd).
+
 ## Get Help
 
 * please report bugs via opening an issue
