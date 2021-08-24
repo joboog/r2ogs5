@@ -364,7 +364,10 @@ cal_sample_parameters <- function(calibration_set,
 
 #' Diagnostic plots for BO objects
 #'
-#' @param bo *BO* object obtained from a previous run of [cal_bayesOpt()].
+#' @param x *BO* object obtained from a previous run of [cal_bayesOpt()].
+#'
+#' @param y argument from the generic 'plot' function not used in this method.
+#' @param ... other arguments for the generic 'plot'
 #'
 #' @details The plot Method when applied to an object of class *BO* returns 4
 #' plots of the development of different measures (y-axis) through the
@@ -385,19 +388,22 @@ cal_sample_parameters <- function(calibration_set,
 #' @export
 #'
 #' @examples \dontrun{plot(bo)}
-plot.BO <- function(bo) {
+plot.BO <- function(x, y, ...) {
 
-    n_init <- length(bo$objective_values) - length(bo$pred_mu)
+    iteration <- curMin <- pred <- errs <- pred_s <- reg <- norm_reg <- NULL
+    n_init <- length(x$objective_values) - length(x$pred_mu)
     df <- dplyr::tibble(
-        iteration = 1:length(bo$pred_mu),
-        errs = bo$objective_values[(n_init + 1):length(bo$objective_values)],
-        pred = bo$pred_mu,
-        pred_s = bo$pred_mse,
-        kappa = bo$kappa
+        iteration = 1:length(x$pred_mu),
+        errs = x$objective_values[(n_init + 1):length(x$objective_values)],
+        pred = x$pred_mu,
+        pred_s = x$pred_mse,
+        kappa = x$kappa,
+        reg = 0,
+        norm_reg = 0,
+        curMin = 0
     )
     df$reg <- df$pred - df$errs
     df$norm_reg <- df$reg / df$pred_s
-    df$curMin <- 0
     for (i in 1:nrow(df)) {
         df$curMin[i] <- min(df$errs[1:i])
     }
