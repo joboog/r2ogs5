@@ -15,7 +15,7 @@ header-includes:
 
 # Bayesian Optimization to calibrate OGS5 models  
 
-This is a tutorial on the calibration of ogs5 process models with the Bayesian Optimization (BO) algorithm provided in the *r2ogs5* package. For the basic functions of *r2ogs5*, please refer to `vignette("r2ogs5")`.  
+This is a tutorial on the calibration of ogs5 process models with the Bayesian Optimization (BO) algorithm provided in the *r2ogs5* package. For the basic functions of *r2ogs5*, and an installation guide please refer to [`vignette("r2ogs5")`](https://gitlab.opengeosys.org/ogs5/r2ogs5/-/blob/master/vignettes/r2ogs5.Rmd).  
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -41,7 +41,7 @@ set.seed(01123)
 Simulation models can take very long to run. Therefore, a meta-model is often used to 
 approximate the simulation model. For calibration, the difference between simulation and 
 calibration data is the objective function that needs to be minimized. Therefore, a
-meta-model model is fitted on the squared difference between the simulation and the data,
+meta-model model is fitted on the objective function values
 for a given sample of parameter values. 
 
 A sequential sampling algorithm known as Bayesian optimization described in Algorithm 1 is used. 
@@ -67,7 +67,7 @@ A tuning parameter $\kappa$ can be used to balance exploration and exploitation.
 
 ## Simulation Setup  <a name="setup"></a>
 
-First, we will load the package and attach the calibration data that comes with the 
+First, we will load the package and attach the calibration data that come with the 
 package to the working environment. 
 The data contain measurements of hydraulic head in 14 wells located in the Ashi
 River basin near the city Acheng in the northeastern province of Heilongjiang of
@@ -78,13 +78,14 @@ groundwater_exp
 ```
 
 Next, the name (here ogs_fem) and location of the OGS5 executable have to be set accordingly
-via `options`. An installation guide of *r2ogs5* and dependencies is given in 
-`vignette("r2ogs5")`. 
+via `options`, for example:
 ```{r, echo = FALSE, eval=TRUE}
 options(r2ogs5.default_ogs5_bin = search_ogs5_bin_path(ogs_exe = "ogs_fem", return_ogs5_bin = TRUE))
 ```
 
 ```{r, eval=FALSE}
+# Note: the next line only makes sense if an executable "ogs_fem" exists
+# in the directory "/usr/local/bin/"
 options(r2ogs5.default_ogs5_bin = "/usr/local/bin/ogs_fem")
 ```
 
@@ -190,7 +191,7 @@ can be specified if required. Here, the word "ISOTROPIC" needs to be included
 that informs OGS5 that conductivities are assumed equal in all directions of the model
 domain. Then, lower and upper limits have to be specified as the last elements of each vector.
 Note that in the case of the groundwater flow process, the same parameter PERMEABILITY_TENSOR
-as in a liquid flow process is used, but here it really functions as conductivity.
+as in a liquid flow process is used, but here it actually works as a conductivity.
 Documentation on OGS5 parameters/keys can be looked up here:
 https://ogs5-keywords.netlify.app/ogs/wiki/public/doc-auto. 
 
@@ -205,9 +206,8 @@ calibration_set <- cal_create_calibration_set(
 
 The calibration set can then be submitted to the function
 `cal_sample_parameters` to get an initial sample of parameters via the Latin 
-Hypercube technique. This sample will be simulated via an ensemble run
-(`vignette("Ensembles")`) and evaluated by the objective function (`f`) at the start
-of the algorithm.
+Hypercube method. This sample will be simulated via an ensemble run
+([vignette("Ensembles")](https://gitlab.opengeosys.org/ogs5/r2ogs5/-/blob/master/vignettes/ensembles.Rmd)) and evaluated by the objective function (`f`) at the start of the algorithm.
 
 ```{r}
 init <- cal_sample_parameters(calibration_set,
@@ -225,13 +225,13 @@ Optionally, a scaling function (`scale_fun`) can be set that will transform the
 parameter boundaries before sampling and transform the sampled values back
 thereafter via `uncsale_fun`. Here, $log_{10}()$ and its inverse $10^x$ are
 provided because changes in conductivity are usually reported across orders of 
-magnitude. This way, the expected amount of samples is equal in intervals of
+magnitude. This way, the expected amount of samples is equal in intervals for
 orders of magnitude, for example between $(1e^{-4}, 1e^{-3}]$ and $(1e^{-3}, 1e^{-2}]$.
 
 ## Calibration <a name="cal"></a>  
 
 Now, everything is setup to run the Bayesian Optimization algorithm on the 
-objective function, a summary of the algorithm is given in Algorithm \ref{tab:BO}.
+objective function, a summary of the algorithm was given before in Algorithm \ref{tab:BO}.
 The initial sample is handed over to `cal_bayesOpt()` as first argument. Next, the
 uncertainty weight parameter `kappa` needs to be specified. This can be either a
 function depending on dimension `d` of the problem and the current iteration `i`, 
@@ -242,7 +242,7 @@ curves are displayed in Figure 1.
 ```{r, message=T}
 bo <- cal_bayesOpt(par_init = init,
                     kappa = "log_t",
-                    max_it = 10,
+                    max_it = 20,
                     exp_data = groundwater_exp,
                     ogs5_obj = ashi,
                     outbloc_names = out_names,
@@ -262,7 +262,7 @@ a path to the OGS5 executable, the objective function, a path where to run ensem
  a unique name for the ensemble run, the number of cores used for the ensemble,
 and the optional scaling functions have to be indicated as function arguments.
 
-The function `cal_bayesOpt` returns an object of class *BO* that contains the 
+After the algorithm has reached the maximum number of iterations, an object of class *BO* that contains the 
 Gaussian process meta-model (`gp_model`), a vector of all queried parameter points
 (`values`),  their resulting objective function values (`objective_values`), the minimum
 found (`min`), the prediction mean and mean squared error
