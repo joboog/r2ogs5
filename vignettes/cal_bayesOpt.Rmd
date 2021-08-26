@@ -8,7 +8,6 @@ vignette: >
   %\VignetteIndexEntry{Bayesian Optimization to calibrate OGS5 models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: vignettes_lib.bib
 header-includes:
   - \counterwithin{figure}{section}
   - \counterwithin{table}{section}
@@ -55,7 +54,7 @@ This way, the algorithm searches for the minimum (exploitation) and uncertainty 
 A tuning parameter $\kappa$ can be used to balance exploration and exploitation. 
 
 \newpage
-|**Algorithm 1** Bayesian Optimization (Adapted from @Shahriari2016) |
+|**Algorithm 1** Bayesian Optimization (Adapted from Shahriari et al. (2016)) |
 |:-------------|
 | Set GP kernel $k_0$, initial parameters $x_0$ and search space $\mathcal{D}$ |
 |**while** t < N   |
@@ -90,7 +89,7 @@ options(r2ogs5.default_ogs5_bin = "/usr/local/bin/ogs_fem")
 ```
 
 A stationary groundwater model that balances groundwater recharge with
-groundwater pumping rates has been set up with OGS5for the study area (@Schulz2015)
+groundwater pumping rates has been set up with OGS5for the study area (Sachse et al. (2016)).
 Here, we will make use of the functionality of *r2ogs5* to add existing input
 files into R. The input files can be found inside the library directory where the package *r2ogs5* is installed and there under examples/groundwater. The simulation will be carried out in a separate folder ("gw1"), so we can make changes to the input files while keeping the original simulation in "groundwater" unchanged.
 
@@ -390,5 +389,7 @@ ggplot(ashi_cal$output, aes(x = well, y = HEAD, color = "simulation")) +
 
 ```
 
+# Sources
+Sachse, Agnes, Erik Nixdorf, Eunseon Jang, Karsten Rink, Thomas Fischer, Beidou Xi, Christof Beyer, Sebastian Bauer, Jens-Olaf Delfs, Marc Walther, Yuanyuan Sun, and Yonghui Song. 2016. *OpenGeoSys Tutorial - Computational Hydrology II*.  
 
-
+Shahriari, Bobak, Kevin Swersky, Ziyu Wang, Ryan P. Adams, and Nando De Freitas. 2016. *“Taking the human out of the loop: A review of Bayesian optimization.”* Proceedings of the IEEE 104 (1): 148–75. https://doi.org/10.1109/JPROC.2015.2494218.

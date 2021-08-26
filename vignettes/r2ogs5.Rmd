@@ -7,7 +7,6 @@ vignette: >
   %\VignetteKeyword{HTML}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: vignettes_lib.bib
 ---
 
 ```{r, include = FALSE}
