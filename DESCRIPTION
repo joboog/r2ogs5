@@ -47,5 +47,6 @@ Depends:
 Suggests: 
     testthat,
     knitr,
+    markdown,
     rmarkdown
 VignetteBuilder: knitr

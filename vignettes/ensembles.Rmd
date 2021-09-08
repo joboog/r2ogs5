@@ -21,10 +21,11 @@ An ensemble refers to several simulations of the same type with different input 
 
 
 1. [Prerequisites](#inst)
-2. [Preprocessing](#preproc)
-3. [Simulation](#sim) 
-4. [Postprocessing](#post)
-5. [Visualization](#viz)
+2. [Simulation setup](#setup) 
+3. [Preprocessing](#preproc)
+4. [Ensemble run](#sim)
+5. [Postprocessing](#post)
+6. [Visualization](#viz)
 
 
 ## Prerequisites  <a name="inst"></a>
@@ -44,9 +45,6 @@ R --slave -e 'devtools::install(".")'
 ```
 from a terminal, requiring the package *devtools* being installed in the systems R library.
 
-An appropriate *OGS5* executable has to be compiled or downloaded and the name
-(here ogs_fem) and location of the OGS5 executable have to be set accordingly
-via `options`.
 
 ```{r}
 library(r2ogs5)
@@ -54,10 +52,22 @@ library(r2ogs5)
 ```{r, echo= FALSE, eval=TRUE}
 options(r2ogs5.default_ogs5_bin = search_ogs5_bin_path(ogs_exe = "ogs_fem", return_ogs5_bin = TRUE))
 ```
-
+An appropriate *OGS5* executable has to be compiled or downloaded and the name
+(here ogs_fem) and location of the OGS5 executable have to be set accordingly
+via `options`, for example:
 ```{r, eval=FALSE}
 options(r2ogs5.default_ogs5_bin = "/usr/local/bin/ogs_fem")
 ```
+
+
+**Note:** In order to install the package with vignettes, e.g. by calling 
+
+```{r, eval=FALSE}
+devtools::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5", build_vignettes = TRUE)
+```
+a basic ogs5 executable named "ogs_fem" must be available in the search path. For Linux, the executable should be in one of the directories found when entering `Sys.getenv("PATH")` in the R console. For Windows, it should be located in *"C:/Programme/OpenGeoSys/bin/"* or *"C:/Programs/OpenGeoSys/bin/"* under the current implementation.  
+
+## Simulation setup <a name="setup"></a>
 Before setting up the ensemble, a base *ogs5* simulation has to be defined.
 The input files will be read in from an already set up simulation, whose input files should be in the directory specified in `temp_dir`. The same 
 hydraulic transport model is utilized as in `vignette("r2ogs5")`, for the creation of the
@@ -222,7 +232,7 @@ names(attributes(ens1))
 
 ```
 
-In a simple loop, each parameter combination can be changed in the base simulation and then added to the ensemble with the helper function `ens_add_ogs5`. 
+In a simple loop, each parameter combination can be changed in the base simulation by overwriting a temporary *ogs5* object "tmp_ogs5" and then adding it to the ensemble with the helper function `ens_add_ogs5`. 
 
 ```{r}
 # ensemble_add_sims <- functoin(ensemble = list())
@@ -263,8 +273,7 @@ ens_write_inputfiles(ens1)
 
 ## Simulate  <a name="sim"></a>
 
-Execute simulation with the wrapper function `ens_run` that calls the function 
-`ogs5_run`. Documentation is available under `?ogs5_run`.
+The simulations are executed with the wrapper function `ens_run` that calls the function `ogs5_run`. Documentation is available under `?ogs5_run`.
 ```{r, results='hide', warning=FALSE, message=FALSE}
 ens_run(ens1,
         ogs_exe = NULL, # default path will be used
@@ -282,7 +291,7 @@ ens1$sim1$output$OUTPUT3[[1]] %>% head
 ```
 
 ## Postprocessing  <a name="post"></a>  
-For every element of the ensemble, there is now placed as a single  *tibble* in `$output`, with the code below. 
+For every simulation of the ensemble, there exists a *tibble* in `$output`. In order to use the plotting grammar from **ggplot2**, a single data table in long format is often useful. Therefore, the data from is stacked into a single *tibble* with the code below. A new column called "sim_name" keeps track of which results belong to which simulations.
 
 ```{r}
 # create tibble of all outputted *.tec files
@@ -312,7 +321,7 @@ tracer_out_df <-
 
 ## Visualization  <a name="viz"></a>
 
-An overview of the effect on the simulation of the different parameters can be achieved by plotting, at least if only a few varied parameters. Here, the Tracer concentration at the last point (`x = 4.7`) is plotted over time as so-called breakthrough curves. It can be observed that both increasing tracer input concentration and result in slightly fatter tails of the curve.
+An overview of the effect on the simulation of the different parameters can be achieved by plotting, if there are not too many parameters. Here, the Tracer concentration at the last point (`x = 4.7`) is plotted over time as so-called breakthrough curves. It can be observed that both increasing tracer input concentration and result in slightly fatter tails of the curve.
 ```{r, eval=FALSE, fig.asp=0.5, fig.width=8}
 
 g <- tracer_out_df %>%

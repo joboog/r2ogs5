@@ -7,7 +7,6 @@ vignette: >
   %\VignetteKeyword{HTML}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: vignettes_lib.bib
 ---
 
 ```{r, include = FALSE}
@@ -53,10 +52,9 @@ git clone https://gitlab.opengeosys.org/ogs5/r2ogs5.git
 cd r2ogs5
 R --slave -e 'devtools::install(".")'
 ```
-requiring the package *devtools* being installed in the systems R library.
 
 Note that it is necessary to have git https://www.git-scm.com/
-and/or the R-package `devtools` installed on your system. 
+and the R-package `devtools` installed on your system. 
   
 Finally, the actual simulation program, OpenGeoSys 5 needs to be available on the system.
 *r2ogs5* does not come with OGS5 executables, as they usually
@@ -65,11 +63,17 @@ executables should be sufficient which can be downloaded from https://www.openge
 An OGS5 executable needs to be available. A function to browse the OS "PATH" variable 
 is available, to search for an OGS5 executable by name. Alternatively, the name (here ogs_fem), and location of the OGS5 executable have to be set accordingly via `options`. 
 
-```{r, eval=TRUE}
+```{r}
+library(r2ogs5)
+```
+
+```{r, eval=TRUE, echo=FALSE}
 options(r2ogs5.default_ogs5_bin = search_ogs5_bin_path(ogs_exe = "ogs_fem", return_ogs5_bin = TRUE))
 ```
 
 ```{r, eval=FALSE}
+# Note: the next line only makes sense if an executable "ogs_fem" exists
+# in the directory "/usr/local/bin/"
 options(r2ogs5.default_ogs5_bin = "/usr/local/bin/ogs_fem")
 ```
 
@@ -79,13 +83,35 @@ getOption("r2ogs5.default_ogs5_bin")
 ```
 
 
-There are more options to set a default simulation directory, benchmark directory, and python environment (needed for some simulation output gathering functionalities). By preference, all options for a  *r2ogs5* project can be stored in a "config.yml" file in the corresponding working directory and updated via
-`update_options_from_config` (see `?update_options_from_config`).
+There are more options to set a default simulation directory, benchmark directory, and python environment (needed for some simulation output gathering functionalities). By preference, all options for a  *r2ogs5* project can be stored in a "config.yml" file in the corresponding working directory and updated via `update_options_from_config` (see `?update_options_from_config`). An example for a config.yml file is: 
+
+```{bash, eval = FALSE}
+default: 
+  r2ogs5.default_ogs5_bin: "/usr/local/bin/ogs_fem"
+  r2ogs5.default_ogs5_bin_path: "/usr/local/bin/"
+
+reactive_transport: 
+  r2ogs5.default_ogs5_bin: "/usr/local/bin/ogs_ipqc"
+  r2ogs5.default_ogs5_bin_path: "/usr/local/bin/"
+
+```
+Here, a default setting and an alternative is available. To use the ogs executable 
+compiled for reactive transport simulations "ogs_ipqc", the options could be loaded via 
+```{r, eval = FALSE}
+update_options_from_config(config = "reactive_transport")
+```
+
+**Note:** In order to install the package with vignettes, e.g. by calling 
+
+```{r, eval=FALSE}
+devtools::install_git("https://gitlab.opengeosys.org/ogs5/r2ogs5", build_vignettes = TRUE)
+```
+a basic ogs5 executable named "ogs_fem" must be available in the search path. For Linux, the executable should be in one of the directories found when entering `Sys.getenv("PATH")` in the R console. For Windows, it should be located in *"C:/Programme/OpenGeoSys/bin/"* or *"C:/Programs/OpenGeoSys/bin/"* under the current implementation.  
 
 
 ## Setting up a simulation <a name="sim"></a>
 
-On the basis of a very simple hydraulic transport flow model, the use of the central 
+By means of a very simple hydraulic transport flow model, the use of the central 
 package functions to create input, run a simulation, and retrieve output are demonstrated. 
 
 A relative directory "tmp" to write OGS5 files in will be defined here, it can be replaced by the user with any path to a custom directory of choice. 
@@ -288,8 +314,7 @@ ex1 <- input_add_msh_bloc(x = ex1, msh_name = "base_mesh",
                           NODES = mesh_lst$NODES,
                           ELEMENTS = mesh_lst$ELEMENTS) 
 ```
-The names of the points are also used in the boundary condition blocs (`bc`), which
-have been added before, and can be looked up via 
+The names of the points link to the boundary condition blocs (`bc`), which have been added before:
 ```{r}
 ex1$input$bc$tracer_in$GEO_TYPE
 ex1$input$bc$pressure_out$GEO_TYPE
