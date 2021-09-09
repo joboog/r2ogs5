@@ -35,16 +35,14 @@
         eg1_tec_ref <- ogs5_read_tecplot_polyline(
             filepath = paste0(bm_prefix,
                               "extdata/ogs5_benchmarks_ref/eg1_ref_polyline.tec")
-                        ) %>%
-                        dplyr::select(!pe) # exclude pe
+                        )
 
         # check if output was written and read
         expect_true(file.exists(paste0(attributes(eg1_read)$sim_path,
                                         "/eg1_read_ply_OUT_LINE_t1.tec")))
         eg1_tec_test <- ogs5_read_tecplot_polyline(
                         filepath = paste0(attributes(eg1_read)$sim_path,
-                                      "/eg1_read_ply_OUT_LINE_t1.tec")) %>%
-                        dplyr::select(!pe) # exclude pe
+                                      "/eg1_read_ply_OUT_LINE_t1.tec"))
 
         # test if dimensions of test and reference file are equal
         expect_equal(dim(eg1_tec_ref), dim(eg1_tec_test))
