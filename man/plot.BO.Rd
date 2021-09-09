@@ -4,10 +4,14 @@
 \alias{plot.BO}
 \title{Diagnostic plots for BO objects}
 \usage{
-\method{plot}{BO}(bo)
+\method{plot}{BO}(x, y, ...)
 }
 \arguments{
-\item{bo}{\emph{BO} object obtained from a previous run of \code{\link[=cal_bayesOpt]{cal_bayesOpt()}}.}
+\item{x}{\emph{BO} object obtained from a previous run of \code{\link[=cal_bayesOpt]{cal_bayesOpt()}}.}
+
+\item{y}{argument from the generic 'plot' function not used in this method.}
+
+\item{...}{other arguments for the generic 'plot'}
 }
 \description{
 Diagnostic plots for BO objects

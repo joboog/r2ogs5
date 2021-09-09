@@ -73,7 +73,14 @@ ogs5_read_tecplot_domain<-function(filepath){
   #=== get header =====================================================
 
   # read first two lines
-  header <- readLines(con=filepath,n=2L)
+  header <- scan(
+    file = filepath,
+    n = 2,
+    what = "character",
+    blank.lines.skip = TRUE,
+    sep = "\n",
+    quiet = TRUE
+  )
   header <- header[stringr::str_which(header, "VARIABLES")]
   # remove pattern
   header<- gsub("\"", "", header)
@@ -93,7 +100,14 @@ ogs5_read_tecplot_domain<-function(filepath){
 
   #=== get data =======================================================
 
-  data <- readLines(con = filepath, n = -1L, ok = TRUE)
+  data <- scan(
+    file = filepath,
+    n = -1L,
+    what = "character",
+    blank.lines.skip = TRUE,
+    sep = "\n",
+    quiet = TRUE
+  )
 
   #=== get time
 
@@ -106,23 +120,22 @@ ogs5_read_tecplot_domain<-function(filepath){
 
   #=== get point data
 
-  # For now, only way to prevent readr from converting columns to "double"
-  suppressMessages(
-    suppressWarnings(
-      eval(
-        parse(
-          text =
-    paste0("df <- readr::read_delim(filepath, \" \", col_types = readr::cols(",
-        paste0("X", 1:length(header), " = readr::col_character()", collapse = ","),
-        "), escape_double = FALSE, col_names = FALSE, trim_ws = TRUE, skip = 3)")
-    ))
-  ))
-
+  df <- data %>%
+    stringr::str_split(" ")
 
   # split data where non numbers are encountered
-
-  data_ind <- df$X1 %>%   # indicator for data
+  data_ind <- df %>%
+    sapply(function(x) x[[1]]) %>%
     stringr::str_which("\\d+\\.\\d+e\\+\\d+|\\d+\\.\\d+e\\-\\d+")
+
+  df <- df[data_ind] %>%
+    sapply(stringr::str_subset,
+           pattern = "\\d+\\.\\d+e\\+\\d+|\\d+\\.\\d+e\\-\\d+") %>%
+    t %>%
+    as.data.frame %>%
+    apply(2, as.numeric)
+
+
 
   splt <- which(diff(data_ind) > 1) # last numbers of each time step
 
@@ -134,11 +147,6 @@ ogs5_read_tecplot_domain<-function(filepath){
     strt <- data_ind[splt[i] + 1]
   }
   tv <- c(tv, rep(ts[i + 1],  (utils::tail(data_ind, 1) - strt) + 1))
-  df <- df[data_ind, ]
-
-  # remove empty columns
-  df <- df %>% dplyr::select_if(is.character)
-  df <- df %>% dplyr::mutate_all(as.numeric)
 
   #=== combine all
   colnames(df)<-header
