@@ -1,9 +1,26 @@
-image: rocker/tidyverse 
+image: rocker/tidyverse
 
-test:
-  script:
-    - R -e 'install.packages(c("testthat", "packrat"))'
-    - R -e 'packrat::restore(restart = FALSE, overwrite.dirty = TRUE)'
-    - R CMD build . --no-build-vignettes --no-manual
-    - R CMD check *tar.gz --no-build-vignettes --no-manual
+stages:
+    - test
+
+# dependencies will be stored there and do not have to be reinstalled every time
+# for the same branch.
+# NOTE: this does not work if the runner changes...
+# cache:
+#   # Ommit key to use the same cache across all pipelines and branches
+#   key: "$CI_COMMIT_REF_SLUG"
+#   paths:
+#     - packrat/lib/
+#     - packrat/src/
+build:
+    stage: test
+    tags:
+        - envinf1
+    script:
+         # checks if the packages from the Imports field are already installed in the cache
+        - R -e 'source("R/ci-setup.R")'
+        - R -e 'print(.libPaths())'
+        #- R -e 'print(rownames(installed.packages()))'
+        - R CMD build --no-build-vignettes --no-manual
+        - R -e 'devtools::check(".", vignettes = FALSE)'
 
