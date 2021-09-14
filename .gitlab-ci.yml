@@ -1,29 +1,40 @@
 image: rocker/tidyverse
 
-stages:
-    - test
+variables:
+  R_LIBS_USER: "$CI_PROJECT_DIR/ci/lib/"
+  CHECK_DIR: "$CI_PROJECT_DIR/ci/logs/"
+  BUILD_LOGS_DIR: "$CI_PROJECT_DIR/ci/logs/$CI_PROJECT_NAME.Rcheck"
 
-# dependencies will be stored there and do not have to be reinstalled every time
-# for the same branch.
-# NOTE: this does not work if the runner changes...
-cache:
-  # Ommit key to use the same cache across all pipelines and branches
-  key: "$CI_COMMIT_REF_SLUG"
-  paths:
-    - /usr/local/lib/R/site-library
-
-build:
+test:
     stage: test
     tags:
         - envinf1
     script:
-         # checks if the packages from the Imports field are already installed in the cache
-        - R -e 'source("R/ci-setup.R")'
+        - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
+         # checks if the packages from the Imports, Suggests, LinkinTo field
+         # are already installed in the cache
+        - R -e 'devtools::install_deps(dep = T, lib = Sys.getenv("R_LIBS_USER"))'
+        # setup python environment
+        # add to library path
+        - R -e '.libPaths(new = "$CI_PROJECT_DIR/ci/lib/")'
         - R -e 'print(.libPaths())'
-        #- R -e 'print(rownames(installed.packages()))'
+        - R -e 'print(rownames(installed.packages()))'
+        - R -e 'reticulate::install_miniconda()'
+        - R -e 'reticulate::py_install("vtk")'
+        #- R -e 'devtools::check(check_dir = Sys.getenv("CHECK_DIR"), vignettes = FALSE)'
+        #- R -e 'if (length(devtools::check_failures(path = Sys.getenv("BUILD_LOGS_DIR"), note = FALSE)) > 0) stop()'
         - R CMD build . --no-build-vignettes --no-manual
-        - R CMD check $(ls -1t *.tar.gz | head -n 1) --no-build-vignettes --no-manual
+        - R CMD check $(ls -1t *.tar.gz | head -n 1) -o $CHECK_DIR --no-build-vignettes --no-manual
+    cache:
+        key: "test01"
+        untracked: true
+        paths:
+          - $R_LIBS_USER
+        when: 'always'
     artifacts:
         paths:
-          - builds/
+          - $BUILD_LOGS_DIR
+        when: 'always'
+
+
 
