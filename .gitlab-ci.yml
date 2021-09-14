@@ -6,12 +6,12 @@ stages:
 # dependencies will be stored there and do not have to be reinstalled every time
 # for the same branch.
 # NOTE: this does not work if the runner changes...
-# cache:
-#   # Ommit key to use the same cache across all pipelines and branches
-#   key: "$CI_COMMIT_REF_SLUG"
-#   paths:
-#     - packrat/lib/
-#     - packrat/src/
+cache:
+  # Ommit key to use the same cache across all pipelines and branches
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - /usr/local/lib/R/site-library
+
 build:
     stage: test
     tags:
@@ -21,6 +21,9 @@ build:
         - R -e 'source("R/ci-setup.R")'
         - R -e 'print(.libPaths())'
         #- R -e 'print(rownames(installed.packages()))'
-        - R CMD build --no-build-vignettes --no-manual
-        - R -e 'devtools::check(".", vignettes = FALSE)'
+        - R CMD build . --no-build-vignettes --no-manual
+        - R CMD check $(ls -1t *.tar.gz | head -n 1) --no-build-vignettes --no-manual
+    artifacts:
+        paths:
+          - builds/
 

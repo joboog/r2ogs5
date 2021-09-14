@@ -10,4 +10,6 @@ pkgs <- stringr::str_remove(
                             pattern = ",")
 
 
-install.packages(setdiff(pkgs, rownames(installed.packages())))
+install.packages(setdiff(pkgs,
+                         rownames(installed.packages(lib = "/usr/local/lib/R/site-library"))),
+                 lib = "/usr/local/lib/R/site-library")
