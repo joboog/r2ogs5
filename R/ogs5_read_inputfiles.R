@@ -211,7 +211,7 @@ ogs5_add_input_bloc_from_addfile <- function(ogs5_obj,
 add_standard_blocs <- function(filepath,
                                sub_bloc_class = NULL,
                                bloc_class = NULL,
-                               convert_fun = I) {
+                               convert_fun = function(x) return(x)) {
 
     file_ext <- filepath %>%
                 stringr::str_split("\\.") %>%
