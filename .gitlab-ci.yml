@@ -34,6 +34,7 @@ test:
         paths:
           - $BUILD_LOGS_DIR
         when: 'always'
+    # script will only run then attempting to merge/push to master
     only:
           - master
 
