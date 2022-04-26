@@ -147,11 +147,12 @@ ogs5_read_tecplot_domain<-function(filepath){
     strt <- data_ind[splt[i] + 1]
   }
   tv <- c(tv, rep(ts[i + 1],  (utils::tail(data_ind, 1) - strt) + 1))
+  tv <- data.frame(TIME=tv)
 
   #=== combine all
   colnames(df)<-header
-
-  df <- dplyr::bind_cols(TIME = tv, df)
+  df <- as.data.frame(df)
+  df <- dplyr::bind_cols(tv, df)
 
   return(df)
 }
