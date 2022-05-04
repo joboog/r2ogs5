@@ -219,7 +219,7 @@ ogs5_read_tecplot_polyline <- function(filepath) {
   # remove empty columns
   df <- df[, sapply(df, function(i) !all(is.na(i)))] %>%
     apply(2,as.numeric) %>%
-    tibble::as_tibble()
+    tibble::as_tibble(.name_repair = "unique")
 
   #=== combine all
   colnames(df) <- header

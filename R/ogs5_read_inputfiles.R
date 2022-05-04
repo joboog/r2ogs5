@@ -257,7 +257,7 @@ add_fct_bloc <- function(bloc){
             matrix(nrow = length(bloc[["DATA"]]),
                    byrow = TRUE) %>%
             'colnames<-' (c("x", "y")) %>%
-            tibble::as_tibble()
+            tibble::as_tibble(.name_repair = "unique")
     }
     if (!(is.null(bloc[["MATRIX"]]))){
         bloc[["MATRIX"]] <- bloc[["MATRIX"]] %>%
@@ -266,7 +266,7 @@ add_fct_bloc <- function(bloc){
             as.double %>%
             matrix(nrow = length(bloc[["MATRIX"]]),
                    byrow = TRUE) %>%
-            tibble::as_tibble()
+            tibble::as_tibble(.name_repair = "unique")
     }
     other_skeys <- which(!names(bloc) %in% c("DATA", "MATRIX"))
     bloc[other_skeys] <- bloc[other_skeys] %>%
@@ -316,7 +316,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                                     matrix(nrow = length(skey_bloc[-c(1:2)]),
                                            byrow = TRUE) %>%
                                     'colnames<-' (c("x", "y")) %>%
-                                    tibble::as_tibble()
+                                    tibble::as_tibble(.name_repair = "unique")
                                )
                            })
 
@@ -459,7 +459,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                                    matrix(nrow = length(nds),
                                           byrow = TRUE) %>%
                                    'colnames<-' (c("node_id", "x", "y", "z"))%>%
-                                   tibble::as_tibble() %>%
+                                   tibble::as_tibble(.name_repair = "unique")%>%
                                    dplyr::mutate_at(dplyr::vars("node_id"),
                                                     list(as.integer))
                                    #dplyr::select(-n) # remove numbering column
@@ -489,7 +489,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                                        paste0("node", 1:(ncol(mat) - 3)))
 
                     bloc[["ELEMENTS"]][[paste0(g)]] <- mat %>%
-                        tibble::as_tibble() %>%
+                        tibble::as_tibble(.name_repair = "unique") %>%
                         dplyr::mutate_at(dplyr::vars(-"ele_id",
                                                      -"ele_type"),
                                          list(as.double)) %>%
@@ -567,7 +567,7 @@ ogs5_add_input_bloc_from_ogs5list <- function(ogs5_obj,
                            unlist %>%
                            as.double() %>%
                            matrix(ncol = 2, byrow = TRUE) %>%
-                          tibble::as_tibble()
+                          tibble::as_tibble(.name_repair = "minimal")
                     colnames(bloc) <- clnme
 
                     bloc <- list(mkey = "CURVES", data = bloc)
