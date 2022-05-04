@@ -562,6 +562,7 @@ ogs5_print_msh_mkey_bloc <-
     #for (geometry in names(mkey_bloc$ELEMENTS)) {
 
     df <- mkey_bloc$ELEMENTS %>%
+      dplyr::mutate(dplyr::across(where(is.numeric), as.character)) %>%
       tidyr::replace_na(list(node3 = "", node4 = "", node5 = "",
                              node6 = "", node7 = "", node8 = "")) %>%
       as.data.frame()
