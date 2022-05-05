@@ -147,11 +147,12 @@ ogs5_read_tecplot_domain<-function(filepath){
     strt <- data_ind[splt[i] + 1]
   }
   tv <- c(tv, rep(ts[i + 1],  (utils::tail(data_ind, 1) - strt) + 1))
+  tv <- data.frame(TIME=tv)
 
   #=== combine all
   colnames(df)<-header
-
-  df <- dplyr::bind_cols(TIME = tv, df)
+  df <- as.data.frame(df)
+  df <- dplyr::bind_cols(tv, df)
 
   return(df)
 }
@@ -218,7 +219,7 @@ ogs5_read_tecplot_polyline <- function(filepath) {
   # remove empty columns
   df <- df[, sapply(df, function(i) !all(is.na(i)))] %>%
     apply(2,as.numeric) %>%
-    tibble::as_tibble()
+    tibble::as_tibble(.name_repair = "unique")
 
   #=== combine all
   colnames(df) <- header

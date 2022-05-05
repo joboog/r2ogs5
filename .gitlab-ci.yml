@@ -1,43 +1,31 @@
-image: rocker/tidyverse
-
-variables:
-  R_LIBS_USER: "$CI_PROJECT_DIR/ci/lib/"
-  CHECK_DIR: "$CI_PROJECT_DIR/ci/logs/"
-  BUILD_LOGS_DIR: "$CI_PROJECT_DIR/ci/logs/$CI_PROJECT_NAME.Rcheck"
-
 test:
+    image: $CI_REGISTRY_IMAGE:latest  #rocker/tidyverse
     stage: test
-    tags:
+    tags: 
         - envinf2
+    variables:
+        R_LIBS_USER: "$CI_PROJECT_DIR/ci/lib/"
+        RETICULATE_MINICONDA_PATH: "/root/.local/share/r-miniconda/"
+        RETICULATE_PYTHON_ENV: "/root/.local/share/r-miniconda/envs/r-reticulate/"
+        CHECK_DIR: "$CI_PROJECT_DIR/ci/logs/"
+        BUILD_LOGS_DIR: "$CI_PROJECT_DIR/ci/logs/$CI_PROJECT_NAME.Rcheck"
+
     script:
-        - mkdir -p $R_LIBS_USER $BUILD_LOGS_DIR
-         # checks if the packages from the Imports, Suggests, LinkinTo field
-         # are already installed in the cache
-        - R -e 'devtools::install_deps(dep = T, lib = Sys.getenv("R_LIBS_USER"))'
-        - R -e 'install.packages("plyr")' # somehow cannot be installed on the cache
-        # add to library path
-        - R -e '.libPaths(new = "$CI_PROJECT_DIR/ci/lib/")'
-        # setup python environment
-        - R -e 'reticulate::install_miniconda()' # this would be nice to have on the docker image
-        - R -e 'reticulate::py_install("vtk")' # this would be nice to have on the docker image
-        #- R -e 'devtools::check(check_dir = Sys.getenv("CHECK_DIR"), vignettes = FALSE)'
-        #- R -e 'if (length(devtools::check_failures(path = Sys.getenv("BUILD_LOGS_DIR"), note = FALSE)) > 0) stop()'
+        - if [ ! -d "$R_LIBS_USER" ]; then mkdir -p "$R_LIBS_USER"; fi
+        - if [ ! -d "$BUILD_LOGS_DIR" ]; then mkdir -p "$BUILD_LOGS_DIR"; fi
+        - R -e 'withr::with_libpaths(new = Sys.getenv("R_LIBS_USER"), {devtools::install_deps(dependencies = T);install.packages("plyr")})'
+        - R -e '.libPaths(new = Sys.getenv("R_LIBS_USER"))'
         - R CMD build . --no-build-vignettes --no-manual
         - R CMD check $(ls -1t *.tar.gz | head -n 1) -o $CHECK_DIR --no-build-vignettes --no-manual
     cache:
         key: $CI_COMMIT_REF_SLUG
         untracked: true
         paths:
-          - $R_LIBS_USER
-        when: 'always'
+            - $R_LIBS_USER
     artifacts:
         paths:
-          - $BUILD_LOGS_DIR
-        when: 'always'
-    # script will only run then attempting to merge/push to master
-    only:
-          - merge_requests
-          - master
-
-
-
+            - $BUILD_LOGS_DIR
+        when: "always"
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" || $CI_PIPELINE_SOURCE == "web"'
+        - if: '$CI_COMMIT_BRANCH == "master"'
